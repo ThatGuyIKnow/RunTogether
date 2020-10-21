@@ -1,0 +1,32 @@
+﻿@using QRCoder
+
+<h3>QRGenerator</h3>
+
+<button class="btn btn-primary" @onclick="GenQR">Click me</button>
+
+@if (qrCodeImageAsBase64 == null)
+{
+
+}
+else
+{
+
+<div>
+    <img alt="Embedded QR Code" src="data:image/bmp;base64,@qrCodeImageAsBase64" width="100" height="100" />
+</div>
+
+}
+
+
+
+@code {
+    private string qrCodeImageAsBase64;
+
+    private void GenQR()
+    {
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
+        Base64QRCode qrCode = new Base64QRCode(qrCodeData);
+        qrCodeImageAsBase64 = qrCode.GetGraphic(20);
+    }
+}

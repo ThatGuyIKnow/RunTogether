@@ -1,21 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\olive\\source\\repos\\RunTogether\\RunTogether\\RunTogether.csproj": {}
+    "C:\\Users\\frede\\Source\\Repos\\ThatGuyIKnow\\RunTogether\\RunTogether\\RunTogether.csproj": {}
   },
   "projects": {
-    "C:\\Users\\olive\\source\\repos\\RunTogether\\RunTogether\\RunTogether.csproj": {
+    "C:\\Users\\frede\\Source\\Repos\\ThatGuyIKnow\\RunTogether\\RunTogether\\RunTogether.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\olive\\source\\repos\\RunTogether\\RunTogether\\RunTogether.csproj",
+        "projectUniqueName": "C:\\Users\\frede\\Source\\Repos\\ThatGuyIKnow\\RunTogether\\RunTogether\\RunTogether.csproj",
         "projectName": "RunTogether",
-        "projectPath": "C:\\Users\\olive\\source\\repos\\RunTogether\\RunTogether\\RunTogether.csproj",
-        "packagesPath": "C:\\Users\\olive\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\olive\\source\\repos\\RunTogether\\RunTogether\\obj\\",
+        "projectPath": "C:\\Users\\frede\\Source\\Repos\\ThatGuyIKnow\\RunTogether\\RunTogether\\RunTogether.csproj",
+        "packagesPath": "C:\\Users\\frede\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\frede\\Source\\Repos\\ThatGuyIKnow\\RunTogether\\RunTogether\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
-          "C:\\Users\\olive\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\frede\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -52,7 +56,7 @@
             },
             "Microsoft.Azure.SignalR": {
               "target": "Package",
-              "version": "[1.4.0, )"
+              "version": "[1.5.1, )"
             },
             "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
@@ -61,6 +65,10 @@
             "Microsoft.EntityFrameworkCore.Tools": {
               "target": "Package",
               "version": "[3.1.9, )"
+            },
+            "QRCoder": {
+              "target": "Package",
+              "version": "[1.3.9, )"
             }
           },
           "imports": [
