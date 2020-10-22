@@ -1,6 +1,3 @@
-
-RunTogether/bin/Debug/netcoreapp3.1/RunTogether.runtimeconfig.dev.json
-RunTogether/bin/Debug/netcoreapp3.1/RunTogether.runtimeconfig.dev.json
-RunTogether/bin/Debug/netcoreapp3.1/RunTogether.runtimeconfig.dev.json
-.vs/RunTogether/config/applicationhost.config
-RunTogether/bin/Debug/netcoreapp3.1/RunTogether.runtimeconfig.dev.json
+RunTogether/bin/
+RunTogether/obj/
+.vs/
