@@ -12,7 +12,7 @@ else
 {
 
 <div>
-    <img alt="Embedded QR Code" src="data:image/bmp;base64,@qrCodeImageAsBase64" width="100" height="100" />
+    <img alt="Embedded QR Code" src="data:image/bmp;base64,@qrCodeImageAsBase64" width="@size" height="@size" />
 </div>
 
 }
@@ -22,11 +22,15 @@ else
 @code {
     private string qrCodeImageAsBase64;
 
+
+    [Parameter] public string code { get; set; } = null;
+    [Parameter] public int size { get; set; } = 100;
+
     private void GenQR()
     {
         QRCodeGenerator qrGenerator = new QRCodeGenerator();
-        QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode(test, QRCodeGenerator.ECCLevel.Q);
         Base64QRCode qrCode = new Base64QRCode(qrCodeData);
-        qrCodeImageAsBase64 = qrCode.GetGraphic(20);
+        qrCodeImageAsBase64 = qrCode.GetGraphic(20, "#cc4545", "#ffffff", true);
     }
 }
