@@ -29,7 +29,7 @@ else
     private void GenQR()
     {
         QRCodeGenerator qrGenerator = new QRCodeGenerator();
-        QRCodeData qrCodeData = qrGenerator.CreateQrCode(test, QRCodeGenerator.ECCLevel.Q);
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.Q);
         Base64QRCode qrCode = new Base64QRCode(qrCodeData);
         qrCodeImageAsBase64 = qrCode.GetGraphic(20, "#cc4545", "#ffffff", true);
     }
