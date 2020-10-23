@@ -1,0 +1,32 @@
+﻿
+@using Microsoft.EntityFrameworkCore
+@using System.Collections.Generic
+
+<h3>DataTable</h3>
+
+<RadzenGrid Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run">
+    <Columns>
+        <RadzenGridColumn TItem="Run" Property="distance" Title="distance"></RadzenGridColumn>
+        <RadzenGridColumn TItem="Run" Property="name" Title="name"></RadzenGridColumn>
+        <RadzenGridColumn TItem="Run" Property="city" Title="city"></RadzenGridColumn>
+    </Columns>
+</RadzenGrid>
+
+
+
+@code {
+    Run[] runs;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        runs = await Task.FromResult(Enumerable.Range(1, 5).Select(index => new Run
+        {
+            distance = index,
+            name = "test run",
+            city = "aalborg"
+        }).ToArray());
+
+    }
+
+}
