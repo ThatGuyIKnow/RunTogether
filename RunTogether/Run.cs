@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Routing;
+using Radzen;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,10 +10,12 @@ namespace RunTogether
 
     public class Run
     {
-        public int distance { get; set; }
+        public int ID { get; set; }
 
-        public string name { get; set; }
+        public DateTime StartDate { get; set; }
 
-        public string city { get; set; }
+        public DateTime EndDate { get; set; }
+
+        public RunRoute Route { get; set; }
     }
 }
