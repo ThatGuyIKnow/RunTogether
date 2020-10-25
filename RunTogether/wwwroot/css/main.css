@@ -1,0 +1,103 @@
+﻿
+.display-none {
+    display: none;
+}
+
+.enterUp {
+    animation: enterUpFullSite;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+}
+
+.exitDown {
+    animation-name: exitDownFullSite;
+    animation-timing-function: ease-in;
+    animation-fill-mode: forwards;
+}
+
+.qr-camera {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    height: -webkit-fill-available;
+    height: fill-available;
+    margin: 0;
+    padding: 0;
+}
+
+.qr-camera > * {
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+    padding: 0;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.qr-camera-ui {
+    -webkit-box-shadow: inset 0px -90px 65px 0 rgba(0,0,0,0.75);
+    -moz-box-shadow: inset 0px -90px 65px 0 rgba(0,0,0,0.75);
+    box-shadow: inset 0px -90px 65px 0 rgba(0,0,0,0.75);
+
+    z-index: 10;
+}
+
+.qr-camera-ui > * {
+    position: absolute;
+    box-sizing: border-box;
+}
+
+    .qr-camera-ui > .close-button {
+        width: 50px;
+        height: 50px;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        color: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        cursor: pointer;
+        
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+
+
+@keyframes enterUpFullSite {
+    from {
+        left: 0;
+        top: 100vh;
+        background-color: rgba(0,0,0,0);
+    }
+
+    to {
+        left: 0;
+        top: 0;
+        background-color: rgba(0,0,0,0.8);
+    }
+}
+@keyframes exitDownFullSite {
+    from {
+        left: 0;
+        top: 0;
+        background-color: rgba(0,0,0,0.8);
+    }
+    to {
+        left: 0;
+        top: 100vh;
+        background-color: rgba(0,0,0,0);
+    }
+}

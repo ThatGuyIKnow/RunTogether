@@ -1,0 +1,104 @@
+﻿@inject IJSRuntime JSRuntime
+@inject PromiseHelper PromiseHelper
+
+@if(hasCamera)
+{
+    <button @onclick="InitializeQrScanner" value="StartCamera">Start Camera</button>
+
+    <div class="qr-camera @_currentClass" style="animation-duration: @(FadeTime)ms">
+        <div class="qr-camera-ui">
+            <div class="close-button">
+                <RadzenIcon Icon="close" @onclick="DestroyQrScanner" />
+            </div>
+        </div>
+        <video id="qrVideo"></video>
+    </div>
+}
+else
+{
+    <p>No Camera Found</p>
+}
+
+@code {
+    private const string HideCss = "display-none";
+    private const string EnterCss = "enterUp";
+    private const string ExitCss = "exitDown";
+
+    private string _currentClass = HideCss;
+
+    private string? _qrCode = null;
+    private bool hasCamera = false;
+
+    [Parameter]
+    public int FadeTime { get; set; } = 500;
+
+    [Parameter]
+    public EventCallback<string> OnCodeScanned { get; set; }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            hasCamera = await JSRuntime.InvokeAsync<bool>("Main.QrScanner.HasCamera");
+            StateHasChanged();
+        }
+    }
+
+
+    private void InitializeQrScanner()
+    {
+        // Create QR Scanner and start it up
+        CreateQrScanner();
+        StartQrScanner();
+    }
+
+
+    private void CreateQrScanner()
+    {
+
+        // When the QR Scanner returns a code, execute the function
+        PromiseHelper.SetResolve(CodeReceivedHandler);
+
+        // (Creation function, video HTML id, objRef from PromiseHelper)
+        JSRuntime.InvokeVoidAsync(
+        "Main.QrScanner.CreateQrScanner",
+        "qrVideo",
+        DotNetObjectReference.Create(PromiseHelper));
+    }
+
+
+    private void StartQrScanner()
+    {
+        // Animates entrance and starts the scanner
+        _currentClass = EnterCss;
+        JSRuntime.InvokeAsync<string>("Main.QrScanner.StartQrScanner");
+    }
+
+    private void DestroyQrScanner()
+    {
+        // Animate exit and wait for animation to finish
+        _currentClass = ExitCss;
+
+        Task.Run(async () =>
+        {
+            await Task.Delay(FadeTime);
+            await JSRuntime.InvokeVoidAsync(
+                "Main.QrScanner.DestroyQrScanner",
+                "qrVideo");
+            _currentClass = HideCss;
+        });
+    }
+
+    private void CodeReceivedHandler(string data)
+    {
+        // After the code has been scanned and sent out to the 
+        // event handlers, the QrScanner closes.
+        _qrCode = data;
+
+        OnCodeScanned.InvokeAsync(_qrCode);
+
+        DestroyQrScanner();
+    }
+
+}
