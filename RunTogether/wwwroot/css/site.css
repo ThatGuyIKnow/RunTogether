@@ -141,8 +141,21 @@ app {
         display: none;
     }
 
-    .main .top-row.auth {
-        justify-content: space-between;
+    .sidebar {
+        display: none;
+    }
+    
+    a {
+        margin: 0 10px 0 10px;
+    }
+
+    .navMobile {
+        height: auto;
+        width: auto;
+        bottom: 0px;
+        justify-content: center;
+        display: flex;
+        align-items: center;
     }
 
     .main .top-row a, .main .top-row .btn-link {
@@ -153,6 +166,10 @@ app {
 @media (min-width: 768px) {
     app {
         flex-direction: row;
+    }
+
+    .navMobile {
+        display: none;
     }
 
     .sidebar {
@@ -172,12 +189,13 @@ app {
         padding-right: 1.5rem !important;
     }
 
-    .navbar-toggler {
-        display: none;
-    }
-
     .sidebar .collapse {
         /* Never collapse the sidebar for wide screens */
         display: block;
     }
+}
+
+.logo {
+    position: absolute;
+    left: 2%;
 }
