@@ -18,6 +18,7 @@ namespace RunTogether.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             //modelBuilder.Entity<Post>()
             //    .HasOne(p => p.Blog)
             //    .WithMany(b => b.Posts);
