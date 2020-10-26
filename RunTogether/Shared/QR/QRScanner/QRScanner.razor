@@ -10,10 +10,13 @@
             <div class="close-button">
                 <RadzenIcon Icon="close" @onclick="DestroyQrScanner" />
             </div>
-            @if(hasFlash)
+            <div class="qr-field">
+                <div></div>
+            </div>
+            @if (hasFlash)
             {
                 <div class="flash-button">
-                    <RadzenIcon Icon="@(flashOn ? "flash_on" : "flash_off")" @onclick="ToggleFlash"/>
+                    <RadzenIcon Icon="@(flashOn ? "flash_on" : "flash_off")" @onclick="ToggleFlash" />
                 </div>
             }
         </div>
