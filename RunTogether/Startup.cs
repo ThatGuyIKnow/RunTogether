@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using RunTogether.Areas.Identity;
 using RunTogether.Data;
 using Radzen;
+using RunTogether.Shared.QR.QRScanner;
 
 namespace RunTogether
 {
@@ -43,6 +44,7 @@ namespace RunTogether
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<DialogService>();
+            services.AddTransient<PromiseHelper>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
