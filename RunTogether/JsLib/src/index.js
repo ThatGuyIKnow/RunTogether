@@ -4,19 +4,22 @@ export function test() {
 }
 
 let mymap;
-
-
+ 
 export function leaflet_start() {
+
+/*    mymap.off();
+    mymap.remove();*/
 
     // Start view for map (zoomlevel and viewpoint)
     mymap = L.map('mapid').setView([57.0117789, 9.9907118], 6);
 
-    var Stamen_Watercolor = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+
+    let Stamen_Watercolor = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
         attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         /*subdomains: 'abcd',*/
         minZoom: 6,
         maxZoom: 18,
-        ext: 'jpg'
+        ext: 'jpg'  
     }).addTo(mymap);
 
     //var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -33,14 +36,14 @@ export function leaflet_start() {
             accessToken: 'pk.eyJ1IjoiZWF3b29wIiwiYSI6ImNrZ2piaXQ0ODB3b2YyenRldDh6dXV1YXAifQ.RkCts-bAJZYnuCAL_fBf0w'
         }).addTo(mymap);*/
 
-
-
     console.log("Virker leaflet?");
 
 }
 
 export function addMarker() {
 
+/*    leaflet_start(); 
+*/
     L.marker([57.0117789, 9.9907118]).addTo(mymap);
     L.marker([57.0123239, 9.9939051]).addTo(mymap);
 
@@ -52,7 +55,7 @@ export function addMarker() {
     var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
 
 
-    console.log("EN marker? tak");
+    console.log("To marker? tak");
 }
 
 

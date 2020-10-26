@@ -5,8 +5,8 @@ html, body {
 }
 
 #mapid {
-    height: 600px;
-    width: 800px;
+    height: 750px;
+    width: 100%;
 }
 
 a, .btn-link {
