@@ -1,4 +1,6 @@
 ﻿@using RunTogether.Shared.Forms
+@inject DialogService dialogService
+
 @inherits LayoutComponentBase
 
 <div class="main">
@@ -7,15 +9,20 @@
         <LoginDisplay />
     </div>
 
+    <RadzenDialog />
+
     <RadzenCard Style="height: auto">
         <RadzenMenu>
-            <RadzenMenuItem Text="Skab ny løber" Icon="directions_run" Path="">
+            <RadzenMenuItem Text="Skab ny løber" Icon="directions_run"
+                            @onclick="@(args => dialogService.Open<CreateNewRunner>("Skab ny løber",
+                                        new Dictionary<string, object>(),
+                                        new DialogOptions(){ Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" }))">
             </RadzenMenuItem>
-            <RadzenMenuItem Text="Slet løber" Icon="delete" Path="">
+            <RadzenMenuItem Text="Slet løber" Icon="delete">
             </RadzenMenuItem>
-            <RadzenMenuItem Text="Skab ny rute" Icon="add_location" Path="">
+            <RadzenMenuItem Text="Skab ny rute" Icon="add_location">
             </RadzenMenuItem>
-            <RadzenMenuItem Text="Rediger rute" Icon="edit_location" Path="">
+            <RadzenMenuItem Text="Rediger rute" Icon="edit_location">
             </RadzenMenuItem>
         </RadzenMenu>
     </RadzenCard>
