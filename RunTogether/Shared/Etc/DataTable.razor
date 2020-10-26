@@ -5,9 +5,12 @@
 
 @inject ApplicationDbContext dbContext
 
+
 <h3>DataTable</h3>
 
-<RadzenGrid Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run">
+<button @onclick="DbTestData">add data to table</button>
+
+<RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run">
     <Columns>
         <RadzenGridColumn TItem="Run" Property="ID" Title="ID"></RadzenGridColumn>
         <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Date"></RadzenGridColumn>
@@ -20,6 +23,8 @@
 
 @code {
 
+    RadzenGrid<Run> table;
+
     IEnumerable<Run> runs;
 
     protected override void OnInitialized()
@@ -27,4 +32,11 @@
         runs = dbContext.Runs;
     }
 
+    private void DbTestData()
+    {
+        var run = new Run { EndDate = DateTime.Today, StartDate = DateTime.Today };
+        dbContext.Runs.Add(run);
+        dbContext.SaveChanges();
+        table.Reload();
+    }
 }
