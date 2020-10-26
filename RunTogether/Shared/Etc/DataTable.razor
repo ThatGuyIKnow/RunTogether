@@ -1,6 +1,9 @@
 ﻿
 @using Microsoft.EntityFrameworkCore
 @using System.Collections.Generic
+@using RunTogether.Data
+
+@inject ApplicationDbContext dbContext
 
 <h3>DataTable</h3>
 
@@ -16,21 +19,12 @@
 
 
 @code {
-    Run[] runs;
 
-    protected override async Task OnInitializedAsync()
+    IEnumerable<Run> runs;
+
+    protected override void OnInitialized()
     {
-
-        Random rnd = new Random();
-
-        runs = await Task.FromResult(Enumerable.Range(1, 5).Select(index => new Run
-        {
-            ID = index,
-            StartDate = DateTime.Today.AddDays(-(rnd.Next(1, 50))),
-            EndDate = DateTime.Today.AddDays(rnd.Next(1, 50)),
-            Route = new RunRoute()
-        }).ToArray());
-
+        runs = dbContext.Runs;
     }
 
 }
