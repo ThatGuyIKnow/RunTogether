@@ -20,6 +20,7 @@ namespace RunTogether.Data
     public class StartPoint : Point
     {
         public int StartPointId { get; set; }
+        public Stage Stage { get; set; }
     }
 
     public class EndPoint : Point
