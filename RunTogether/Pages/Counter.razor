@@ -2,46 +2,24 @@
 
 @inject IJSRuntime JsRunTime
 
-<h1>Map</h1>
-
-<div @ref="mapid" id="mapid"></div>
-
+<h1>Map controller</h1>
 <br>
-<p>Load a markers to map</p>
-<button class="btn btn-primary" @onclick="LoadMarker">Click me</button>
+<button class="btn btn-primary" @onclick="LoadMarker">Add Markers</button>
+<br>
+<button class="btn btn-primary" @onclick="FindUser">Locate Me</button>
 
 
 
 @code {
 
-    ElementReference mapid;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JsRunTime.InvokeVoidAsync("Main.leaflet_start");
-            firstRender = false;    
-        }
-
-    }
-
-@*    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {       
-        if (firstRender)
-        {
-            await JsRunTime.InvokeVoidAsync("Main.leaflet_start", null);
-            StateHasChanged(); 
-        }
-
-    }*@
-
-
-    @*private int currentCount = 0;*@
-
     private async void LoadMarker()
     {
-            await JsRunTime.InvokeVoidAsync("Main.addMarker");
+        await JsRunTime.InvokeVoidAsync("Main.addMarker");
+    }
+
+    private async void FindUser()
+    {
+        await JsRunTime.InvokeVoidAsync("Main.locateUser");
     }
 
 }

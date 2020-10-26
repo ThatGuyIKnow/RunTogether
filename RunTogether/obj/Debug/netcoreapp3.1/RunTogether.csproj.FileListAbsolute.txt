@@ -237,3 +237,4 @@ C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\obj\Debug\netcoreapp3.1\
 C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\obj\Debug\netcoreapp3.1\Razor\Shared\NavMenu.razor.g.cs
 C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\obj\Debug\netcoreapp3.1\Razor\Shared\SurveyPrompt.razor.g.cs
 C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\obj\Debug\netcoreapp3.1\Razor\_Imports.razor.g.cs
+C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\bin\Debug\netcoreapp3.1\wwwroot\logos\STATE_LOGO.jpg
