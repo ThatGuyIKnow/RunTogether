@@ -28,7 +28,7 @@
             ID = index,
             StartDate = DateTime.Today.AddDays(-(rnd.Next(1, 50))),
             EndDate = DateTime.Today.AddDays(rnd.Next(1, 50)),
-            Route = new RunRoute()
+            Route = new RunRoute() //RunRoute(new List<Stage> { new Stage(), new Stage(), new Stage()})
         }).ToArray());
 
     }
