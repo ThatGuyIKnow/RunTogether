@@ -8,15 +8,22 @@
         <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
         <LoginDisplay />
     </div>
-    
+
     <RadzenDialog />
 
     <RadzenCard Style="height: auto">
-        <RadzenMenu Click="@(args => ShowDialog(args))">
-            <RadzenMenuItem Text="Skab ny løber" Icon="person_add" />
-            <RadzenMenuItem Text="Rediger løber" Icon="person_search" />
-            <RadzenMenuItem Text="Skab ny rute" Icon="add_location" />
-            <RadzenMenuItem Text="Rediger rute" Icon="edit_location" />
+        <RadzenMenu>
+            <RadzenMenuItem Text="Skab ny løber" Icon="directions_run"
+                            @onclick="@(args => dialogService.Open<CreateNewRunner>("Skab ny løber",
+                                        new Dictionary<string, object>(),
+                                        new DialogOptions(){ Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" }))">
+            </RadzenMenuItem>
+            <RadzenMenuItem Text="Slet løber" Icon="delete">
+            </RadzenMenuItem>
+            <RadzenMenuItem Text="Skab ny rute" Icon="add_location">
+            </RadzenMenuItem>
+            <RadzenMenuItem Text="Rediger rute" Icon="edit_location">
+            </RadzenMenuItem>
         </RadzenMenu>
     </RadzenCard>
 
@@ -26,34 +33,6 @@
 </div>
 
 @code {
-    void ShowDialog(MenuItemEventArgs e)
-    {
-        if (e.Text == "Skab ny løber")
-        {
-            dialogService.Open<CreateNewRunner>("Skab ny løber",
-                new Dictionary<string, object>(),
-                new DialogOptions(){ Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
-        }
-
-        if (e.Text == "Rediger løber")
-        {
-            dialogService.Open<EditRunner>("Rediger løber",
-                new Dictionary<string, object>(),
-                new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
-        }
-
-        if (e.Text == "Skab ny rute")
-        {
-            dialogService.Open<CreateNewRoute>("Skab ny rute",
-                new Dictionary<string, object>(),
-                new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
-        }
-
-        if (e.Text == "Rediger rute")
-        {
-            dialogService.Open<EditRoute>("Rediger rute",
-                new Dictionary<string, object>(),
-                new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
-        }
-    }
+    public string Trademark { get; set; } = "RunTogether 2020" +
+        "Designet af: SW318E20";
 }
