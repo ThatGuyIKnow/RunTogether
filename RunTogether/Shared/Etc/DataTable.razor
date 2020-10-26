@@ -2,11 +2,15 @@
 @using Microsoft.EntityFrameworkCore
 @using System.Collections.Generic
 @using RunTogether.Data
+@using RunTogether.Pages
 
 @inject ApplicationDbContext dbContext
-
+@inject DialogService dialogService
 
 <h3>DataTable</h3>
+<RadzenButton Text=@($"New run") Click="@((args) => dialogService.Open<CreateRunDialog>($"New run",
+                        new Dictionary<string, object>(),
+                        new DialogOptions(){ Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" }))" />
 
 <button @onclick="DbTestData">add data to table</button>
 
@@ -32,7 +36,7 @@
         runs = dbContext.Runs;
     }
 
-    private void DbTestData()
+    public void DbTestData()
     {
         var run = new Run { EndDate = DateTime.Today, StartDate = DateTime.Today };
         dbContext.Runs.Add(run);
