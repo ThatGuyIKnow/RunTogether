@@ -1,4 +1,5 @@
 ﻿using Radzen.Blazor;
+using RunTogether.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,11 +12,11 @@ namespace RunTogether
 
         public DateTime Date { get; set; }
 
-        public Point StartPoint { get; set; }
+        public StartPoint StartPoint { get; set; }
 
-        public Point EndPoint { get; set; }
+        public EndPoint EndPoint { get; set; }
 
-        public List<Point> ThroughPoints { get; set; } 
+        public List<ThroughPoint> ThroughPoints { get; set; } 
 
         public int RunRouteId { get; set; }
 
