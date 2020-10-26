@@ -10,6 +10,12 @@
             <div class="close-button">
                 <RadzenIcon Icon="close" @onclick="DestroyQrScanner" />
             </div>
+            @if(hasFlash)
+            {
+                <div class="flash-button">
+                    <RadzenIcon Icon="@(flashOn ? "flash_on" : "flash_off")" @onclick="ToggleFlash"/>
+                </div>
+            }
         </div>
         <video id="qrVideo"></video>
     </div>
@@ -28,6 +34,8 @@ else
 
     private string? _qrCode = null;
     private bool hasCamera = false;
+    private bool hasFlash = false;
+    private bool flashOn = false;
 
     [Parameter]
     public int FadeTime { get; set; } = 500;
@@ -54,7 +62,7 @@ else
     }
 
 
-    private void CreateQrScanner()
+    private async Task CreateQrScanner()
     {
 
         // When the QR Scanner returns a code, execute the function
@@ -65,6 +73,10 @@ else
         "Main.QrScanner.CreateQrScanner",
         "qrVideo",
         DotNetObjectReference.Create(PromiseHelper));
+
+        // Check if camera has flash available
+        hasFlash = await JSRuntime.InvokeAsync<bool>("Main.QrScanner.HasFlash");
+        StateHasChanged();
     }
 
 
@@ -99,6 +111,15 @@ else
         OnCodeScanned.InvokeAsync(_qrCode);
 
         DestroyQrScanner();
+    }
+
+    private void ToggleFlash()
+    {
+        flashOn = !flashOn;
+        JSRuntime.InvokeVoidAsync(
+            "Main.QrScanner.ChangeFlashStatus",
+            flashOn);
+        StateHasChanged();
     }
 
 }

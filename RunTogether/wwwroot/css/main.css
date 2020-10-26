@@ -50,29 +50,37 @@
     box-sizing: border-box;
 }
 
-    .qr-camera-ui > .close-button {
-        width: 50px;
-        height: 50px;
-        bottom: 50px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #fff;
-        border-radius: 50%;
-        font-size: 1.5rem;
-        color: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+.qr-camera-ui > .close-button {
+    width: 50px;
+    height: 50px;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        cursor: pointer;
-        
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-    }
+    cursor: pointer;
+    
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.qr-camera-ui > .flash-button {
+    cursor: pointer;
+    color: white;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+}
 
 
 

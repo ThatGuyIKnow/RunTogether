@@ -8,13 +8,13 @@ export class QrScannerClass
         this.qrScanner = null;
         this.dotnetHelper = null;
         
-        this.CreateQrScanner  = this.CreateQrScanner.bind(this);
-        this.StartQrScanner   = this.StartQrScanner.bind(this);
-        this.StopQrScanner    = this.StopQrScanner.bind(this);
-        this.DestroyQrScanner = this.DestroyQrScanner.bind(this);
-        this.ToggleFlash      = this.ToggleFlash.bind(this);
-        this.HasFlash         = this.HasFlash.bind(this);
-        this.HasCamera        = this.HasCamera.bind(this);
+        this.CreateQrScanner   = this.CreateQrScanner.bind(this);
+        this.StartQrScanner    = this.StartQrScanner.bind(this);
+        this.StopQrScanner     = this.StopQrScanner.bind(this);
+        this.DestroyQrScanner  = this.DestroyQrScanner.bind(this);
+        this.ChangeFlashStatus = this.ChangeFlashStatus.bind(this);
+        this.HasFlash          = this.HasFlash.bind(this);
+        this.HasCamera         = this.HasCamera.bind(this);
     }
 
     CreateQrScanner(videoElemId, objRef) {
@@ -24,11 +24,18 @@ export class QrScannerClass
             result => this.dotnetHelper.invokeMethodAsync('ResolvePromiseString', result)
         );
     }
-    
-    StartQrScanner()   { this.qrScanner.start();           }
-    StopQrScanner()    { this.qrScanner.stop();            }
-    DestroyQrScanner() { this.qrScanner.destroy();         }
-    ToggleFlash()      { this.qrScanner.toggleFlash();     }
-    HasFlash ()        { return this.qrScanner.hasFlash(); }
-    HasCamera()        { return QrScanner.hasCamera();     }
+
+    ChangeFlashStatus(status) {
+        if (status) {
+            this.qrScanner.turnFlashOn();
+        } else {
+            this.qrScanner.turnFlashOff();
+        }
+    }
+
+    StartQrScanner()    { this.qrScanner.start();           }
+    StopQrScanner()     { this.qrScanner.stop();            }
+    DestroyQrScanner()  { this.qrScanner.destroy();         }
+    HasFlash ()         { return this.qrScanner.hasFlash(); }
+    HasCamera()         { return QrScanner.hasCamera();     }
 }
