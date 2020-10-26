@@ -1,16 +1,24 @@
-﻿@using RunTogether.Shared.Etc
-@using RunTogether.Shared.Forms
+﻿@using RunTogether.Shared.Forms
 @inherits LayoutComponentBase
-
-<div class="sidebar">
-    <NavMenuAdmin />
-</div>
 
 <div class="main">
     <div class="top-row px-4 auth">
         <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
         <LoginDisplay />
     </div>
+
+    <RadzenCard Style="height: auto">
+        <RadzenMenu>
+            <RadzenMenuItem Text="Skab ny løber" Icon="directions_run" Path="">
+            </RadzenMenuItem>
+            <RadzenMenuItem Text="Slet løber" Icon="delete" Path="">
+            </RadzenMenuItem>
+            <RadzenMenuItem Text="Skab ny rute" Icon="add_location" Path="">
+            </RadzenMenuItem>
+            <RadzenMenuItem Text="Rediger rute" Icon="edit_location" Path="">
+            </RadzenMenuItem>
+        </RadzenMenu>
+    </RadzenCard>
 
     <div class="content px-4">
         @Body

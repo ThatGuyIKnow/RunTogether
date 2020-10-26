@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RunTogether.Areas.Identity;
 using RunTogether.Data;
+using Radzen;
 
 namespace RunTogether
 {
