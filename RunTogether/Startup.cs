@@ -15,8 +15,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RunTogether.Areas.Identity;
 using RunTogether.Data;
+<<<<<<< Updated upstream
 using RunTogether.Shared.QR.QRScanner;
 
+=======
+using Radzen;
+>>>>>>> Stashed changes
 namespace RunTogether
 {
     public class Startup
@@ -40,7 +44,13 @@ namespace RunTogether
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+<<<<<<< Updated upstream
             services.AddTransient<PromiseHelper>();
+=======
+            services.AddSingleton<WeatherForecastService>();
+
+            services.AddScoped<DialogService>();
+>>>>>>> Stashed changes
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
