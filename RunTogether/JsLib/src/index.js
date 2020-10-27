@@ -4,7 +4,7 @@ export function test() {
 }
 
 let mymap;
- 
+
 export function leaflet_start() {
 
     // Start view for map (zoomlevel and viewpoint)
@@ -35,40 +35,33 @@ export function leaflet_start() {
         }).addTo(mymap);*/
 
     //Test for sponser images and test to markers 
-    L.marker([57.0117789, 9.9907118]).bindPopup('Start for segment 1<br/>Dette segment er sponseret af State.</p><br/><img src="/logos/State_Logo_v1.jpg" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
-    L.marker([57.00967, 10.00404]).bindPopup('Start for segment 2<br />Dette segment er sponseret af FrugtKurven.</p><br/><img src="/logos/Frugtkurven_Logo.png" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
 
-    let latlngs = [
-        [57.0117789, 9.9907118],
-        [57.00967, 10.00404]
-    ];
-
-    L.polyline(latlngs, { color: '#db5c57' }).addTo(mymap);
+    addMarkers(); 
+    addPolyline(latlngs);   
 
     // Text to check that the function is done
     console.log("leaflet_start() function is done ");
 
 }
 
-function deletemap() {
-    mymap.remove(); 	
+function addMarkers() {
+    L.marker([57.0117789, 9.9907118]).bindPopup('Start for segment 1<br/>Dette segment er sponseret af State.</p><br/><img src="/logos/State_Logo_v1.jpg" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
+    L.marker([57.00967, 10.00404]).bindPopup('Start for segment 2<br />Dette segment er sponseret af FrugtKurven.</p><br/><img src="/logos/Frugtkurven_Logo.png" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
+    L.marker([58.0123239, 10.9940051]).bindPopup('Start for segment 3<br />Dette segment er sponseret af FrugtKurven.</p><br/><img src="/logos/Frugtkurven_Logo.png" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
 }
 
-export function locateUser() {
-    mymap.locate({ setView: true });
-}
+let latlngs = [
+    [57.0117789, 9.9907118],
+    [57.00967, 10.00404],
+    [58.0123239, 10.9940051]
+];
 
 
-export function addMarker() {
+function addPolyline(latlngs) {      
         
+    let polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
+    mymap.fitBounds(polyline.getBounds());
 
-    var latlngs = [
-        [57.0117789, 9.9907118],
-        [57.0123239, 9.9939051],
-        [57.0123239, 9.9939051]
-    ];
-
-    var polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
 
     console.log("To marker? tak");
 }

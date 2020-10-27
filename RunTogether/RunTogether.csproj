@@ -15,16 +15,6 @@
     <PackageReference Include="Radzen.Blazor" Version="2.15.17" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\logos\STATE_LOGO.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="wwwroot\logos\STATE_LOGO.jpg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="npm --prefix $(ProjectDir)JsLib run build" />
   </Target>

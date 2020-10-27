@@ -1,25 +1,4 @@
 ﻿@page "/counter"
 
-@inject IJSRuntime JsRunTime
+<h1>Dette er counter siden</h1>
 
-<h1>Map controller</h1>
-<br>
-<button class="btn btn-primary" @onclick="LoadMarker">Add Markers</button>
-<br>
-<button class="btn btn-primary" @onclick="FindUser">Locate Me</button>
-
-
-
-@code {
-
-    private async void LoadMarker()
-    {
-        await JsRunTime.InvokeVoidAsync("Main.addMarker");
-    }
-
-    private async void FindUser()
-    {
-        await JsRunTime.InvokeVoidAsync("Main.locateUser");
-    }
-
-}
