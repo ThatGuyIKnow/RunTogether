@@ -158,9 +158,9 @@ app {
         align-items: center;
     }
 
-    /*    .main .top-row a, .main .top-row .btn-link {
+    .main .top-row a, .main .top-row .btn-link {
         margin-left: 0;
-    }*/
+    }
 }
 
 @media (min-width: 768px) {
