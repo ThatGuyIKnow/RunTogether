@@ -1,4 +1,4 @@
-﻿
+﻿@page "/DataTable"
 @using Microsoft.EntityFrameworkCore
 @using System.Collections.Generic
 @using RunTogether.Data
@@ -10,9 +10,9 @@
 <h3>DataTable</h3>
 <RadzenButton Text=@($"New run") Click="@((args) => dialogService.Open<CreateRunDialog>($"New run",
                         new Dictionary<string, object>(),
-                        new DialogOptions(){ Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" }))" />
+                        new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" }))" />
 
-<button @onclick="DbTestData">add data to table</button>
+<RadzenButton Text=@($"Show simple dialog") Click="@ShowSimpleDialog" />
 
 <RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run">
     <Columns>
@@ -27,20 +27,48 @@
 
 @code {
 
+    public string Teststring = "thisisatest";
     RadzenGrid<Run> table;
 
     IEnumerable<Run> runs;
+
+    Run run = new Run();
 
     protected override void OnInitialized()
     {
         runs = dbContext.Runs;
     }
 
-    public void DbTestData()
+    public void DbTestData(Run run)
     {
-        var run = new Run { EndDate = DateTime.Today, StartDate = DateTime.Today };
         dbContext.Runs.Add(run);
         dbContext.SaveChanges();
         table.Reload();
     }
+
+
+    async Task ShowSimpleDialog() => await dialogService.OpenAsync("Simple Dialog", ds =>
+    @<RadzenCard Style="padding: 20px;">
+        <p Style="margin-bottom: 10px;">@Teststring</p>
+        <div class="row">
+            <div class="col-md-12">
+                <RadzenButton Text="Ok" Click="()=> ds.Close(true)" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Cancel" Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+
+void OnSubmit(Run run)
+{
+Console.WriteLine("YEY!");
+this.dialogService.Close(true);
+
+}
+
+void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
+{
+Console.WriteLine("AW");
+}
+
 }
