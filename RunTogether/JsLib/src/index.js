@@ -5,6 +5,11 @@ export function test() {
 
 let mymap;
 
+let latlngs = [
+    [57.0117789, 9.9907118],
+    [57.00967, 10.00404],
+    [58.0123239, 10.9940051]
+];
  
 export function leaflet_start() {
 
@@ -51,11 +56,6 @@ function addMarkers() {
     L.marker([58.0123239, 10.9940051]).bindPopup('Start for segment 3<br />Dette segment er sponseret af FrugtKurven.</p><br/><img src="/logos/Frugtkurven_Logo.png" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
 }
 
-let latlngs = [
-    [57.0117789, 9.9907118],
-    [57.00967, 10.00404],
-    [58.0123239, 10.9940051]
-];
 
 
 function addPolyline(latlngs) {      
@@ -63,14 +63,14 @@ function addPolyline(latlngs) {
     let polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
     mymap.fitBounds(polyline.getBounds());
 
-    let latlngs = [
+/*    let latlngs = [
         [57.0117789, 9.9907118],
         [57.0123239, 9.9939051],
         [57.0123239, 9.9939051]
     ];
-
-    let polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
-
+*/
+/*    let polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
+*/
     console.log("To marker? tak");
 }
 

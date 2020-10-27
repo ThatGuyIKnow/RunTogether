@@ -1,4 +1,4 @@
 ﻿<StaticWebAssets Version="1.0">
-  <ContentRoot BasePath="/Identity" Path="C:\Users\mads\.nuget\packages\microsoft.aspnetcore.identity.ui\3.1.9\staticwebassets\V4\" />
-  <ContentRoot BasePath="_content/Radzen.Blazor" Path="C:\Users\mads\.nuget\packages\radzen.blazor\2.15.17\build\..\staticwebassets\" />
+  <ContentRoot BasePath="/Identity" Path="C:\Users\caspe\.nuget\packages\microsoft.aspnetcore.identity.ui\3.1.9\staticwebassets\V4\" />
+  <ContentRoot BasePath="_content/Radzen.Blazor" Path="C:\Users\caspe\.nuget\packages\radzen.blazor\2.15.17\build\..\staticwebassets\" />
 </StaticWebAssets>

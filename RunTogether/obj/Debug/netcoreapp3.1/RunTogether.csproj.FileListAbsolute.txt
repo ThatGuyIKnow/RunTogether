@@ -237,7 +237,6 @@ C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\obj\Debug\netcoreapp3.1\
 C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\obj\Debug\netcoreapp3.1\Razor\Shared\NavMenu.razor.g.cs
 C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\obj\Debug\netcoreapp3.1\Razor\Shared\SurveyPrompt.razor.g.cs
 C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\obj\Debug\netcoreapp3.1\Razor\_Imports.razor.g.cs
-C:\Users\caspe\Documents\GitHub\RunTogether\RunTogether\bin\Debug\netcoreapp3.1\wwwroot\logos\STATE_LOGO.jpg
 C:\Users\mads\OneDrive\C\Dokumenter\GitHub\RunTogether\RunTogether\bin\Debug\netcoreapp3.1\appsettings.Development.json
 C:\Users\mads\OneDrive\C\Dokumenter\GitHub\RunTogether\RunTogether\bin\Debug\netcoreapp3.1\appsettings.json
 C:\Users\mads\OneDrive\C\Dokumenter\GitHub\RunTogether\RunTogether\bin\Debug\netcoreapp3.1\JsLib\package-lock.json
