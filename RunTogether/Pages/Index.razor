@@ -8,7 +8,10 @@
 
     SurveyPrompt Title="How is Blazor working for you?" />*@
 
-<div @ref="mapid" id="mapid"></div>
+<div @ref="mapid" @onmousemove="Mouse_Move" @onmousedown="CreateMarker" id="mapid"></div>
+
+<p>@Coordinates</p>
+
 
 @code {
 
@@ -19,9 +22,55 @@
         if (firstRender)
         {
             await JsRunTime.InvokeVoidAsync("Main.leaflet_start");
-            firstRender = false; 
+            firstRender = false;
         }
 
     }
 
+    protected string Coordinates { get; set; }
+
+    protected void Mouse_Move(MouseEventArgs e)
+    {
+        Coordinates = $"X = {e.ClientX } Y = {e.ClientY}";
+    }
+
+    private async void CreateMarker()
+    {
+
+        await JsRunTime.InvokeVoidAsync("Main.onMapClick");
+
+    }
+
 }
+
+@*Microsoft.JSInterop.JSException
+      HResult=0x80131500
+      Message=setLatLng is not defined
+    ReferenceError: setLatLng is not defined
+        at Module.l (https://localhost:5001/js/main.js:1:1338)
+        at https://localhost:5001/_framework/blazor.server.js:8:31619
+        at new Promise (<anonymous>)
+        at e.beginInvokeJSFromDotNet (https://localhost:5001/_framework/blazor.server.js:8:31587)
+        at https://localhost:5001/_framework/blazor.server.js:1:20052
+        at Array.forEach (<anonymous>)
+        at e.invokeClientMethod (https://localhost:5001/_framework/blazor.server.js:1:20022)
+        at e.processIncomingData (https://localhost:5001/_framework/blazor.server.js:1:18006)
+        at e.connection.onreceive (https://localhost:5001/_framework/blazor.server.js:1:11091)
+        at WebSocket.i.onmessage (https://localhost:5001/_framework/blazor.server.js:1:39007)
+      Source=System.Private.CoreLib
+      StackTrace:
+       at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+       at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+       at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+       at System.Threading.Tasks.ValueTask`1.get_Result()
+       at Microsoft.JSInterop.JSRuntime.<InvokeWithDefaultCancellation>d__16`1.MoveNext()
+       at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+       at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+       at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+       at System.Threading.Tasks.ValueTask`1.get_Result()
+       at Microsoft.JSInterop.JSRuntimeExtensions.<InvokeVoidAsync>d__0.MoveNext()
+       at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+       at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+       at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+       at RunTogether.Pages.Index.<CreateMarker>d__8.MoveNext() in C:\Users\mads\OneDrive\C\Dokumenter\GitHub\RunTogether\RunTogether\Pages\Index.razor:line 40
+*@

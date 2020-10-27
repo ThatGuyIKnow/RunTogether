@@ -1,25 +1,21 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\caspe\\Documents\\GitHub\\RunTogether\\RunTogether\\RunTogether.csproj": {}
+    "C:\\Users\\mads\\OneDrive\\C\\Dokumenter\\GitHub\\RunTogether\\RunTogether\\RunTogether.csproj": {}
   },
   "projects": {
-    "C:\\Users\\caspe\\Documents\\GitHub\\RunTogether\\RunTogether\\RunTogether.csproj": {
+    "C:\\Users\\mads\\OneDrive\\C\\Dokumenter\\GitHub\\RunTogether\\RunTogether\\RunTogether.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\caspe\\Documents\\GitHub\\RunTogether\\RunTogether\\RunTogether.csproj",
+        "projectUniqueName": "C:\\Users\\mads\\OneDrive\\C\\Dokumenter\\GitHub\\RunTogether\\RunTogether\\RunTogether.csproj",
         "projectName": "RunTogether",
-        "projectPath": "C:\\Users\\caspe\\Documents\\GitHub\\RunTogether\\RunTogether\\RunTogether.csproj",
-        "packagesPath": "C:\\Users\\caspe\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\caspe\\Documents\\GitHub\\RunTogether\\RunTogether\\obj\\",
+        "projectPath": "C:\\Users\\mads\\OneDrive\\C\\Dokumenter\\GitHub\\RunTogether\\RunTogether\\RunTogether.csproj",
+        "packagesPath": "C:\\Users\\mads\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\mads\\OneDrive\\C\\Dokumenter\\GitHub\\RunTogether\\RunTogether\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\"
-        ],
         "configFilePaths": [
-          "C:\\Users\\caspe\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+          "C:\\Users\\mads\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -89,7 +85,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
         }
       }
     }
