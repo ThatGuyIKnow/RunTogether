@@ -8,7 +8,10 @@
         <h2>Løber:</h2>
         <RadzenDropDown AllowClear="true" TValue="string" Style="margin-bottom: 20px" Change="@(args => Change("string", "DropDown"))" />
 
-        <h3>Navn:</h3>
+        <h3>Fornavn:</h3>
+        <RadzenTextBox Style="margin-bottom: 20px" Change="@(args => Change(args, ""))" />
+
+        <h3>Efternavn:</h3>
         <RadzenTextBox Style="margin-bottom: 20px" Change="@(args => Change(args, ""))" />
 
         <h3>Email:</h3>
