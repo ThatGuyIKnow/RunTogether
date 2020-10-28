@@ -14,7 +14,7 @@
 
 <RadzenButton Text=@($"Show simple dialog") Click="@ShowSimpleDialog" />
 
-<RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run">
+<RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => Selected = args)">
     <Columns>
         <RadzenGridColumn TItem="Run" Property="ID" Title="ID"></RadzenGridColumn>
         <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Date"></RadzenGridColumn>
@@ -23,11 +23,39 @@
     </Columns>
 </RadzenGrid>
 
+<RadzenTabs>
+    <Tabs>
+        <RadzenTabsItem Text="Order Details">
+            <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@(new List<Run>(){Selected})" TItem="Run">
+                <Columns>
+                    <RadzenGridColumn TItem="Run" Property="run.EndDate" Title="Unit Price" />
+                    <RadzenGridColumn TItem="Run" Property="run.ID" Title="Order" />
+                    <RadzenGridColumn TItem="Run" Property="run.StartDate" Title="Product" />
+                </Columns>
+            </RadzenGrid>
+        </RadzenTabsItem>
+        <RadzenTabsItem Text="Products">
+            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@(new List<Run>(){Selected})" TItem="Run" PageSize="10">
+                <Template Context="detail">
+                    <RadzenCard Style="width:100px;height:100px">
+                        Product:
+                        <b>@detail?.ID</b>
+                    </RadzenCard>
+                </Template>
+            </RadzenDataList>
+        </RadzenTabsItem>
+    </Tabs>
+</RadzenTabs>
+
+
+
 
 
 @code {
+   
+    Run Selected = new Run();
+    IQueryable<Run> Selecteds;
 
-    public string Teststring = "thisisatest";
     RadzenGrid<Run> table;
 
     IEnumerable<Run> runs;
@@ -39,36 +67,53 @@
         runs = dbContext.Runs;
     }
 
-    public void DbTestData(Run run)
-    {
-        dbContext.Runs.Add(run);
-        dbContext.SaveChanges();
-        table.Reload();
-    }
-
-
     async Task ShowSimpleDialog() => await dialogService.OpenAsync("Simple Dialog", ds =>
-    @<RadzenCard Style="padding: 20px;">
-        <p Style="margin-bottom: 10px;">@Teststring</p>
-        <div class="row">
-            <div class="col-md-12">
-                <RadzenButton Text="Ok" Click="()=> ds.Close(true)" Style="margin-bottom: 10px; width: 150px" />
-                <RadzenButton Text="Cancel" Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 10px; width: 150px" />
+    @<RadzenTemplateForm TItem="Run" Data="@run" Submit="()=> OnSubmit(run.StartDate, run.EndDate)" InvalidSubmit="()=> OnInvalidSubmit()">
+
+        <div class="row" style="margin-bottom: 48px">
+            <div class="col-md-4 align-right">
+                <RadzenLabel Text="Start date" />
+            </div>
+            <div class="col">
+                <RadzenDatePicker Name="StartDate" DateFormat="d" @bind-Value="run.StartDate" /><br>
+                <RadzenRequiredValidator Component="StartDate" Text="Start date is required" Popup=true Style="position: absolute" />
             </div>
         </div>
-    </RadzenCard>);
+
+        <div class="row" style="margin-bottom: 48px">
+            <div class="col-md-4 align-right">
+                <RadzenLabel Text="End date" />
+            </div>
+            <div class="col">
+                <RadzenDatePicker Name="EndDate" DateFormat="d" @bind-Value="run.EndDate" /><br>
+                <RadzenRequiredValidator Component="EndDate" Text="End date is required" Popup=true Style="position: absolute" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenTemplateForm>
+    );
 
 
-void OnSubmit(Run run)
-{
-Console.WriteLine("YEY!");
-this.dialogService.Close(true);
+        public void OnSubmit(DateTime Start, DateTime End)
+        {
+            Run RunObj = new Run() { StartDate = Start, EndDate = End };
+            Console.WriteLine("YEY!");
+            this.dialogService.Close(true);
+            dbContext.Runs.Add(RunObj);
+            dbContext.SaveChanges();
+            table.Reload();
 
-}
+        }
 
-void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
-{
-Console.WriteLine("AW");
-}
+        void OnInvalidSubmit()
+        {
+            Console.WriteLine("AW");
+        }
 
 }
