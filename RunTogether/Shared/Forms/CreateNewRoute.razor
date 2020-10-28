@@ -1,9 +1,31 @@
 ﻿@inject DialogService dialogService
 @inject IJSRuntime JSRuntime
 
-<p>CreateNewRoute</p>
 
-<div id="mapid"></div>
+<div class="row">
+    <div class="col-md-12">
+        <h3>Rutens navn:</h3>
+        <RadzenTextBox Placeholder="Indtast navn" Style="margin-bottom: 20px; width: 200px" Change="@(args => Change(args, ""))" />
+    </div>
+</div>
+<div class="row">
+     <div id="mapid" ; style="height: 200px"></div>
+</div>
+<div class="row">
+        @*<RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
+        AllowSorting="true" Data="@employees" TItem="Employee" ColumnWidth="200px">*@
+    <RadzenGrid AllowPaging="true" PageSize="4" TItem="Stage" ColumnWidth="200px">
+        <Columns>
+            <RadzenGridColumn TItem="Stage" Property="StageName" Title="Segmentnavn" />
+            <RadzenGridColumn TItem="Stage" Property="StartLocation" Title="Startlokation" />
+            <RadzenGridColumn TItem="Stage" Property="EndLocation" Title="Slutlokation" />
+            <RadzenGridColumn TItem="Stage" Property="StartDate" Title="Startdato" />
+            <RadzenGridColumn TItem="Stage" Property="Sponsor" Title="Sponsor" />
+            <RadzenGridColumn TItem="Stage" Property="SponsorContribution" Title="Sponsorbidrag" />
+            <RadzenGridColumn TItem="Stage" Property="SponsorImage" Title="Sponsorlogo" />
+        </Columns>
+    </RadzenGrid>
+</div>
 
     @code {
 
@@ -17,5 +39,20 @@
                 firstRender = false;
             }
         }
+
+        Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
+
+        void Change(string value, string name)
+        {
+            events.Add(DateTime.Now, $"{name} value changed to {value}");
+            StateHasChanged();
+        }
+
+        IEnumerable<Stage> Stages;
+
+        //protected override void OnInitialized()
+        //{
+        //    employees = dbContext.Employees;
+        //}
 
     }
