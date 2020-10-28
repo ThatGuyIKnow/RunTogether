@@ -62,15 +62,7 @@ function addPolyline(latlngs) {
     let polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
     mymap.fitBounds(polyline.getBounds());
 
-    /*    let latlngs = [
-            [57.0117789, 9.9907118],
-            [57.0123239, 9.9939051],
-            [57.0123239, 9.9939051]
-        ];
-    */
-    /*    let polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
-    */
-    console.log("To marker? tak");
+    console.log("Add polyline");
 }
 
 

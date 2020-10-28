@@ -4,11 +4,6 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-#mapid {
-    height: 750px;
-    width: 100%;
-}
-
 a, .btn-link {
     color: #0366d6;
 }

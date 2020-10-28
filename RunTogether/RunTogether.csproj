@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="npm --prefix $(ProjectDir)JsLib run build" />
+        <Exec Command="npm --prefix $(ProjectDir)JsLib run build" />
   </Target>
 
 </Project>
