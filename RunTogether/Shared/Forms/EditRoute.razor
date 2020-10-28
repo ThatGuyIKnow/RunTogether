@@ -1,4 +1,6 @@
 ﻿@inject DialogService dialogService
+@using RunTogether.Data
+@inject ApplicationDbContext applicationDbContext 
 
 <p>Vælg segment for at redigere.</p>
 
@@ -7,7 +9,15 @@
         <h3>Vælg segment:</h3>
     </div>
     <div class="col-md-9">
-        <RadzenDropDown AllowClear="true" TValue="string" Style="margin-bottom: 20px; width: 200px" Change="@(args => Change("string", "DropDown"))" />
+        <RadzenDropDown AllowClear="true" TValue="string" Style="margin-bottom: 20px; width: 200px" Change="@(args => ChangeBound("string", "DropDown"))" />
+
+        @*Kan måske bruges til at populate dropdown-listen:*@
+        @*<RadzenDropDown AllowClear="true" Data="@stages" TValue="string" TextProperty="StageName" ValueProperty="StageID" Style="margin-bottom: 20px; width:200px;" Change="@(args => Change("string", "DropDown with bound Value"))" />*@
+       
+        
+        @*EXEMPEL:*@
+        @*<RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data="@products" @bind-Value="myModel.MyValue"*@
+        @*TextProperty="ProductName" ValueProperty="ProductID" Style="margin-bottom: 20px; width:400px;" Change="@(args => ChangeBound(args, "DropDown with bound Value"))" />*@
     </div>
 </div>
 
@@ -62,11 +72,28 @@
 </div>
 
 @code {
+
+    IEnumerable<Stage> stages;
+
+
+    protected override void OnInitialized()
+    {
+        //customers = dbContext.Customers.ToList(); <- exempel fra https://blazor.radzen.com/dropdown
+
+        stages = applicationDbContext.Stages.ToList();  //måske?
+    }
+
     string value;
 
     Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
 
     void Change(string value, string name)
+    {
+        events.Add(DateTime.Now, $"{name} value changed to {value}");
+        StateHasChanged();
+    }
+
+    void ChangeBound(object value, string name)
     {
         events.Add(DateTime.Now, $"{name} value changed to {value}");
         StateHasChanged();
