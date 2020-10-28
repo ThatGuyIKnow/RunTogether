@@ -3,17 +3,19 @@
 
 <p>CreateNewRoute</p>
 
-<button type="button" class="btn btn-primary" @onclick="testFunction">
-    Test the map
-</button>
+<div id="mapid"></div>
 
-@code {
+    @code {
 
-    public async Task testFunction()
-    {
-        await JSRuntime.InvokeAsync<Task>("Main.leaflet_start");
+        //ElementReference mapid;
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                await JSRuntime.InvokeVoidAsync("Main.leaflet_start");
+                firstRender = false;
+            }
+        }
 
     }
-
-
-}
