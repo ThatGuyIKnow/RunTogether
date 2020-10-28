@@ -1,0 +1,101 @@
+﻿@inject DialogService dialogService
+@using RunTogether.Data
+@inject ApplicationDbContext applicationDbContext 
+
+<p>Vælg segment for at redigere.</p>
+
+<div class="row">
+    <div class="col-md-3">
+        <h3>Vælg segment:</h3>
+    </div>
+    <div class="col-md-9">
+        <RadzenDropDown AllowClear="true" TValue="string" Style="margin-bottom: 20px; width: 200px" Change="@(args => ChangeBound("string", "DropDown"))" />
+
+        @*Kan måske bruges til at populate dropdown-listen:*@
+        @*<RadzenDropDown AllowClear="true" Data="@stages" TValue="string" TextProperty="StageName" ValueProperty="StageID" Style="margin-bottom: 20px; width:200px;" Change="@(args => Change("string", "DropDown with bound Value"))" />*@
+       
+        
+        @*EXEMPEL:*@
+        @*<RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data="@products" @bind-Value="myModel.MyValue"*@
+        @*TextProperty="ProductName" ValueProperty="ProductID" Style="margin-bottom: 20px; width:400px;" Change="@(args => ChangeBound(args, "DropDown with bound Value"))" />*@
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <h3>Tilføj billede:</h3>
+    </div>
+    <div class="col-md-9">
+        <RadzenButton Click="@((args) => dialogService.Close(true))" Style="margin-bottom: 10px; width: 200px">Vælg billede</RadzenButton>
+        <br />
+        <br />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <h3>Informationsbox:</h3>
+        <br />
+    </div>
+    <div class="col-md-9">
+        <RadzenTextArea Placeholder="Skriv text her..." Change="@(args => Change(args, "TextArea with placeholder"))" Style="margin-bottom: 20px; width: 200px" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <h3>Startlokation:</h3>
+        <br />
+        <h3>Slutlokation:</h3>
+    </div>
+    <div class="col-md-9">
+        <RadzenTextBox Placeholder="Indtast adresse" Style="margin-bottom: 20px; width: 200px" Change="@(args => Change(args, ""))" />
+        <br />
+        <RadzenTextBox Placeholder="Indtast adresse" Style="margin-bottom: 20px; width: 200px" Change="@(args => Change(args, ""))" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <h3>Ret løbere:</h3>
+    </div>
+    <div class="col-md-9">
+        <RadzenDropDown AllowClear="true" TValue="string" Style="margin-bottom: 20px; width: 200px" Change="@(args => Change("string", "DropDown"))" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <RadzenButton Click="@((args) => dialogService.Close(true))" Text="Gem" Style="margin-bottom: 10px; width: 150px" />
+        <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Annuller" Style="margin-bottom: 10px; width: 150px" />
+    </div>
+</div>
+
+@code {
+
+    IEnumerable<Stage> stages;
+
+
+    protected override void OnInitialized()
+    {
+        //customers = dbContext.Customers.ToList(); <- exempel fra https://blazor.radzen.com/dropdown
+
+        stages = applicationDbContext.Stages.ToList();  //måske?
+    }
+
+    string value;
+
+    Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
+
+    void Change(string value, string name)
+    {
+        events.Add(DateTime.Now, $"{name} value changed to {value}");
+        StateHasChanged();
+    }
+
+    void ChangeBound(object value, string name)
+    {
+        events.Add(DateTime.Now, $"{name} value changed to {value}");
+        StateHasChanged();
+    }
+}

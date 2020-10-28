@@ -1,4 +1,10 @@
 ﻿
+﻿import { QrScannerClass } from './qrScanner'
+import "../styles/qrScanner.css";
+
+export const QrScanner = new QrScannerClass();
+
+
 export function test() {
     console.log("Funktion som tester om der er forbindelse");
 }

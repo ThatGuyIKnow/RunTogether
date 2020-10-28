@@ -1,0 +1,35 @@
+﻿@using RunTogether.Shared.Etc
+@using RunTogether.Shared.Forms
+
+@inherits LayoutComponentBase
+
+<div class="sidebar">
+    <NavMenuRunner />
+</div>
+
+<div class="main">
+    <div class="top-row px-4 auth">
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
+        <LoginDisplay />
+    </div>
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
+
+<div class="navMobile">
+    <RadzenCard>
+        <RadzenMenu>
+            <RadzenMenuItem Text="Grib stafet" Icon="phone" Path=""></RadzenMenuItem>
+            <RadzenMenuItem Text="Rute" Icon="map" Path=""></RadzenMenuItem>
+            <RadzenMenuItem Text="Indstillinger" Icon="favorite" Path=""></RadzenMenuItem>
+        </RadzenMenu>
+    </RadzenCard>
+</div>
+
+@code {
+    public string Trademark { get; set; } =
+        "RunTogether 2020 - Designet af: SW318E20";
+
+    public string runnerStatus = "You are the active runner";
+}

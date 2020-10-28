@@ -1,4 +1,8 @@
 ﻿@page "/"
+@using RunTogether.Shared.QR
+@using RunTogether.Shared.Etc 
+
+@inject RunTogether.Data.ApplicationDbContext dbContext
 
 @inject IJSRuntime JsRunTime
 
@@ -74,3 +78,12 @@
        at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
        at RunTogether.Pages.Index.<CreateMarker>d__8.MoveNext() in C:\Users\mads\OneDrive\C\Dokumenter\GitHub\RunTogether\RunTogether\Pages\Index.razor:line 40
 *@
+<QRGenerator code="ITSWORKING!" size="100"/>
+
+Welcome to your new app.
+
+<DataTable></DataTable>
+
+@code{
+
+}

@@ -1,0 +1,43 @@
+﻿@using QRCoder
+
+<h3>QRGenerator</h3>
+
+
+@if (qrCodeImageAsBase64 == null)
+{
+    <p>QR code failed to load...</p>
+}
+else
+{
+
+    <div>
+        <img alt="Embedded QR Code" src="data:image/bmp;base64,@qrCodeImageAsBase64" width="@size" height="@size" />
+    </div>
+
+}
+
+
+@code {
+    private string qrCodeImageAsBase64;
+
+
+    [Parameter] public string code { get; set; } = null;
+    [Parameter] public int size { get; set; } = 100;
+    [Parameter] public string color { get; set; } = "#000000";
+
+    protected override void OnParametersSet()
+    {
+        if (code != default && size != default && color != default)
+        {
+            GenQR();
+        }
+    }
+
+    private void GenQR()
+    {
+        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        QRCodeData qrCodeData = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.Q);
+        Base64QRCode qrCode = new Base64QRCode(qrCodeData);
+        qrCodeImageAsBase64 = qrCode.GetGraphic(20, color, "#ffffff", true);
+    }
+}

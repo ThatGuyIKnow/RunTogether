@@ -1,0 +1,18 @@
+﻿@using RunTogether.Shared.Etc
+@using RunTogether.Shared.Forms
+@inherits LayoutComponentBase
+<RadzenDialog />
+<div class="sidebar">
+    <NavMenu />
+</div>
+
+<div class="main">
+    <div class="top-row px-4 auth">
+        <LoginDisplay />
+        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+    </div>
+
+    <div class="content px-4">
+        @Body
+    </div>
+</div>
