@@ -1,7 +1,19 @@
 ﻿@inject DialogService dialogService
+@inject IJSRuntime JSRuntime
 
 <p>CreateNewRoute</p>
 
+<button type="button" class="btn btn-primary" @onclick="testFunction">
+    Test the map
+</button>
+
 @code {
+
+    public async Task testFunction()
+    {
+        await JSRuntime.InvokeAsync<Task>("Main.leaflet_start");
+
+    }
+
 
 }
