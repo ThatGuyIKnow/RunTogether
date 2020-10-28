@@ -1,17 +1,21 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+:root {
+    --run-together: #CC4545;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 a, .btn-link {
-    color: #0366d6;
+    color: #0366d6; /* Light Blue */
 }
 
 .btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    color: white;
+    background-color: #1b6ec2; /* Blue */
+    border-color: #1861ac; /* Dark Blue */
 }
 
 app {
@@ -31,7 +35,7 @@ app {
 }
 
     .main .top-row {
-        background-color: #f7f7f7;
+        background-color: #f7f7f7; /* Light Gray */
         border-bottom: 1px solid #d6d5d5;
         justify-content: flex-end;
     }
@@ -47,11 +51,11 @@ app {
 }
 
 .sidebar {
-    background-color: #FFFFFF;
+    background-color: white;
 }
 
     .sidebar .top-row {
-        background-color: #CC4545;
+        background-color: var(--run-together);
     }
 
     .sidebar .navbar-brand {
@@ -88,12 +92,12 @@ app {
         }
 
             .sidebar .nav-item a.active {
-                background-color: #CC4545;
+                background-color: var(--run-together);
                 color: white;
             }
 
             .sidebar .nav-item a:hover {
-                background-color: #CC4545;
+                background-color: var(--run-together);
                 color: white;
             }
 
@@ -102,7 +106,7 @@ app {
 }
 
 .navbar-toggler {
-    background-color: #CC4545;
+    background-color: var(--run-together);
 }
 
 .valid.modified:not([type=checkbox]) {
