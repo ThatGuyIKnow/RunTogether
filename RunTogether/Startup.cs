@@ -19,6 +19,7 @@ using RunTogether.Data;
 using Radzen;
 using RunTogether.Areas.Identity.Helpers;
 using RunTogether.Shared.QR.QRScanner;
+using Radzen;
 
 namespace RunTogether
 {
@@ -59,6 +60,9 @@ namespace RunTogether
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
+            services.AddSingleton<WeatherForecastService>();
+
+            services.AddScoped<DialogService>();
         }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

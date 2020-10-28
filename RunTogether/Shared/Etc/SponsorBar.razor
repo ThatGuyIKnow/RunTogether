@@ -1,23 +1,21 @@
 ﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">RunTogether</a>
+    <a class="navbar-brand" href="">Sponsors</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
     </button>
 </div>
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            Sponsor 1
-        </li>
-        <li class="nav-item px-3">
-            Sponsor 2
-        </li>
+    <ul>
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/icon1.png" Style="width:100%" />
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/icon4.png" Style="width:100%" />
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/icon5.png" Style="width:100%" />
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png" Style="width:100%" />
     </ul>
 </div>
 
 @code {
-    private bool collapseNavMenu = true;
+    private bool collapseNavMenu = false;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
