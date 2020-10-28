@@ -34,6 +34,34 @@ namespace RunTogether.Data
             modelBuilder.Entity<Stage>()
                 .HasOne(s => s.EndPoint)
                 .WithOne(sp => sp.Stage);
+
+            modelBuilder.Entity<Stage>()
+                .HasMany(s => s.ThroughPoints)
+                .WithOne(t => t.Stage);
+
+            modelBuilder.Entity<StartPoint>()
+                .HasOne(sp => sp.Stage)
+                .WithOne(s => s.StartPoint);
+            
+            modelBuilder.Entity<EndPoint>()
+                .HasOne(e => e.Stage)
+                .WithOne(s => s.EndPoint);
+            
+            modelBuilder.Entity<ThroughPoint>()
+                .HasOne(t => t.Stage)
+                .WithMany(s => s.ThroughPoints);
+
+            modelBuilder.Entity<RunRoute>()
+                .HasMany(rr => rr.Stages)
+                .WithOne(s => s.RunRoute);
+
+            modelBuilder.Entity<RunRoute>()
+                .HasOne(rr => rr.Run)
+                .WithOne(r => r.Route);
+
+            modelBuilder.Entity<Run>()
+                .HasOne(r => r.Route)
+                .WithOne(rr => rr.Run);
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
