@@ -8,9 +8,6 @@
 @inject DialogService dialogService
 
 <h3>DataTable</h3>
-<RadzenButton Text=@($"New run") Click="@((args) => dialogService.Open<CreateRunDialog>($"New run",
-                        new Dictionary<string, object>(),
-                        new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" }))" />
 
 <RadzenButton Text=@($"Show simple dialog") Click="@ShowSimpleDialog" />
 
