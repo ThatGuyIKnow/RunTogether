@@ -1,0 +1,16 @@
+﻿@page "/runner"
+
+@layout RunTogether.Shared.Layouts.RunnerLayout
+
+@using RunTogether.Shared.QR.QRScanner
+
+
+
+<h3>Runner</h3>
+
+<QRScanner OnCodeScanned="((v) => { qrCode = v; })" />
+
+@code {
+    private int currentCount = 0;
+    private string qrCode = "";
+}
