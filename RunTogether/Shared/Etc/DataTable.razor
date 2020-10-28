@@ -3,15 +3,19 @@
 @using System.Collections.Generic
 @using RunTogether.Data
 @using RunTogether.Pages
+@using Microsoft.AspNetCore.Identity
+@using RunTogether.Areas.Identity.Helpers
+@using RunTogether.Areas.Identity
 
 @inject ApplicationDbContext dbContext
+@inject UserManager<ApplicationUser> userManager
 @inject DialogService dialogService
 
 <h3>DataTable</h3>
 
 <RadzenButton Text=@($"Show simple dialog") Click="@ShowSimpleDialog" />
 
-<RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => Selected = args)">
+<RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => fuckvs(args))">
     <Columns>
         <RadzenGridColumn TItem="Run" Property="ID" Title="ID"></RadzenGridColumn>
         <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Date"></RadzenGridColumn>
@@ -23,16 +27,14 @@
 <RadzenTabs>
     <Tabs>
         <RadzenTabsItem Text="Order Details">
-            <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@(new List<Run>(){Selected})" TItem="Run">
+            <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
                 <Columns>
-                    <RadzenGridColumn TItem="Run" Property="run.EndDate" Title="Unit Price" />
-                    <RadzenGridColumn TItem="Run" Property="run.ID" Title="Order" />
-                    <RadzenGridColumn TItem="Run" Property="run.StartDate" Title="Product" />
+                    <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Unit Price" />
                 </Columns>
             </RadzenGrid>
         </RadzenTabsItem>
         <RadzenTabsItem Text="Products">
-            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@(new List<Run>(){Selected})" TItem="Run" PageSize="10">
+            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@runs" TItem="Run" PageSize="10">
                 <Template Context="detail">
                     <RadzenCard Style="width:100px;height:100px">
                         Product:
@@ -49,19 +51,37 @@
 
 
 @code {
-   
-    Run Selected = new Run();
-    IQueryable<Run> Selecteds;
-
-    RadzenGrid<Run> table;
-
-    IEnumerable<Run> runs;
 
     Run run = new Run();
 
+    RadzenGrid<Run> table;
+
+    IQueryable<Run> runs;
+
+    List<ApplicationUser> runners; 
+
     protected override void OnInitialized()
     {
+
         runs = dbContext.Runs;
+        var test = new UserCreationHelper(  userManager, dbContext);
+        test.CreateRunner("Frederik", "Deiborg", "hej@gmail.com", runs.First());
+
+    }
+
+    public void fuckvs(Run args)
+    {
+        run = args;
+        runners = dbContext.Users
+            .Where(u => u.RunId == run.ID)
+            .ToList();
+
+        foreach (var runner in runners)
+        {
+
+            Console.WriteLine(runner);
+
+        }
     }
 
     async Task ShowSimpleDialog() => await dialogService.OpenAsync("Simple Dialog", ds =>
@@ -97,20 +117,20 @@
     );
 
 
-        public void OnSubmit(DateTime Start, DateTime End)
-        {
-            Run RunObj = new Run() { StartDate = Start, EndDate = End };
-            Console.WriteLine("YEY!");
-            this.dialogService.Close(true);
-            dbContext.Runs.Add(RunObj);
-            dbContext.SaveChanges();
-            table.Reload();
+    public void OnSubmit(DateTime Start, DateTime End)
+    {
+        Run RunObj = new Run() { StartDate = Start, EndDate = End };
+        Console.WriteLine("YEY!");
+        this.dialogService.Close(true);
+        dbContext.Runs.Add(RunObj);
+        dbContext.SaveChanges();
+        table.Reload();
 
-        }
+    }
 
-        void OnInvalidSubmit()
-        {
-            Console.WriteLine("AW");
-        }
+    void OnInvalidSubmit()
+    {
+        Console.WriteLine("AW");
+    }
 
 }
