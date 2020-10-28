@@ -1,7 +1,7 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 :root {
-    --run-together: #CC4545;
+    --run-together: #CC4545; /* RunTogether Red */
 }
 
 html, body {
@@ -45,10 +45,10 @@ app {
             margin-left: 1.5rem;
         }
 
-.main .top-row a:first-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+        .main .top-row a:first-child {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
 .sidebar {
     background-color: white;
@@ -133,12 +133,12 @@ app {
     z-index: 1000;
 }
 
-#blazor-error-ui .dismiss {
-    cursor: pointer;
-    position: absolute;
-    right: 0.75rem;
-    top: 0.5rem;
-}
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }
 
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
@@ -148,7 +148,7 @@ app {
     .sidebar {
         display: none;
     }
-    
+
     a {
         margin: 0 10px 0 10px;
     }
