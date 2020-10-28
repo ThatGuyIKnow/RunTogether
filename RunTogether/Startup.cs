@@ -17,6 +17,7 @@ using RunTogether.Areas.Identity;
 using RunTogether.Data;
 using Radzen;
 using RunTogether.Shared.QR.QRScanner;
+using Radzen;
 
 namespace RunTogether
 {
@@ -45,6 +46,9 @@ namespace RunTogether
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<DialogService>();
             services.AddTransient<PromiseHelper>();
+            services.AddSingleton<WeatherForecastService>();
+
+            services.AddScoped<DialogService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
