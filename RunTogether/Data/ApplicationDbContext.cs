@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using RunTogether.Areas.Identity;
 
 namespace RunTogether.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
 
         public DbSet<Run> Runs { get; set; }
@@ -19,6 +21,9 @@ namespace RunTogether.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+
             //modelBuilder.Entity<Post>()
             //    .HasOne(p => p.Blog)
             //    .WithMany(b => b.Posts);
@@ -62,10 +67,17 @@ namespace RunTogether.Data
             modelBuilder.Entity<Run>()
                 .HasOne(r => r.Route)
                 .WithOne(rr => rr.Run);
+
+            modelBuilder.Entity<Run>()
+                .HasMany(r => r.Runners)
+                .WithOne(rr => rr.Run);
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
+        {
+        }
+        public ApplicationDbContext() : base()
         {
         }
     }

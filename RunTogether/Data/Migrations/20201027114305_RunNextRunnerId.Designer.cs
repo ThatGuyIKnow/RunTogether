@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunTogether.Data;
 
 namespace RunTogether.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201027114305_RunNextRunnerId")]
+    partial class RunNextRunnerId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -48,15 +50,15 @@ namespace RunTogether.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "runner",
-                            ConcurrencyStamp = "cf0cc906-abff-4c71-b14f-c5edb054e203",
+                            Id = "bb84aef6-18db-4ea7-8c5f-543de6d7947b",
+                            ConcurrencyStamp = "dfbc3575-e000-4501-9645-6209e35b3d9e",
                             Name = "Runner",
                             NormalizedName = "RUNNER"
                         },
                         new
                         {
-                            Id = "organiser",
-                            ConcurrencyStamp = "3a94d61f-f55c-45f3-9d16-1294f8a4671b",
+                            Id = "fe04126a-4943-4af4-87ab-188ebac56715",
+                            ConcurrencyStamp = "5ebe28db-9d61-4487-bc36-7b3a6a849597",
                             Name = "Organiser",
                             NormalizedName = "ORGANISER"
                         });
@@ -220,7 +222,7 @@ namespace RunTogether.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("RunId")
+                    b.Property<int?>("RunID")
                         .HasColumnType("int");
 
                     b.Property<int>("RunnerId")
@@ -246,7 +248,7 @@ namespace RunTogether.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("RunId");
+                    b.HasIndex("RunID");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -413,9 +415,9 @@ namespace RunTogether.Data.Migrations
 
             modelBuilder.Entity("RunTogether.Areas.Identity.ApplicationUser", b =>
                 {
-                    b.HasOne("RunTogether.Run", "Run")
+                    b.HasOne("RunTogether.Run", null)
                         .WithMany("Runners")
-                        .HasForeignKey("RunId");
+                        .HasForeignKey("RunID");
                 });
 
             modelBuilder.Entity("RunTogether.Data.EndPoint", b =>
