@@ -8,6 +8,7 @@
 @using RunTogether.Areas.Identity
 @using RunTogether.Shared.QR
 
+@inject IJSRuntime jsRuntime
 @inject ApplicationDbContext dbContext
 @inject UserManager<ApplicationUser> userManager
 @inject DialogService dialogService
@@ -52,7 +53,12 @@
 
                 <RadzenTabsItem Text="QR Kode">
                     <div>
-                        <QRGenerator code="@QRString" size="50%" />
+                        <a title="print screen" alt="print screen" @onclick="PrintImage">klik for print</a>
+                        <RadzenDropDown @bind-Value="color" AllowClear="true" TValue="string" Data="@colorList" TextProperty="Name" ValueProperty="code" Style="margin-bottom: 20px" />
+                        
+                        <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
+
+                        <QRGenerator code="@QRString" size=@($"{slider}%") color="@color"/>
                     </div>               
                 </RadzenTabsItem>
             </Tabs>
@@ -60,12 +66,26 @@
     </div>
 </div>
 
-
-
-
 @code {
 
-    private string QRString = "";
+    void PrintImage()
+    {
+        jsRuntime.InvokeVoidAsync("Main.Common.PrintImage", "QRCodeImg");
+    }
+
+
+    public class Farver
+    {
+        public string Name { get; set; }
+        public string code { get; set; }
+    }
+
+    List<Farver> colorList = new List<Farver>();
+
+    //Variabler for QRCode gen
+    string color = "#000000";
+    int slider = 50;
+    private string QRString = default;
 
     //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
     RadzenGrid<Run> table;
@@ -73,7 +93,7 @@
     //henter hele data table ned og filtere client-side, men der laves ingen filtering her, så det er fint.
     IEnumerable<Run> runs;
 
-    //alt querying bliver laver i DB og kun det relevante data sendes til client.
+    //alt querying bliver lavet i DB og kun det relevante data sendes til client.
     IQueryable<ApplicationUser> runners;
 
 
@@ -82,16 +102,19 @@
         runs = dbContext.Runs;
         var test = new UserCreationHelper(userManager, dbContext);
 
-        dbContext.Runs.Add(new Run { Name = "Løb 1", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1), QRString = "test code" });
-        dbContext.Runs.Add(new Run { Name = "Løb 2", StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(3), QRString = "ajuf_££$dafdf" });
-        dbContext.Runs.Add(new Run { Name = "Løb 3", StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(5), QRString = "asdafgds" });
-        dbContext.SaveChanges();
-        await test.CreateRunner("Frederik", "Deiborg", "HejMedDig@gmail.com", runs.ElementAt(0));
-        await test.CreateRunner("Oliver", "Hansen", "Coolguy@gmail.com", runs.ElementAt(0));
-        await test.CreateRunner("Kurt", "C.Kode", "CisGod@gmail.com", runs.ElementAt(1));
-        await test.CreateRunner("Mads", "Madsen", "SejtNavnGod@gmail.com", runs.ElementAt(1));
-        await test.CreateRunner("Ran", "D.Om", "RandomMaild@gmail.com", runs.ElementAt(1));
-        await test.CreateRunner("All", "Alone", "Lonely@gmail.com", runs.ElementAt(2));
+        colorList.Add(new Farver() { Name = "RT rød", code = "#cc4545" });
+        colorList.Add(new Farver() { Name = "Sort", code = "#000000" });
+
+        //dbContext.Runs.Add(new Run { Name = "Løb 1", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1), QRString = "test code" });
+        //dbContext.Runs.Add(new Run { Name = "Løb 2", StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(3), QRString = "ajuf_££$dafdf" });
+        //dbContext.Runs.Add(new Run { Name = "Løb 3", StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(5), QRString = "asdafgds" });
+        //dbContext.SaveChanges();
+        //await test.CreateRunner("Frederik", "Deiborg", "HejMedDig@gmail.com", runs.ElementAt(0));
+        //await test.CreateRunner("Oliver", "Hansen", "Coolguy@gmail.com", runs.ElementAt(0));
+        //await test.CreateRunner("Kurt", "C.Kode", "CisGod@gmail.com", runs.ElementAt(1));
+        //await test.CreateRunner("Mads", "Madsen", "SejtNavnGod@gmail.com", runs.ElementAt(1));
+        //await test.CreateRunner("Ran", "D.Om", "RandomMaild@gmail.com", runs.ElementAt(1));
+        //await test.CreateRunner("All", "Alone", "Lonely@gmail.com", runs.ElementAt(2));
     }
 
     public void QueryForRunners(Run QueryRun)
@@ -106,41 +129,61 @@
     Run run = new Run();
 
     async Task ShowSimpleDialog() => await dialogService.OpenAsync("Simple Dialog", ds =>
-    @<RadzenTemplateForm TItem="Run" Data="@run" Submit="()=> OnSubmit(run.StartDate, run.EndDate)" InvalidSubmit="()=> OnInvalidSubmit()">
+    @<RadzenTemplateForm TItem="Run" Data="@run" Submit="()=> OnSubmit(run.Name, run.StartDate, run.EndDate, run.QRString)" InvalidSubmit="()=> OnInvalidSubmit()">
 
-        <div class="row" style="margin-bottom: 48px">
-            <div class="col-md-4 align-right">
-                <RadzenLabel Text="Start date" />
-            </div>
-            <div class="col">
-                <RadzenDatePicker Name="StartDate" DateFormat="d" @bind-Value="run.StartDate" /><br>
-                <RadzenRequiredValidator Component="StartDate" Text="Start date is required" Popup=true Style="position: absolute" />
-            </div>
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="Løb navn" />
         </div>
+        <div class="col">
+            <RadzenTextBox Name="Name" @bind-Value="run.Name" /><br>
+            <RadzenRequiredValidator Component="Name" Text="Navn skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
+    </div>
 
-        <div class="row" style="margin-bottom: 48px">
-            <div class="col-md-4 align-right">
-                <RadzenLabel Text="End date" />
-            </div>
-            <div class="col">
-                <RadzenDatePicker Name="EndDate" DateFormat="d" @bind-Value="run.EndDate" /><br>
-                <RadzenRequiredValidator Component="EndDate" Text="End date is required" Popup=true Style="position: absolute" />
-            </div>
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="Start dato" />
         </div>
+        <div class="col">
+            <RadzenDatePicker Name="StartDate" DateFormat="d" @bind-Value="run.StartDate" /><br>
+            <RadzenRequiredValidator Component="StartDate" Text="Start dato skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
+    </div>
 
-        <div class="row">
-            <div class="col-md-12">
-                <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
-                <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
-            </div>
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="Slut dato" />
         </div>
-    </RadzenTemplateForm>
+        <div class="col">
+            <RadzenDatePicker Name="EndDate" DateFormat="d" @bind-Value="run.EndDate" /><br>
+            <RadzenRequiredValidator Component="EndDate" Text="Slut dato skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="QR Kode" />
+        </div>
+        <div class="col">
+            <RadzenTextBox Name="QRString" @bind-Value="run.QRString" /><br>
+            <RadzenRequiredValidator Component="QRString" Text="QR Kode skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+            <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
+        </div>
+    </div>
+</RadzenTemplateForm>
     );
 
 
-    public void OnSubmit(DateTime Start, DateTime End)
+    public void OnSubmit(String RunName, DateTime Start, DateTime End, String QR)
     {
-        Run RunObj = new Run() { StartDate = Start, EndDate = End };
+        Run RunObj = new Run() {Name = RunName, StartDate = Start, EndDate = End, QRString = QR };
         Console.WriteLine("YEY!");
         this.dialogService.Close(true);
         dbContext.Runs.Add(RunObj);

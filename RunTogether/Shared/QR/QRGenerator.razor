@@ -8,7 +8,7 @@ else
 {
 
     <div>
-        <img alt="Embedded QR Code" src="data:image/bmp;base64,@qrCodeImageAsBase64" width="@size" height="@size" />
+        <img id="QRCodeImg" alt="Embedded QR Code" src="data:image/bmp;base64,@qrCodeImageAsBase64" width="@size" height="@size" />
     </div>
 
 }
@@ -35,6 +35,6 @@ else
         QRCodeGenerator qrGenerator = new QRCodeGenerator();
         QRCodeData qrCodeData = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.Q);
         Base64QRCode qrCode = new Base64QRCode(qrCodeData);
-        qrCodeImageAsBase64 = qrCode.GetGraphic(20, color, "#ffffff", true);
+        qrCodeImageAsBase64 = qrCode.GetGraphic(30, color, "#ffffff", true);
     }
 }
