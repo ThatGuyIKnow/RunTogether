@@ -1,9 +1,12 @@
-﻿/* Close the sidebar */
-function navbarToggleOpen() {
-    document.getElementById("sidebarId").style.width = 200;
-}
+﻿export class NavigationalBarHideFunctionality
+{
+    /* Close the sidebar */
+    navbarToggleOpen(style) {
+        document.getElementById(style.id).style[style.attribute] = style.value;
+    }
 
-/* Open the sidebar */
-function navbarToggleClose() {
-    document.getElementById("sidebarId").style.width = 0;
+    /* Open the sidebar */
+    navbarToggleClose(style) {
+        document.getElementById(style.id).style[style.attribute] = style.value;
+    }
 }

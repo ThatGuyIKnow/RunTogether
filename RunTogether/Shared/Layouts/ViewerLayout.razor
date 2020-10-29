@@ -4,24 +4,13 @@
 @inherits LayoutComponentBase
 
 <div class="sidebar" id="sidebarId">
-    <div class="top-row pl-4 navbar navbar-dark">
-        <a class="navbar-brand" href="">Sponsors</a>
-    </div>
-
-    <div>
-        <ul>
-            <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/icon1.png" Style="width:100%" />
-            <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/icon4.png" Style="width:100%" />
-            <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/icon5.png" Style="width:100%" />
-            <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png" Style="width:100%" />
-        </ul>
-    </div>
+    <SponsorBar/>
 </div>
 
 <div class="main">
     <div class="top-row px-4 auth">
         <button class="navbar-toggler" @onclick="toggleNav">
-            <span class="oi-menu"></span>
+            <span class="oi oi-menu"></span>
         </button>
         <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
     </div>
@@ -34,17 +23,19 @@
 @code {
     bool collapseNavMenu = true;
 
+    string navId = "sidebarId";
+
     async Task toggleNav()
     {
         collapseNavMenu = !collapseNavMenu;
 
         if (collapseNavMenu == true)
         {
-            await JSRuntime.InvokeVoidAsync("navbarToggleOpen");
+            await JSRuntime.InvokeVoidAsync("Main.navbar.navbarToggleOpen", new { id = navId, attribute = "width", value = "250px" });
         }
         else
         {
-            await JSRuntime.InvokeVoidAsync("navbarToggleClose");
+            await JSRuntime.InvokeVoidAsync("Main.navbar.navbarToggleClose", new { id = navId, attribute = "width", value = "0" });
         }
     }
 }
