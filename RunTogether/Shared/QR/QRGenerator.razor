@@ -1,8 +1,5 @@
 ﻿@using QRCoder
 
-<h3>QRGenerator</h3>
-
-
 @if (qrCodeImageAsBase64 == null)
 {
     <p>QR code failed to load...</p>
@@ -22,7 +19,7 @@ else
 
 
     [Parameter] public string code { get; set; } = null;
-    [Parameter] public int size { get; set; } = 100;
+    [Parameter] public string size { get; set; } = "100%";
     [Parameter] public string color { get; set; } = "#000000";
 
     protected override void OnParametersSet()
