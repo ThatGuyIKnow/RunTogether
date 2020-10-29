@@ -33,11 +33,11 @@
     {
         collapsed = !collapsed;
 
-        if (collapsed == false)
+        if (collapsed == false) /* Open */
         {
-            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle", new { id = sidebarId, attribute = "width", value = "250px" });
+            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle", new { id = sidebarId, attribute = "width", value = "250px" }); 
         }
-        else
+        else /* Close */
         {
             await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle", new { id = sidebarId, attribute = "width", value = "0" });
         }
