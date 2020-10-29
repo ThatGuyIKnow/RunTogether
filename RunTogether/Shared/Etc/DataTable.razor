@@ -29,7 +29,9 @@
         <RadzenTabsItem Text="Order Details">
             <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
                 <Columns>
-                    <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Unit Price" />
+                    <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Efternavn" />
+                    <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Fornavn" />
+                    <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email" />
                 </Columns>
             </RadzenGrid>
         </RadzenTabsItem>
@@ -58,14 +60,19 @@
 
     IQueryable<Run> runs;
 
-    List<ApplicationUser> runners; 
+    List<ApplicationUser> runners;
+
+    protected override async Task OnInitializedAsync()
+    {
+        runs = dbContext.Runs;
+        var test = new UserCreationHelper(userManager, dbContext);
+        await test.CreateRunner("test", "123", "he123123j@gmail.com", runs.First());
+    }
 
     protected override void OnInitialized()
     {
 
-        runs = dbContext.Runs;
-        var test = new UserCreationHelper(  userManager, dbContext);
-        test.CreateRunner("Frederik", "Deiborg", "hej@gmail.com", runs.First());
+
 
     }
 
