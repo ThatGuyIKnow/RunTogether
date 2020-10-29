@@ -1,22 +1,36 @@
 ﻿@using RunTogether.Shared.Etc
 @using RunTogether.Shared.Forms
 
+@inject IJSRuntime JSRuntime
+
 @inherits LayoutComponentBase
 
-<div class="sidebar">
+<!-- Desktop navigation bar -->
+<div class="sidebar" id="navBarId">
     <NavMenuRunner />
 </div>
 
 <div class="main">
     <div class="top-row px-4 auth">
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
+        <!-- Sidebar toggle open/close button -->
+        <button class="navbar-toggler navbar-toggler-left" @onclick="toggleSidebar">
+            <span class="oi oi-menu"></span>
+        </button>
+
+        <!-- RunTogether logo -->
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png"
+                     Style="width:200px" class="logo"></RadzenImage>
+
         <LoginDisplay />
     </div>
+    
+    <!-- Main content -->
     <div class="content px-4">
         @Body
     </div>
 </div>
 
+<!-- Mobile navigation bar -->
 <div class="navMobile">
     <RadzenCard>
         <RadzenMenu>
@@ -29,4 +43,25 @@
 
 @code {
     public string runnerStatus = "You are the active runner";
+
+    /* Keeps track of whether sidebar is collapsed or not. By default not collapsed */
+    bool collapsed = false;
+
+    string sidebarId = "navBarId";
+
+    async Task toggleSidebar()
+    {
+        collapsed = !collapsed;
+
+        if (collapsed == false) /* Open */
+        {
+            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle",
+                new { id = sidebarId, attribute = "width", value = "15rem" });
+        }
+        else /* Close */
+        {
+            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle",
+                new { id = sidebarId, attribute = "width", value = "0" });
+        }
+    }
 }

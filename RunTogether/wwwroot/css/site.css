@@ -203,9 +203,18 @@ app {
     }
 }
 
+.navbar-toggler-left {
+    position: absolute;
+    left: 1rem;
+}
+
 .logo {
     position: absolute;
-    left: 2%;
+    left: 5rem;
+}
+
+.logo-align-left {
+    left: 1rem;
 }
 
 .scrollable {

@@ -6,23 +6,25 @@
 
 <div class="main">
     <div class="top-row px-4 auth">
-        <!-- Sidebar toggle open/close button --> 
+        <!-- Sidebar toggle open/close button -->
         <button class="navbar-toggler" @onclick="toggleSidebar">
-            Sponsors <span class="oi oi-menu"></span>
+            <span class="oi oi-menu"></span>
         </button>
-        
+
         <!-- RunTogether logo -->
         <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png"
-                     Style="width:200px" class="logo"></RadzenImage>
+                     Style="width:200px" class="logo logo-align-left"></RadzenImage>
     </div>
 
+    <!-- Main content of the page -->
     <div class="content px-4">
-        @Body <!-- Main content of the page -->
+        @Body
     </div>
 </div>
 
+<!-- Sponsor bar -->
 <div class="sidebar" id="sponsorbarId">
-    <SponsorBar /> <!-- Sponsor bar -->
+    <SponsorBar />
 </div>
 
 @code {
