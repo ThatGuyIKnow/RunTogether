@@ -16,7 +16,7 @@ namespace RunTogether
 
         public string Name { get; set; }
 
-        public string QRstring { get; set; }
+        public string QRString { get; set; }
 
         public DateTime StartDate { get; set; }
 
