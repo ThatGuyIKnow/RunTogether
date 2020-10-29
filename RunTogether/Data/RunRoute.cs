@@ -11,6 +11,11 @@ namespace RunTogether
 
         public Run Run { get; set; }
 
+        public RunRoute()
+        {
+            Stages = new List<Stage>();
+        }
+
         public override string ToString()
         {
             return "This here sure is a route";

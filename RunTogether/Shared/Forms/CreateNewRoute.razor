@@ -1,58 +1,146 @@
 ﻿@inject DialogService dialogService
 @inject IJSRuntime JSRuntime
+@using Data
+@inject ApplicationDbContext dbContext
 
 
 <div class="row">
     <div class="col-md-12">
+        @*Skal enten slettes, eller tilføje funktionalitet der gemmer navnet i ruten*@
         <h3>Rutens navn:</h3>
-        <RadzenTextBox Placeholder="Indtast navn" Style="margin-bottom: 20px; width: 200px" Change="@(args => Change(args, ""))" />
+        <RadzenTextBox Placeholder="Indtast navn" Style="margin-bottom: 20px; width: 200px" />
     </div>
 </div>
+
 <div class="row">
-     <div id="mapid" ; style="height: 200px"></div>
+    <div id="mapid" ; style="height: 200px"></div><br />
 </div>
+
 <div class="row">
-        @*<RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" FilterMode="FilterMode.Advanced" AllowPaging="true" PageSize="4"
-        AllowSorting="true" Data="@employees" TItem="Employee" ColumnWidth="200px">*@
-    <RadzenGrid AllowPaging="true" PageSize="4" TItem="Stage" ColumnWidth="200px">
+    @*Button that allows for adding a new stage, via the ShowAddStageDialog*@
+    <RadzenButton Text=@($"Tilføj nyt segment") Click="@ShowAddStageDialog" /><br />
+
+    @*Grid that shows the stages belonging to the new route*@
+    @*Skal tilføje flere felter*@
+    <RadzenGrid @ref="table" Data="@runRoute.Stages" AllowFiltering="true" AllowSorting="true" TItem="Stage" RowSelect="@(args => Selected = args)">
         <Columns>
-            <RadzenGridColumn TItem="Stage" Property="StageName" Title="Segmentnavn" />
-            <RadzenGridColumn TItem="Stage" Property="StartLocation" Title="Startlokation" />
-            <RadzenGridColumn TItem="Stage" Property="EndLocation" Title="Slutlokation" />
-            <RadzenGridColumn TItem="Stage" Property="StartDate" Title="Startdato" />
-            <RadzenGridColumn TItem="Stage" Property="Sponsor" Title="Sponsor" />
-            <RadzenGridColumn TItem="Stage" Property="SponsorContribution" Title="Sponsorbidrag" />
-            <RadzenGridColumn TItem="Stage" Property="SponsorImage" Title="Sponsorlogo" />
+            <RadzenGridColumn TItem="Stage" Property="StageId" Title="ID" />
+            <RadzenGridColumn TItem="Stage" Property="Date" Title="Startdato" />
         </Columns>
     </RadzenGrid>
+
+    <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@(new List<Stage>(){Selected})" TItem="Stage">
+        <Columns>
+            <RadzenGridColumn TItem="Stage" Property="stage.StageId" Title="ID" />
+            <RadzenGridColumn TItem="Stage" Property="stage.Date" Title="Startdato" />
+            <RadzenGridColumn TItem="Stage" Property="stage.RunRouteId" Title="RuteID" />
+        </Columns>
+    </RadzenGrid>
+
+    <RadzenButton Text=@($"Gem rute") Click="@SaveRouteChanges" Style="margin-bottom: 20px; width: 200px" />
+    <RadzenButton Text=@($"Annuller") Click="@CancelRouteChanges" Style="margin-bottom: 20px; width: 200px" />
 </div>
 
-    @code {
+    
 
-        //ElementReference mapid;
 
-        protected override async Task OnAfterRenderAsync(bool firstRender)
+@code {
+
+    ElementReference mapid;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
         {
-            if (firstRender)
-            {
-                await JSRuntime.InvokeVoidAsync("Main.leaflet_start");
-                firstRender = false;
-            }
+            await JSRuntime.InvokeVoidAsync("Main.leaflet_start");
+            firstRender = false;
         }
+    }
 
-        Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
+    Stage Selected = new Stage();
+    IQueryable<Stage> Selecteds;
 
-        void Change(string value, string name)
-        {
-            events.Add(DateTime.Now, $"{name} value changed to {value}");
-            StateHasChanged();
-        }
+    Stage stage = new Stage();
+    RadzenGrid<Stage> table;
 
-        IEnumerable<Stage> Stages;
+    RunRoute runRoute = new RunRoute();
+    Run run = new Run();
 
-        //protected override void OnInitialized()
-        //{
-        //    employees = dbContext.Employees;
-        //}
+    List<Stage> newStages = new List<Stage>();
+
+    //IEnumerable<RunRoute> runRoutes;
+    //IEnumerable<Stage> stages;
+    //protected override void OnInitialized()
+    //{
+    //    runRoutes = dbContext.RunRoutes;
+    //    stages = dbContext.Stages;
+    //}
+
+    async Task ShowAddStageDialog() => await dialogService.OpenAsync("Tilføj segment", ds =>
+        @<RadzenTemplateForm TItem="Stage" Data="@stage" Submit="()=> OnSubmit(stage.Date)" InvalidSubmit="()=> OnInvalidSubmit()">
+
+            <div class="row" style="margin-bottom: 48px">
+                <div class="col-md-4 align-right">
+                    <RadzenLabel Text="Startdato" />
+                </div>
+                <div class="col">
+                    <RadzenDatePicker Name="Date" DateFormat="d" @bind-Value="stage.Date" /><br>
+                    <RadzenRequiredValidator Component="Date" Text="Start date is required" Popup=true Style="position: absolute" />
+                </div>
+            </div>
+
+            @*<div class="row" style="margin-bottom: 48px">
+                <div class="col-md-4 align-right">
+                    <RadzenNumeric TValue="float" @bind-Value="stage.StartPoint" Placeholder="Startlokation" />
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 48px">
+                <div class="col-md-4 align-right">
+                    <RadzenNumeric TValue="float" @bind-Value="stage.EndPoint" Placeholder="Slutlokation" />
+                </div>
+            </div>*@
+
+            <div class="row">
+                <div class="col-md-12">
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+                    <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
+                </div>
+            </div>
+        </RadzenTemplateForm>
+    );
+
+    public void OnSubmit(DateTime Start)
+    {
+        Stage StageObj = new Stage() { Date = Start, RunRoute = runRoute };
+        runRoute.Stages.Add(StageObj);
+        newStages.Add(StageObj);
+        this.dialogService.Close(true);
+        table.Reload();
 
     }
+
+    void OnInvalidSubmit()
+    {
+        Console.WriteLine("AW");
+    }
+
+    public void SaveRouteChanges()
+    {
+        runRoute.Run = run; //burde laves om til at automatisk tage det run man har valgt at edit route på
+        dialogService.Close(true);
+
+        dbContext.RunRoutes.Add(runRoute);
+
+        foreach (Stage stage in newStages)
+        {
+            dbContext.Stages.Add(stage);
+        }
+
+        dbContext.SaveChanges();
+    }
+
+    public void CancelRouteChanges()
+    {
+        dialogService.Close(true);
+    }
+}
