@@ -207,3 +207,10 @@ app {
     position: absolute;
     left: 2%;
 }
+
+.scrollable {
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 100%;
+    width: auto;
+}
