@@ -54,15 +54,19 @@ export function buttonAdd() {
 
 export function buttonRemove() {
     console.log("Remove knappen er blevet trykket");
-    Remove_Layor(); 
+    Remove_Layer(); 
 }
+
+let layerGroup; 
+let overlay; 
+
 
 function addMarkers(latlngs) {
     let i = 0; 
     let segNum = 0; 
     let marker; 
 
-    let layerGroup = L.layerGroup().addTo(mymap); 
+    layerGroup = L.layerGroup().addTo(mymap);
 
     for (i = 0; i < latlngs.length; i++) {
         segNum = i + 1;
@@ -71,7 +75,7 @@ function addMarkers(latlngs) {
         layerGroup.addLayer(marker); 
     }
 
-    let overlay = { 'markers': layerGroup };
+   overlay = { 'Markers': layerGroup };
     L.control.layers(null, overlay).addTo(mymap); 
 
 /*
@@ -82,8 +86,8 @@ function addMarkers(latlngs) {
     L.marker([58.0123239, 9.9940051]).bindPopup('Start for segment 3<br />Dette segment er sponseret af FrugtKurven.</p><br/><img src="/logos/Frugtkurven_Logo.png" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);*/
 }
 
-function Remove_Layor() {
-    mymap.removeLayer(overlay)
+function Remove_Layer() {
+    mymap.removeLayer(layerGroup)
 }
 
 function addPolyline(latlngs) {
