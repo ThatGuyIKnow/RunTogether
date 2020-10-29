@@ -53,6 +53,7 @@ app {
 
 .sidebar {
     background-color: white;
+    transition: 0.5s;
 }
 
     .sidebar .top-row {
