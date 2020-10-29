@@ -34,10 +34,16 @@
     </div>
     <script src="js/main.js"></script>
     <script src="_framework/blazor.server.js"></script>
+    <script src="../JsLib/src/NavBarHide.js"></script>
     <script>
-        /* Set the width of the sidebar to "value" px */
-        window.applyStyleForElement = function (navbar) {
-            document.getElementById("sidebarId").style.width = navbar.value;
+        /* Close the sidebar */
+        function navbarToggleOpen(cssvalue) {
+            document.getElementById("sidebarId").style.width = 200;
+        }
+
+        /* Open the sidebar */
+        function navbarToggleClose() {
+            document.getElementById("sidebarId").style.width = 0;
         }
     </script>
 </body>

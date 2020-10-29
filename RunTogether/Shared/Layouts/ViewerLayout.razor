@@ -21,7 +21,7 @@
 <div class="main">
     <div class="top-row px-4 auth">
         <button class="navbar-toggler" @onclick="toggleNav">
-            <span class="navbar-toggler-icon"></span>
+            <span class="oi-menu"></span>
         </button>
         <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
     </div>
@@ -40,17 +40,11 @@
 
         if (collapseNavMenu == true)
         {
-            await JSRuntime.InvokeVoidAsync("applyStyleForElement", new
-            {
-                value = "200 px"
-            });
+            await JSRuntime.InvokeVoidAsync("navbarToggleOpen");
         }
         else
         {
-            await JSRuntime.InvokeVoidAsync("applyStyleForElement", new
-            {
-                value = "0 px"
-            });
+            await JSRuntime.InvokeVoidAsync("navbarToggleClose");
         }
     }
 }
