@@ -3,10 +3,6 @@
 
 @inherits LayoutComponentBase
 
-<div class="sidebar" id="sidebarId">
-    <SponsorBar/>
-</div>
-
 <div class="main">
     <div class="top-row px-4 auth">
         <button class="navbar-toggler" @onclick="toggleNav">
@@ -18,6 +14,10 @@
     <div class="content px-4">
         @Body
     </div>
+</div>
+
+<div class="sidebar" id="sidebarId">
+    <SponsorBar />
 </div>
 
 @code {
