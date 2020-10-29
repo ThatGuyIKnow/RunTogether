@@ -15,7 +15,8 @@
 
 <RadzenButton Text=@($"Show simple dialog") Click="@ShowSimpleDialog" />
 
-<RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => fuckvs(args))">
+@*Radzen DataGrid table with Run as datatype and runs as data source*@
+<RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
     <Columns>
         <RadzenGridColumn TItem="Run" Property="ID" Title="ID"></RadzenGridColumn>
         <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Date"></RadzenGridColumn>
@@ -24,6 +25,7 @@
     </Columns>
 </RadzenGrid>
 
+@*Radzen Card with tabs for "sub" content*@
 <RadzenTabs>
     <Tabs>
         <RadzenTabsItem Text="Order Details">
@@ -54,42 +56,34 @@
 
 @code {
 
-    Run run = new Run();
 
+
+    //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
     RadzenGrid<Run> table;
 
-    IQueryable<Run> runs;
+    //henter hele data table ned og filtere client-side, men der laves ingen filtering her, så det er fint.
+    IEnumerable<Run> runs;
 
-    List<ApplicationUser> runners;
+    //alt querying bliver laver i DB og kun det relevante data sendes til client.
+    IQueryable<ApplicationUser> runners;
+
 
     protected override async Task OnInitializedAsync()
     {
         runs = dbContext.Runs;
         var test = new UserCreationHelper(userManager, dbContext);
-        await test.CreateRunner("test", "123", "he123123j@gmail.com", runs.First());
+
+        await test.CreateRunner("test", "123", "he123123j@gmail.com", runs.ElementAt<Run>(2));
     }
 
-    protected override void OnInitialized()
+    public void QueryForRunners(Run QueryRun)
     {
-
-
-
-    }
-
-    public void fuckvs(Run args)
-    {
-        run = args;
         runners = dbContext.Users
-            .Where(u => u.RunId == run.ID)
-            .ToList();
-
-        foreach (var runner in runners)
-        {
-
-            Console.WriteLine(runner);
-
-        }
+            .Where(u => u.RunId == QueryRun.ID);
     }
+
+    //Code for create Run dialog. 
+    Run run = new Run();
 
     async Task ShowSimpleDialog() => await dialogService.OpenAsync("Simple Dialog", ds =>
     @<RadzenTemplateForm TItem="Run" Data="@run" Submit="()=> OnSubmit(run.StartDate, run.EndDate)" InvalidSubmit="()=> OnInvalidSubmit()">
