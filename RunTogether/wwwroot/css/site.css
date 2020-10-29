@@ -2,6 +2,7 @@
 
 :root {
     --run-together: #CC4545; /* RunTogether Red */
+    --background-element: #114B5F; /* Dark blue background for elements like buttons */
 }
 
 html, body {
@@ -56,6 +57,8 @@ app {
 
     .sidebar .top-row {
         background-color: var(--run-together);
+        position: sticky;
+        top: 0;
     }
 
     .sidebar .navbar-brand {
@@ -106,7 +109,11 @@ app {
 }
 
 .navbar-toggler {
-    background-color: var(--run-together);
+    background-color: var(--background-element);
+}
+
+.oi {
+    color: white;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -177,9 +184,10 @@ app {
     }
 
     .sidebar {
-        width: 250px;
+        /*        width: 250px;*/
         height: 100vh;
         position: sticky;
+        right: 0;
         top: 0;
     }
 
