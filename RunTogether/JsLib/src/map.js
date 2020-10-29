@@ -38,7 +38,7 @@ export class mapClass {
             layerGroup.addLayer(marker);
         }
 
-        polyline = L.polyline(this.latlngs, { color: 'red' });
+        polyline = L.polyline(this.latlngs, { color: '#db5d57' });
         layerGroup.addLayer(polyline).addTo(mymap);
         mymap.fitBounds(polyline.getBounds());
     }
