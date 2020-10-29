@@ -12,7 +12,8 @@ export const QrScanner = new QrScannerClass();
 
 
 /*This is going into map.js later*/
-let mymap
+let mymap, layerGroup; 
+
 
 //Coordinates for the  polyline
 let latlngs = [
@@ -49,16 +50,13 @@ export function leaflet_start() {
 
 export function buttonAdd() {
     addMarkers(latlngs);
-    addPolyline(latlngs); 
-}
+/*    addPolyline(latlngs); 
+*/}
 
 export function buttonRemove() {
     console.log("Remove knappen er blevet trykket");
     Remove_Layer(); 
 }
-
-let layerGroup; 
-let overlay; 
 
 
 function addMarkers(latlngs) {
@@ -75,8 +73,11 @@ function addMarkers(latlngs) {
         layerGroup.addLayer(marker); 
     }
 
-   overlay = { 'Markers': layerGroup };
-    L.control.layers(null, overlay).addTo(mymap); 
+    addPolyline(latlngs); 
+/*
+    overlay = { 'Markers': layerGroup(marker), 'Line': layerGroup(polyline) };
+
+    L.control.layers(null, overlay).addTo(mymap); */
 
 /*
     let marker1 = L.marker([57.0117789, 9.9907118]).bindPopup('Start for segment 1<br/>Dette segment er sponseret af State.</p><br/><img src="/logos/State_Logo_v1.jpg" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
@@ -87,12 +88,15 @@ function addMarkers(latlngs) {
 }
 
 function Remove_Layer() {
-    mymap.removeLayer(layerGroup)
+    mymap.removeLayer(layerGroup); 
 }
+
+let polyline;
 
 function addPolyline(latlngs) {
 
-    let polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
+    polyline = L.polyline(latlngs, { color: 'red' });
+    layerGroup.addLayer(polyline).addTo(mymap); 
     mymap.fitBounds(polyline.getBounds());
 
     console.log("Add polyline");
