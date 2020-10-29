@@ -3,8 +3,11 @@
 @inject IJSRuntime JsRunTime
 
 
-<h1>Map</h1>
+<h1>{Test side for Map}</h1>
 
+<button class="btn btn-primary" @onclick="button_add">Tilføje markers og linjer</button>
+<button class="btn btn-primary" @onclick="button_remove">Fjerne markers og linjer</button>
+<br>
 <div id="mapid"></div>
 
 @*<div @ref="mapid" @onmousedown="CreateMarker" id="mapid"></div>*@
@@ -21,10 +24,24 @@
         if (firstRender)
         {
             await JsRunTime.InvokeVoidAsync("Main.leaflet_start");
-            firstRender = false;
+            StateHasChanged(); 
+            @*firstRender = false;*@
         }
 
     }
+
+    private async void button_add()
+    {
+        await JsRunTime.InvokeVoidAsync("Main.buttonAdd");
+    }
+
+
+    private async void button_remove()
+    {
+        await JsRunTime.InvokeVoidAsync("Main.buttonRemove");
+    }
+
+
     @*
         protected string Coordinates { get; set; }
 

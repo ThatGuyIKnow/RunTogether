@@ -39,25 +39,40 @@ export function leaflet_start() {
         maxZoom: maxZoomL,
         ext: 'jpg'
     }).addTo(mymap);
-
+/*
     addMarkers(latlngs); 
     addPolyline(latlngs); 
-
+*/
     console.log("leaflet_start() function is done ");
 
+}
+
+export function buttonAdd() {
+    addMarkers(latlngs);
+    addPolyline(latlngs); 
+}
+
+export function buttonRemove() {
+    console.log("Remove knappen er blevet trykket");
+    Remove_Layor(); 
 }
 
 function addMarkers(latlngs) {
     let i = 0; 
     let segNum = 0; 
+    let marker; 
+
+    let layerGroup = L.layerGroup().addTo(mymap); 
 
     for (i = 0; i < latlngs.length; i++) {
         segNum = i + 1;
-        let marker =L.marker(latlngs[i]).bindPopup('Start for segment ' + segNum +
-                                        '<br />Dette segment er sponseret af [SPONSOR].</p>').openPopup().addTo(mymap); 
-       /* mymap.addLayer(marker);*/
+        marker = L.marker(latlngs[i]).bindPopup('Start for segment ' + segNum +
+            '<br />Dette segment er sponseret af [SPONSOR].</p>').openPopup();
+        layerGroup.addLayer(marker); 
     }
-    /*mymap.removeLayer(marker);*/ 
+
+    let overlay = { 'markers': layerGroup };
+    L.control.layers(null, overlay).addTo(mymap); 
 
 /*
     let marker1 = L.marker([57.0117789, 9.9907118]).bindPopup('Start for segment 1<br/>Dette segment er sponseret af State.</p><br/><img src="/logos/State_Logo_v1.jpg" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
@@ -65,6 +80,10 @@ function addMarkers(latlngs) {
     mymap.removeLayer(marker1); 
     L.marker([57.00967, 10.00404]).bindPopup('Start for segment 2<br />Dette segment er sponseret af FrugtKurven.</p><br/><img src="/logos/Frugtkurven_Logo.png" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
     L.marker([58.0123239, 9.9940051]).bindPopup('Start for segment 3<br />Dette segment er sponseret af FrugtKurven.</p><br/><img src="/logos/Frugtkurven_Logo.png" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);*/
+}
+
+function Remove_Layor() {
+    mymap.removeLayer(overlay)
 }
 
 function addPolyline(latlngs) {
