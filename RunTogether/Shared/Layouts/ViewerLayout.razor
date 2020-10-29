@@ -12,7 +12,8 @@
         </button>
         
         <!-- RunTogether logo -->
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png"
+                     Style="width:200px" class="logo"></RadzenImage>
     </div>
 
     <div class="content px-4">
@@ -25,7 +26,8 @@
 </div>
 
 @code {
-    bool collapsed = false; /* Keeps track of whether sidebar is collapsed or not. Is collapsed. By default not collapsed */
+    /* Keeps track of whether sidebar is collapsed or not. By default not collapsed */
+    bool collapsed = false;
 
     string sidebarId = "sponsorbarId";
 
@@ -35,11 +37,13 @@
 
         if (collapsed == false) /* Open */
         {
-            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle", new { id = sidebarId, attribute = "width", value = "15rem" }); 
+            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle",
+                new { id = sidebarId, attribute = "width", value = "15rem" });
         }
         else /* Close */
         {
-            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle", new { id = sidebarId, attribute = "width", value = "0" });
+            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle",
+                new { id = sidebarId, attribute = "width", value = "0" });
         }
     }
 }
