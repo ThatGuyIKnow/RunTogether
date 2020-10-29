@@ -6,26 +6,38 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using RunTogether.Data;
 
 namespace RunTogether.Areas.Identity.Helpers
 {
-    public class UserCreationHelper
+    public class PlainTextPasswordHasher : PasswordHasher<ApplicationUser>
+    {
+        public override string HashPassword(ApplicationUser user, string password) { return password; }
+    }
+
+    public class UserCreationHelper : IDisposable
     {
         private UserManager<ApplicationUser> _userManager { get; }
         private ApplicationDbContext _dbContext { get; }
+        private IServiceScope _scope { get; }
+        
 
-        public UserCreationHelper(UserManager<ApplicationUser> userManager, ApplicationDbContext dbContext)
+        public UserCreationHelper(IServiceScopeFactory scopeFactory)
         {
-            _userManager = userManager;
-            _dbContext = dbContext;
+            _scope = scopeFactory.CreateScope();
+
+            _userManager = _scope.ServiceProvider.GetService<UserManager<ApplicationUser>>();
+            _dbContext = _scope.ServiceProvider.GetService<ApplicationDbContext>();
         }
 
         public async Task<IdentityResult> CreateRunner(string firstName, string lastName, string email, Run run)
         {
             IdentityResult userInfoResult = await ValidateUserInformation(email, IdentityRoleTypes.Runner, run);
             if (!userInfoResult.Succeeded) { return userInfoResult; }
-            
+
+            _userManager.PasswordHasher = new PlainTextPasswordHasher();
+
             int newRunnerId = run.GetNextRunnerId();
             string usernamePrefix = run.ID.ToString();
 
@@ -36,18 +48,17 @@ namespace RunTogether.Areas.Identity.Helpers
                 LastName = lastName,
                 RunnerId = newRunnerId
             };
-            IdentityResult result = await _userManager.CreateAsync(user, CreateRandomPassword(12));
+            IdentityResult result = await _userManager.CreateAsync(user, CreateRandomPassword(32));
             
             if(result.Succeeded)
             {
                 run.Runners.Add(user);
                 run.IncrementRunnerId();
-                //_dbContext.Runs.Find(run.ID).Runners.Add(user);
-                //_dbContext.Runs.Find(run.ID).IncrementRunnerId();
                 await _dbContext.SaveChangesAsync();
                 await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Runner);
             }
 
+            _userManager.PasswordHasher = new PasswordHasher<ApplicationUser>();
             return result;
         }
 
@@ -56,7 +67,7 @@ namespace RunTogether.Areas.Identity.Helpers
         {
             IdentityResult userInfoResult = await ValidateUserInformation(email, IdentityRoleTypes.Organiser);
             if (!userInfoResult.Succeeded) { return userInfoResult; }
-
+            
             ApplicationUser user = new ApplicationUser(email)
             {
                 Email = email,
@@ -74,25 +85,7 @@ namespace RunTogether.Areas.Identity.Helpers
             return result;
         }
 
-        //private async Task<IdentityResult> CreateUser(string firstName, string lastName, string email, string username)
-        //{
-
-
-        //    ApplicationUser user = new ApplicationUser(username)
-        //    {
-        //        Email = email, FirstName = firstName, LastName = lastName
-        //    };
-
-        //    return await _userManager.CreateAsync(user, CreateRandomPassword(12));
-
-        //    if (result.Succeeded)
-        //    {
-        //        await _userManager.AddToRoleAsync(user, role);
-        //    }
-
-        //    return result;
-        //}
-
+        
         private async Task<IdentityResult> ValidateUserInformation(string email, string role, Run? run = null)
         {
             bool isUsedEmail = false;
@@ -137,6 +130,11 @@ namespace RunTogether.Areas.Identity.Helpers
             }
 
             return result;
+        }
+
+        public void Dispose()
+        {
+            _scope?.Dispose();
         }
     }
 }

@@ -47,6 +47,7 @@ namespace RunTogether
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
             services.AddSingleton<WeatherForecastService>();
             services.AddScoped<DialogService>();
+            services.AddTransient<UserCreationHelper>();
             services.AddTransient<PromiseHelper>();
             
 

@@ -1,14 +1,12 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@inject IJSRuntime JsRuntime
 @inject PromiseHelper PromiseHelper
-@inject UserManager<ApplicationUser> _userManager
 @inject ApplicationDbContext dbContext
-@using RunTogether.Areas.Identity
+@inject UserCreationHelper userCreator
 @using RunTogether.Areas.Identity.Helpers
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.EntityFrameworkCore
 @using RunTogether.Data
+@implements IDisposable
 
-@if(hasCamera)
+@if (hasCamera)
 {
     <button @onclick="InitializeQrScanner" value="StartCamera">Start Camera</button>
 
@@ -56,9 +54,9 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
         {
-            hasCamera = await JSRuntime.InvokeAsync<bool>("Main.QrScanner.HasCamera");
+            hasCamera = await JsRuntime.InvokeAsync<bool>("Main.QrScanner.HasCamera");
             StateHasChanged();
         }
     }
@@ -66,6 +64,12 @@ else
 
     private async void InitializeQrScanner()
     {
+        //UserCreationHelper userCreator = new UserCreationHelper(userManager, dbContext);
+        //IdentityResult r =  await userCreator.CreateOrganiser("Jonas", "Harold", "helloMellow@hotmail.com");
+        //JsRuntime.InvokeVoidAsync("console.log", r.Succeeded, " ", r.Errors);
+        //Run run = await dbContext.Runs.FindAsync(3);
+        //await userCreator.CreateRunner("Jonas", "Harold", "helloBellow@hotmail.com", run);
+
         // Create QR Scanner and start it up
         CreateQrScanner();
         StartQrScanner();
@@ -74,18 +78,17 @@ else
 
     private async Task CreateQrScanner()
     {
-
         // When the QR Scanner returns a code, execute the function
         PromiseHelper.SetResolve(CodeReceivedHandler);
 
         // (Creation function, video HTML id, objRef from PromiseHelper)
-        JSRuntime.InvokeVoidAsync(
+        JsRuntime.InvokeVoidAsync(
         "Main.QrScanner.CreateQrScanner",
         "qrVideo",
         DotNetObjectReference.Create(PromiseHelper));
 
         // Check if camera has flash available
-        hasFlash = await JSRuntime.InvokeAsync<bool>("Main.QrScanner.HasFlash");
+        hasFlash = await JsRuntime.InvokeAsync<bool>("Main.QrScanner.HasFlash");
         StateHasChanged();
     }
 
@@ -94,7 +97,7 @@ else
     {
         // Animates entrance and starts the scanner
         _currentClass = EnterCss;
-        JSRuntime.InvokeAsync<string>("Main.QrScanner.StartQrScanner");
+        JsRuntime.InvokeAsync<string>("Main.QrScanner.StartQrScanner");
     }
 
     private void DestroyQrScanner()
@@ -105,7 +108,7 @@ else
         Task.Run(async () =>
         {
             await Task.Delay(FadeTime);
-            await JSRuntime.InvokeVoidAsync(
+            await JsRuntime.InvokeVoidAsync(
                 "Main.QrScanner.DestroyQrScanner",
                 "qrVideo");
             _currentClass = HideCss;
@@ -114,7 +117,7 @@ else
 
     private void CodeReceivedHandler(string data)
     {
-        // After the code has been scanned and sent out to the 
+        // After the code has been scanned and sent out to the
         // event handlers, the QrScanner closes.
         _qrCode = data;
 
@@ -126,10 +129,15 @@ else
     private void ToggleFlash()
     {
         flashOn = !flashOn;
-        JSRuntime.InvokeVoidAsync(
+        JsRuntime.InvokeVoidAsync(
             "Main.QrScanner.ChangeFlashStatus",
             flashOn);
         StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        DestroyQrScanner();
     }
 
 }
