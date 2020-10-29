@@ -1,41 +1,45 @@
 ﻿@using RunTogether.Shared.Etc
+
 @inject IJSRuntime JSRuntime
 
 @inherits LayoutComponentBase
 
 <div class="main">
     <div class="top-row px-4 auth">
-        <button class="navbar-toggler" @onclick="toggleNav">
-            <span class="oi oi-menu"></span>
+        <!-- Sidebar toggle open/close button --> 
+        <button class="navbar-toggler" @onclick="toggleSidebar">
+            Sponsors <span class="oi oi-menu"></span>
         </button>
+        
+        <!-- RunTogether logo -->
         <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
     </div>
 
     <div class="content px-4">
-        @Body
+        @Body <!-- Main content of the page -->
     </div>
 </div>
 
-<div class="sidebar" id="sidebarId">
-    <SponsorBar />
+<div class="sidebar" id="sponsorbarId">
+    <SponsorBar /> <!-- Sponsor bar -->
 </div>
 
 @code {
-    bool collapseNavMenu = true;
+    bool collapsed = false; /* Keeps track of whether sidebar is collapsed or not. Is collapsed. By default not collapsed */
 
-    string navId = "sidebarId";
+    string sidebarId = "sponsorbarId";
 
-    async Task toggleNav()
+    async Task toggleSidebar()
     {
-        collapseNavMenu = !collapseNavMenu;
+        collapsed = !collapsed;
 
-        if (collapseNavMenu == true)
+        if (collapsed == false)
         {
-            await JSRuntime.InvokeVoidAsync("Main.navbar.navbarToggleOpen", new { id = navId, attribute = "width", value = "250px" });
+            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle", new { id = sidebarId, attribute = "width", value = "250px" });
         }
         else
         {
-            await JSRuntime.InvokeVoidAsync("Main.navbar.navbarToggleClose", new { id = navId, attribute = "width", value = "0" });
+            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle", new { id = sidebarId, attribute = "width", value = "0" });
         }
     }
 }

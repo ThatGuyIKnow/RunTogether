@@ -110,6 +110,7 @@ app {
 
 .navbar-toggler {
     background-color: var(--background-element);
+    color: white;
 }
 
 .oi {

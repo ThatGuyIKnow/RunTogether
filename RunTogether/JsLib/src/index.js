@@ -1,6 +1,6 @@
 ﻿import { QrScannerClass } from './qrScanner';
-import { NavigationalBarHideFunctionality } from './NavBarHide';
+import { SidebarCollapseFunctionality } from './SidebarHide';
 import "../styles/qrScanner.css";
 
 export const QrScanner = new QrScannerClass();
-export const navbar = new NavigationalBarHideFunctionality();
+export const sidebar = new SidebarCollapseFunctionality();
