@@ -1,22 +1,17 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
-:root {
-    --run-together: #CC4545; /* RunTogether Red */
-    --background-element: #114B5F; /* Dark blue background for elements like buttons */
-}
-
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
 a, .btn-link {
-    color: #0366d6; /* Light Blue */
+    color: #0366d6;
 }
 
 .btn-primary {
-    color: white;
-    background-color: #1b6ec2; /* Blue */
-    border-color: #1861ac; /* Dark Blue */
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
 }
 
 app {
@@ -36,7 +31,7 @@ app {
 }
 
     .main .top-row {
-        background-color: #f7f7f7; /* Light Gray */
+        background-color: #f7f7f7;
         border-bottom: 1px solid #d6d5d5;
         justify-content: flex-end;
     }
@@ -52,14 +47,11 @@ app {
         }
 
 .sidebar {
-    background-color: white;
-    transition: 0.5s;
+    background-color: #FFFFFF;
 }
 
     .sidebar .top-row {
-        background-color: var(--run-together);
-        position: sticky;
-        top: 0;
+        background-color: #CC4545;
     }
 
     .sidebar .navbar-brand {
@@ -96,12 +88,12 @@ app {
         }
 
             .sidebar .nav-item a.active {
-                background-color: var(--run-together);
+                background-color: #CC4545;
                 color: white;
             }
 
             .sidebar .nav-item a:hover {
-                background-color: var(--run-together);
+                background-color: #CC4545;
                 color: white;
             }
 
@@ -110,12 +102,7 @@ app {
 }
 
 .navbar-toggler {
-    background-color: var(--background-element);
-    color: white;
-}
-
-.oi {
-    color: white;
+    background-color: #CC4545;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -157,7 +144,7 @@ app {
     .sidebar {
         display: none;
     }
-
+    
     a {
         margin: 0 10px 0 10px;
     }
@@ -186,11 +173,10 @@ app {
     }
 
     .sidebar {
-        width: 15rem;
+        width: 250px;
         height: 100vh;
         position: sticky;
         top: 0;
-        right: 0;
     }
 
     .main .top-row {
@@ -204,23 +190,7 @@ app {
     }
 }
 
-.navbar-toggler-left {
-    position: absolute;
-    left: 1rem;
-}
-
 .logo {
     position: absolute;
-    left: 5rem;
-}
-
-.logo-align-left {
-    left: 1rem;
-}
-
-.scrollable {
-    overflow: hidden;
-    overflow-y: scroll;
-    height: 100%;
-    width: auto;
+    left: 2%;
 }

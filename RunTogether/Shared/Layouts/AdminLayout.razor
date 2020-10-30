@@ -1,21 +1,16 @@
 ﻿@using RunTogether.Shared.Forms
-
 @inject DialogService dialogService
 
 @inherits LayoutComponentBase
 
 <div class="main">
     <div class="top-row px-4 auth">
-        <!-- RunTogether logo -->
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo logo-align-left"></RadzenImage>
-        
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
         <LoginDisplay />
     </div>
 
-    <!-- Is required for Radzen dialogues -->
     <RadzenDialog />
 
-    <!-- Top navigation bar -->
     <RadzenCard Style="height: auto">
         <RadzenMenu Click="@(args => ShowDialog(args))">
             <RadzenMenuItem Text="Skab ny løber" Icon="person_add">
@@ -29,7 +24,6 @@
         </RadzenMenu>
     </RadzenCard>
 
-    <!-- Main content -->
     <div class="content px-4">
         @Body
     </div>
