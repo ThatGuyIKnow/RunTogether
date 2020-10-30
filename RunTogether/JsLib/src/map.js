@@ -3,7 +3,6 @@
 let mymap, layerGroup, polyline;
 
 let maxBounds1 = [51.649, 0.49]; 
-
 let maxBounds2 = [59.799, 18.68];  
 
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
