@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime JSRuntime
 @inject PromiseHelper PromiseHelper
 
-@if(hasCamera)
+@if (hasCamera)
 {
     <button @onclick="InitializeQrScanner" value="StartCamera">Start Camera</button>
 
@@ -49,7 +49,7 @@ else
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if(firstRender)
+        if (firstRender)
         {
             hasCamera = await JSRuntime.InvokeAsync<bool>("Main.QrScanner.HasCamera");
             StateHasChanged();
@@ -73,9 +73,9 @@ else
 
         // (Creation function, video HTML id, objRef from PromiseHelper)
         JSRuntime.InvokeVoidAsync(
-        "Main.QrScanner.CreateQrScanner",
-        "qrVideo",
-        DotNetObjectReference.Create(PromiseHelper));
+            "Main.QrScanner.CreateQrScanner",
+            "qrVideo",
+            DotNetObjectReference.Create(PromiseHelper));
 
         // Check if camera has flash available
         hasFlash = await JSRuntime.InvokeAsync<bool>("Main.QrScanner.HasFlash");
@@ -107,7 +107,7 @@ else
 
     private void CodeReceivedHandler(string data)
     {
-        // After the code has been scanned and sent out to the 
+        // After the code has been scanned and sent out to the
         // event handlers, the QrScanner closes.
         _qrCode = data;
 
