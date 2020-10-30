@@ -83,7 +83,7 @@
     //}
 
     async Task ShowAddStageDialog() => await dialogService.OpenAsync("Tilføj segment", ds =>
-        @<RadzenTemplateForm TItem="Stage" Submit="()=> OnSubmit(date, xCoordinate, yCoordinate)" InvalidSubmit="()=> OnInvalidSubmit()">
+        @<RadzenTemplateForm TItem="Stage">
 
             <div class="row" style="margin-bottom: 48px">
                 <div class="col-md-4 align-right">
@@ -91,25 +91,26 @@
                 </div>
                 <div class="col">
                     <RadzenDatePicker Name="Date" DateFormat="d" @bind-Value="date" /><br>
-                    <RadzenRequiredValidator Component="Date" Text="Start date is required" Popup=true Style="position: absolute" />
+                    @*<RadzenRequiredValidator Component="Date" Text="Start date is required" Popup=true Style="position: absolute" />*@
                 </div>
             </div>
 
             <div class="row" style="margin-bottom: 48px">
                 <div class="col-md-4 align-right">
-                    <RadzenNumeric TValue="float" @bind-Value="xCoordinate" Placeholder="Startlokation" />
+                    <RadzenNumeric TValue="float" @bind-Value="xCoordinate" Placeholder="Startlokation X" />
                 </div>
             </div>
 
             <div class="row" style="margin-bottom: 48px">
                 <div class="col-md-4 align-right">
-                    <RadzenNumeric TValue="float" @bind-Value="yCoordinate" Placeholder="Startlokation" />
+                    <RadzenNumeric TValue="float" @bind-Value="yCoordinate" Placeholder="Startlokation Y" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12">
-                    <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+                    @*<RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />*@
+                    <RadzenButton Click="()=> OnSubmit(date, xCoordinate, yCoordinate)" Text="OK" Style="margin-bottom: 10px; width: 150px" />
                     <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
                 </div>
             </div>
@@ -120,11 +121,12 @@
     {
         Stage StageObj = new Stage() { Date = Start, RunRoute = runRoute };
         //StageObj.StartPoint.StageId = StageObj.StageId;
-        StageObj.StartPoint.Coordinates = (xCoord, yCoord);
+        StartPoint startPoint = new StartPoint() { Coordinates = (xCoord, yCoord) };
+        StageObj.StartPoint = startPoint;
         runRoute.Stages.Add(StageObj);
         newStages.Add(StageObj);
         Console.WriteLine(StageObj.StartPoint.Coordinates);
-        dialogService.Close(true);
+        this.dialogService.Close(true);
         table.Reload();
 
     }
@@ -153,4 +155,4 @@
     {
         dialogService.Close(true);
     }
-}
+    }
