@@ -5,7 +5,6 @@ namespace RunTogether.Areas.Identity
 {
     public class ApplicationUser : IdentityUser
     {
-        [PersonalData] 
         public int RunnerId { get; set; } = 0;
 
         [PersonalData]

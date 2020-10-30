@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RunTogether.Areas.Identity;
+using RunTogether.Areas.Identity.Data;
 
 namespace RunTogether.Data
 {
@@ -17,6 +18,7 @@ namespace RunTogether.Data
         public DbSet<StartPoint> StartPoints { get; set; }
         public DbSet<EndPoint> EndPoints { get; set; }
         public DbSet<ThroughPoint> ThroughPoints { get; set; }
+        public DbSet<OrganiserCreationKey> OrganiserCreationKeys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
