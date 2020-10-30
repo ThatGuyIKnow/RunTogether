@@ -9,7 +9,7 @@ import "../styles/map_style.css";
 export const QrScanner = new QrScannerClass();
 
 
-/*Test array for the map*/
+/*Test array with startpoint and endpoint coordinates*/
 let latlngs = [
     [57.0117789, 9.9907118],
     [56.7499, 9.9921],
