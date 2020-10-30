@@ -7,6 +7,7 @@
 @using RunTogether.Areas.Identity.Helpers
 @using RunTogether.Areas.Identity
 @using RunTogether.Shared.QR
+@using RunTogether.Shared.Forms
 
 @inject IJSRuntime jsRuntime
 @inject ApplicationDbContext dbContext
@@ -14,7 +15,10 @@
 @inject DialogService dialogService
 
 
-<RadzenButton Text=@($"Opret nyt løb") Click="@ShowSimpleDialog" />
+<RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret ny løber",
+                        new Dictionary<string, object>(),
+                        new DialogOptions(){ Width = "700px", Height = "530px" }))" />
+
 <div class="row">
     <div class="col-md-6">
         <RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
@@ -54,71 +58,15 @@
                 <RadzenTabsItem Text="QR Kode">
                     <div>
                         <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
-                      
+
                         <RadzenDropDown @bind-Value="color" AllowClear="true" TValue="string" Data="@colorList" TextProperty="Name" ValueProperty="code" Style="margin-bottom: 20px" />
 
                         <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
 
-                        <QRGenerator code="@QRString" size=@($"{slider}%") color="@color" />
-                    </div>               
+                        <QRGenerator code="@run.QRString" size=@($"{slider}%") color="@color" />
+                    </div>
                 </RadzenTabsItem>
             </Tabs>
         </RadzenTabs>
     </div>
 </div>
-
-@code {
-
-    async Task ShowSimpleDialog() => await dialogService.OpenAsync("Simple Dialog", ds =>
-    @<RadzenTemplateForm TItem="Run" Data="@run" Submit="()=> OnSubmit(run.Name, run.StartDate, run.EndDate, run.QRString)" InvalidSubmit="()=> OnInvalidSubmit()">
-
-    <div class="row" style="margin-bottom: 48px">
-        <div class="col-md-4 align-right">
-            <RadzenLabel Text="Løb navn" />
-        </div>
-        <div class="col">
-            <RadzenTextBox Name="Name" @bind-Value="run.Name" /><br>
-            <RadzenRequiredValidator Component="Name" Text="Navn skal udfyldes" Popup=true Style="position: absolute" />
-        </div>
-    </div>
-
-    <div class="row" style="margin-bottom: 48px">
-        <div class="col-md-4 align-right">
-            <RadzenLabel Text="Start dato" />
-        </div>
-        <div class="col">
-            <RadzenDatePicker Name="StartDate" DateFormat="d" @bind-Value="run.StartDate" /><br>
-            <RadzenRequiredValidator Component="StartDate" Text="Start dato skal udfyldes" Popup=true Style="position: absolute" />
-        </div>
-    </div>
-
-    <div class="row" style="margin-bottom: 48px">
-        <div class="col-md-4 align-right">
-            <RadzenLabel Text="Slut dato" />
-        </div>
-        <div class="col">
-            <RadzenDatePicker Name="EndDate" DateFormat="d" @bind-Value="run.EndDate" /><br>
-            <RadzenRequiredValidator Component="EndDate" Text="Slut dato skal udfyldes" Popup=true Style="position: absolute" />
-        </div>
-    </div>
-
-    <div class="row" style="margin-bottom: 48px">
-        <div class="col-md-4 align-right">
-            <RadzenLabel Text="QR Kode" />
-        </div>
-        <div class="col">
-            <RadzenTextBox Name="QRString" @bind-Value="run.QRString" /><br>
-            <RadzenRequiredValidator Component="QRString" Text="QR Kode skal udfyldes" Popup=true Style="position: absolute" />
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
-            <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
-        </div>
-    </div>
-</RadzenTemplateForm>
-    );
-
-}

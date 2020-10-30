@@ -1,4 +1,5 @@
 ﻿using Microsoft.JSInterop;
+using Radzen;
 using Radzen.Blazor;
 using RunTogether.Areas.Identity;
 using RunTogether.Areas.Identity.Helpers;
@@ -30,7 +31,6 @@ namespace RunTogether.Shared.Etc
         //Variabler for QRCode gen
         string color = "#000000";
         int slider = 50;
-        private string QRString = default;
 
         //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
         RadzenGrid<Run> table;
@@ -41,7 +41,6 @@ namespace RunTogether.Shared.Etc
         //alt querying bliver lavet i DB og kun det relevante data sendes til client.
         IQueryable<ApplicationUser> runners;
 
-
         protected override async Task OnInitializedAsync()
         {
             runs = dbContext.Runs;
@@ -49,6 +48,9 @@ namespace RunTogether.Shared.Etc
 
             colorList.Add(new Farver() { Name = "RT rød", code = "#cc4545" });
             colorList.Add(new Farver() { Name = "Sort", code = "#000000" });
+
+            dialogService.OnOpen += Open;
+            dialogService.OnClose += Close;
 
             //dbContext.Runs.Add(new Run { Name = "Løb 1", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1), QRString = "test code" });
             //dbContext.Runs.Add(new Run { Name = "Løb 2", StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(3), QRString = "ajuf_££$dafdf" });
@@ -62,33 +64,27 @@ namespace RunTogether.Shared.Etc
             //await test.CreateRunner("All", "Alone", "Lonely@gmail.com", runs.ElementAt(2));
         }
 
+        Run run = new Run();
         public void QueryForRunners(Run QueryRun)
         {
-            QRString = QueryRun.QRString;
+
+            run = QueryRun;
 
             runners = dbContext.Users
                 .Where(u => u.RunId == QueryRun.ID);
         }
 
-        //Code for create Run dialog. 
-        Run run = new Run();
-
-
-        public void OnSubmit(String RunName, DateTime Start, DateTime End, String QR)
+        void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
         {
-            Run RunObj = new Run() { Name = RunName, StartDate = Start, EndDate = End, QRString = QR };
-            Console.WriteLine("YEY!");
-            this.dialogService.Close(true);
-            dbContext.Runs.Add(RunObj);
-            dbContext.SaveChanges();
+            StateHasChanged();
+        }
+
+        void Close(dynamic result)
+        {
             table.Reload();
-
+            StateHasChanged();
         }
 
-        void OnInvalidSubmit()
-        {
-            Console.WriteLine("AW");
-        }
 
     }
 }
