@@ -76,12 +76,12 @@
     IEnumerable<Stage> stages;
 
 
-    protected override void OnInitialized()
-    {
-        //customers = dbContext.Customers.ToList(); <- exempel fra https://blazor.radzen.com/dropdown
+    //protected override void OnInitialized()
+    //{
+    //    //customers = dbContext.Customers.ToList(); <- exempel fra https://blazor.radzen.com/dropdown
 
-        stages = applicationDbContext.Stages.ToList();  //måske?
-    }
+    //    stages = applicationDbContext.Stages.ToList();  //måske?
+    //}
 
     string value;
 

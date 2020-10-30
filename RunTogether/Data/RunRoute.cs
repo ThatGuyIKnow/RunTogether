@@ -5,7 +5,7 @@ namespace RunTogether
     public class RunRoute
     {
         public int RunRouteId { get; set; }
-        public List<Stage> Stages { get; set; }
+        public List<Stage> Stages { get; set; } = new List<Stage>();
         
         public int RunId { get; set; }
 
