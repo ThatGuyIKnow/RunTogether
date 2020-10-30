@@ -1,20 +1,26 @@
 ﻿
+/*Global variable for the map class*/
 let mymap, layerGroup, polyline;
 
 
+/*Class for the map*/
 export class mapClass {
 
     constructor(latlngs) {
         this.latlngs = latlngs;
 
-        this.createMap = this.createMap.bind(this);
+        this.initializeMap = this.initializeMap.bind(this);
         this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
         this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
     }
 
-    createMap() {
+    /* A Method that initializes the map */
+    initializeMap() {
+
+        /*Pointing mymap to leaflet map and setting the viewpoint and start zoom point*/
         mymap = L.map('mapid').setView([57.0117789, 9.9907118], 6);
 
+        /* Appling tile layer to the map*/
         L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
             attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             subdomains: 'abcd',
@@ -24,13 +30,16 @@ export class mapClass {
         }).addTo(mymap);
     }
 
+    /* A Method to add markers and lines*/
     addMarkersAndLines(latlngs) {
         let i = 0;
         let segNum = 0;
         let marker;
 
+        /*Creating layer group and adding to map*/
         layerGroup = L.layerGroup().addTo(mymap);
 
+        /*Creating markers*/
         for (i = 0; i < this.latlngs.length; i++) {
             segNum = i + 1;
             marker = L.marker(this.latlngs[i]).bindPopup('Start for segment ' + segNum +
@@ -38,17 +47,21 @@ export class mapClass {
             layerGroup.addLayer(marker);
         }
 
+        /*Creating polyline and fiting the polyline and markers to the map view*/
         polyline = L.polyline(this.latlngs, { color: '#db5d57' });
-        layerGroup.addLayer(polyline).addTo(mymap);
+        layerGroup.addLayer(polyline);
         mymap.fitBounds(polyline.getBounds());
+
     }
 
+    /* A Method to remove markers and lines*/
     removeMarkersAndLines() {
         mymap.removeLayer(layerGroup);
     }
 }
 
 /*
+ *   //If the layer group has to be spilt up
      addPolyline(latlngs) {
         polyline = L.polyline(this.latlngs, { color: 'red' }).addTo(mymap);
         mymap.fitBounds(polyline.getBounds());

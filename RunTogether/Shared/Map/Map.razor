@@ -25,7 +25,7 @@
     {
         if (firstRender)
         {
-            await JsRunTime.InvokeVoidAsync("Main.Map.createMap");
+            await JsRunTime.InvokeVoidAsync("Main.Map.initializeMap");
             StateHasChanged();
         }
 
@@ -44,6 +44,7 @@
 
 
     @*
+
         protected string Coordinates { get; set; }
 
         protected void Mouse_Move(MouseEventArgs e)
