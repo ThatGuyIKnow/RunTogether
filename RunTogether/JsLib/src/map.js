@@ -4,7 +4,7 @@ let mymap, layerGroup, polyline;
 
 let maxBounds1 = [51.649, 0.49]; 
 
-let maxBounds2 = [60.031, 18.13];  
+let maxBounds2 = [59.799, 18.68];  
 
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 
@@ -26,7 +26,7 @@ export class mapClass {
     initializeMap() {
 
         /*Pointing mymap to leaflet map and setting the viewpoint and start zoom point*/
-        mymap = L.map('mapid').setView([57.0117789, 9.9907118], 6);
+        mymap = L.map('mapid').setView([55.964, 9.992], 6.5);
 
         mymap.setMaxBounds(bounds);
 
