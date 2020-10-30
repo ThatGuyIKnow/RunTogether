@@ -13,7 +13,7 @@
 <div class="main">
     <div class="top-row px-4 auth">
         <!-- Sidebar toggle open/close button -->
-        <button class="navbar-toggler navbar-toggler-left" @onclick="toggleSidebar">
+        <button class="navbar-toggler navbar-toggler-left" @onclick="ToggleSidebar">
             <span class="oi oi-menu"></span>
         </button>
 
@@ -31,26 +31,3 @@
         @Body
     </div>
 </div>
-
-@code {
-    /* Keeps track of whether sidebar is collapsed or not. By default not collapsed */
-    bool collapsed = false;
-
-    string sidebarId = "navBarId";
-
-    async Task toggleSidebar()
-    {
-        collapsed = !collapsed;
-
-        if (collapsed == false) /* Open */
-        {
-            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle",
-                new { id = sidebarId, attribute = "width", value = "15rem" });
-        }
-        else /* Close */
-        {
-            await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle",
-                new { id = sidebarId, attribute = "width", value = "0" });
-        }
-    }
-}
