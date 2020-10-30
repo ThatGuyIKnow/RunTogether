@@ -1,18 +1,18 @@
-﻿
-﻿import { QrScannerClass } from './qrScanner'
+import { QrScannerClass } from './qrScanner'
+import { SidebarCollapseFunctionality } from './SidebarHide';
 import "../styles/qrScanner.css";
-
 import "../styles/map_style.css";
 
 
 export const QrScanner = new QrScannerClass();
+export const sidebar = new SidebarCollapseFunctionality();
 
 /*export let a =  new leaflet_start();*/
 
 
 
 /*This is going into map.js later*/
-let mymap
+let mymap;
 
 //Coordinates for the  polyline
 let latlngs = [
@@ -34,8 +34,8 @@ export function leaflet_start() {
         ext: 'jpg'
     }).addTo(mymap);
 
-    addMarkers(); 
-    addPolyline(latlngs); 
+    addMarkers();
+    addPolyline(latlngs);
 
     console.log("leaflet_start() function is done ");
 }
@@ -48,7 +48,9 @@ function addMarkers() {
 
 function addPolyline(latlngs) {
 
-    let polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
+    let polyline = L.polyline(latlngs, {
+        color: 'red'
+    }).addTo(mymap);
     mymap.fitBounds(polyline.getBounds());
 
     console.log("Add polyline");
@@ -67,11 +69,3 @@ export function onMapClick() {
 
     mymap.on('click', onMapClick);
 }
-
-
-
-
-
-
-
-
