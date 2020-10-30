@@ -53,12 +53,13 @@
 
                 <RadzenTabsItem Text="QR Kode">
                     <div>
-                        <a title="print screen" alt="print screen" @onclick="PrintImage">klik for print</a>
+                        <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
+                      
                         <RadzenDropDown @bind-Value="color" AllowClear="true" TValue="string" Data="@colorList" TextProperty="Name" ValueProperty="code" Style="margin-bottom: 20px" />
-                        
+
                         <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
 
-                        <QRGenerator code="@QRString" size=@($"{slider}%") color="@color"/>
+                        <QRGenerator code="@QRString" size=@($"{slider}%") color="@color" />
                     </div>               
                 </RadzenTabsItem>
             </Tabs>
