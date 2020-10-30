@@ -9,8 +9,6 @@ namespace RunTogether.Shared.Map
 {
     public partial class Map
     {
-        ElementReference mapid;
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -34,7 +32,7 @@ namespace RunTogether.Shared.Map
 
 
    
-/*
+    /*
         protected string Coordinates { get; set; }
 
         protected void Mouse_Move(MouseEventArgs e)
