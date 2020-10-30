@@ -5,7 +5,9 @@ import "../styles/qrScanner.css";
 import { mapClass } from './map'
 import "../styles/map_style.css";
 
+import { CommonJS } from "./common.js"
 
+export const Common = new CommonJS();
 export const QrScanner = new QrScannerClass();
 
 

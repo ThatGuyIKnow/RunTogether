@@ -3,114 +3,70 @@
 @using System.Collections.Generic
 @using RunTogether.Data
 @using RunTogether.Pages
+@using Microsoft.AspNetCore.Identity
+@using RunTogether.Areas.Identity.Helpers
+@using RunTogether.Areas.Identity
+@using RunTogether.Shared.QR
+@using RunTogether.Shared.Forms
 
+@inject IJSRuntime jsRuntime
 @inject ApplicationDbContext dbContext
+@inject UserManager<ApplicationUser> userManager
 @inject DialogService dialogService
 
-<h3>DataTable</h3>
 
-<RadzenButton Text=@($"Show simple dialog") Click="@ShowSimpleDialog" />
+<RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret ny løber",
+                        new Dictionary<string, object>(),
+                        new DialogOptions(){ Width = "700px", Height = "530px" }))" />
 
-<RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => Selected = args)">
-    <Columns>
-        <RadzenGridColumn TItem="Run" Property="ID" Title="ID"></RadzenGridColumn>
-        <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Date"></RadzenGridColumn>
-        <RadzenGridColumn TItem="Run" Property="EndDate" Title="End Date"></RadzenGridColumn>
-        <RadzenGridColumn TItem="Run" Property="Route" Title="Route"></RadzenGridColumn>
-    </Columns>
-</RadzenGrid>
+<div class="row">
+    <div class="col-md-6">
+        <RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
+            <Columns>
+                <RadzenGridColumn TItem="Run" Property="Name" Title="Løb"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Dato"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="EndDate" Title="Slut Dato"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="Route" Title="Rute"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
+            </Columns>
+        </RadzenGrid>
+    </div>
+    <div class="col-md-6">
+        <RadzenTabs>
+            <Tabs>
+                <RadzenTabsItem Text="Runners">
+                    <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
+                        <Columns>
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn" />
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn" />
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email" />
+                        </Columns>
+                    </RadzenGrid>
+                </RadzenTabsItem>
 
-<RadzenTabs>
-    <Tabs>
-        <RadzenTabsItem Text="Order Details">
-            <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@(new List<Run>(){Selected})" TItem="Run">
-                <Columns>
-                    <RadzenGridColumn TItem="Run" Property="run.EndDate" Title="Unit Price" />
-                    <RadzenGridColumn TItem="Run" Property="run.ID" Title="Order" />
-                    <RadzenGridColumn TItem="Run" Property="run.StartDate" Title="Product" />
-                </Columns>
-            </RadzenGrid>
-        </RadzenTabsItem>
-        <RadzenTabsItem Text="Products">
-            <RadzenDataList WrapItems="true" AllowPaging="true" Data="@(new List<Run>(){Selected})" TItem="Run" PageSize="10">
-                <Template Context="detail">
-                    <RadzenCard Style="width:100px;height:100px">
-                        Product:
-                        <b>@detail?.ID</b>
-                    </RadzenCard>
-                </Template>
-            </RadzenDataList>
-        </RadzenTabsItem>
-    </Tabs>
-</RadzenTabs>
+                <RadzenTabsItem Text="Route">
+                    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@runners" TItem="ApplicationUser" PageSize="10">
+                        <Template Context="detail">
+                            <RadzenCard Style="width:100px;height:100px">
+                                Product:
+                                <b>@detail?.Email</b>
+                            </RadzenCard>
+                        </Template>
+                    </RadzenDataList>
+                </RadzenTabsItem>
 
+                <RadzenTabsItem Text="QR Kode">
+                    <div>
+                        <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
 
+                        <RadzenDropDown @bind-Value="color" AllowClear="true" TValue="string" Data="@colorList" TextProperty="Name" ValueProperty="code" Style="margin-bottom: 20px" />
 
+                        <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
 
-
-@code {
-   
-    Run Selected = new Run();
-    IQueryable<Run> Selecteds;
-
-    RadzenGrid<Run> table;
-
-    IEnumerable<Run> runs;
-
-    Run run = new Run();
-
-    protected override void OnInitialized()
-    {
-        runs = dbContext.Runs;
-    }
-
-    async Task ShowSimpleDialog() => await dialogService.OpenAsync("Simple Dialog", ds =>
-    @<RadzenTemplateForm TItem="Run" Data="@run" Submit="()=> OnSubmit(run.StartDate, run.EndDate)" InvalidSubmit="()=> OnInvalidSubmit()">
-
-        <div class="row" style="margin-bottom: 48px">
-            <div class="col-md-4 align-right">
-                <RadzenLabel Text="Start date" />
-            </div>
-            <div class="col">
-                <RadzenDatePicker Name="StartDate" DateFormat="d" @bind-Value="run.StartDate" /><br>
-                <RadzenRequiredValidator Component="StartDate" Text="Start date is required" Popup=true Style="position: absolute" />
-            </div>
-        </div>
-
-        <div class="row" style="margin-bottom: 48px">
-            <div class="col-md-4 align-right">
-                <RadzenLabel Text="End date" />
-            </div>
-            <div class="col">
-                <RadzenDatePicker Name="EndDate" DateFormat="d" @bind-Value="run.EndDate" /><br>
-                <RadzenRequiredValidator Component="EndDate" Text="End date is required" Popup=true Style="position: absolute" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
-                <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
-            </div>
-        </div>
-    </RadzenTemplateForm>
-    );
-
-
-        public void OnSubmit(DateTime Start, DateTime End)
-        {
-            Run RunObj = new Run() { StartDate = Start, EndDate = End };
-            Console.WriteLine("YEY!");
-            this.dialogService.Close(true);
-            dbContext.Runs.Add(RunObj);
-            dbContext.SaveChanges();
-            table.Reload();
-
-        }
-
-        void OnInvalidSubmit()
-        {
-            Console.WriteLine("AW");
-        }
-
-}
+                        <QRGenerator code="@run.QRString" size=@($"{slider}%") color="@color" />
+                    </div>
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+    </div>
+</div>
