@@ -51,7 +51,7 @@ namespace RunTogether.Areas.Identity.Data
             return result;
         }
 
-        protected static byte GetRandomByte(RNGCryptoServiceProvider rngProvider, int maxSize)
+        protected static int GetRandomByte(RNGCryptoServiceProvider rngProvider, int maxSize)
         {
             // Using the provider, get a random byte and check if it is considered fair
             // (Ex. a number can be considered fair if the maximum size of the random numbers are
@@ -62,7 +62,7 @@ namespace RunTogether.Areas.Identity.Data
                 rngProvider.GetBytes(randomNumber);
             } while (IsFairByte(randomNumber[0], maxSize));
 
-            return randomNumber[0];
+            return (int)randomNumber[0] % maxSize;
         }
 
         protected static bool IsFairByte(byte number, int arraySize)

@@ -1,7 +1,5 @@
-﻿@inject IJSRuntime JsRuntime
+﻿@inject IJSRuntime jsRuntime
 @inject PromiseHelper PromiseHelper
-@inject ApplicationDbContext dbContext
-@inject UserCreationHelper userCreator
 @using RunTogether.Areas.Identity.Helpers
 @using RunTogether.Data
 @implements IDisposable
@@ -56,7 +54,7 @@ else
     {
         if (firstRender)
         {
-            hasCamera = await JsRuntime.InvokeAsync<bool>("Main.QrScanner.HasCamera");
+            hasCamera = await jsRuntime.InvokeAsync<bool>("Main.QrScanner.HasCamera");
             StateHasChanged();
         }
     }
@@ -82,13 +80,13 @@ else
         PromiseHelper.SetResolve(CodeReceivedHandler);
 
         // (Creation function, video HTML id, objRef from PromiseHelper)
-        JSRuntime.InvokeVoidAsync(
+        jsRuntime.InvokeVoidAsync(
             "Main.QrScanner.CreateQrScanner",
             "qrVideo",
             DotNetObjectReference.Create(PromiseHelper));
 
         // Check if camera has flash available
-        hasFlash = await JsRuntime.InvokeAsync<bool>("Main.QrScanner.HasFlash");
+        hasFlash = await jsRuntime.InvokeAsync<bool>("Main.QrScanner.HasFlash");
         StateHasChanged();
     }
 
@@ -97,7 +95,7 @@ else
     {
         // Animates entrance and starts the scanner
         _currentClass = EnterCss;
-        JsRuntime.InvokeAsync<string>("Main.QrScanner.StartQrScanner");
+        jsRuntime.InvokeAsync<string>("Main.QrScanner.StartQrScanner");
     }
 
     private void DestroyQrScanner()
@@ -108,7 +106,7 @@ else
         Task.Run(async () =>
         {
             await Task.Delay(FadeTime);
-            await JsRuntime.InvokeVoidAsync(
+            await jsRuntime.InvokeVoidAsync(
                 "Main.QrScanner.DestroyQrScanner",
                 "qrVideo");
             _currentClass = HideCss;
@@ -129,7 +127,7 @@ else
     private void ToggleFlash()
     {
         flashOn = !flashOn;
-        JsRuntime.InvokeVoidAsync(
+        jsRuntime.InvokeVoidAsync(
             "Main.QrScanner.ChangeFlashStatus",
             flashOn);
         StateHasChanged();
