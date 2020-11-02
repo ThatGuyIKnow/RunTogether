@@ -11,6 +11,11 @@ export const Common = new CommonJS();
 export const QrScanner = new QrScannerClass();
 export const Sidebar = new SidebarCollapseFunctionality();
 
+
+export function tester(object) {
+    console.log(object); 
+}
+
 /*Test array with startpoint and endpoint coordinates*/
 let latlngs = [
     [57.0117789, 9.9907118],
