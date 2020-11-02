@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunTogether.Data;
 
 namespace RunTogether.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201102135721_pointAsVector2")]
+    partial class pointAsVector2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,14 +51,14 @@ namespace RunTogether.Data.Migrations
                         new
                         {
                             Id = "runner",
-                            ConcurrencyStamp = "115777b3-b8a2-4bfe-a236-24d4dd665ba4",
+                            ConcurrencyStamp = "03ddb555-e513-434e-8525-261ec9c9a163",
                             Name = "Runner",
                             NormalizedName = "RUNNER"
                         },
                         new
                         {
                             Id = "organiser",
-                            ConcurrencyStamp = "199f994c-dcfb-4385-b24e-5e3fe2b8829a",
+                            ConcurrencyStamp = "41837bf7-080f-42c5-ba7c-904027cff45d",
                             Name = "Organiser",
                             NormalizedName = "ORGANISER"
                         });
@@ -258,14 +260,12 @@ namespace RunTogether.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Coordinates")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("StageId")
                         .HasColumnType("int");
-
-                    b.Property<float>("X")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Y")
-                        .HasColumnType("real");
 
                     b.HasKey("EndPointId");
 
@@ -282,14 +282,12 @@ namespace RunTogether.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Coordinates")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("StageId")
                         .HasColumnType("int");
-
-                    b.Property<float>("X")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Y")
-                        .HasColumnType("real");
 
                     b.HasKey("StartPointId");
 
@@ -306,14 +304,12 @@ namespace RunTogether.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Coordinates")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("StageId")
                         .HasColumnType("int");
-
-                    b.Property<float>("X")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Y")
-                        .HasColumnType("real");
 
                     b.HasKey("ThroughPointId");
 

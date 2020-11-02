@@ -25,17 +25,17 @@ namespace RunTogether
             List<List<float>> PointList = new List<List<float>>(); 
             foreach (Stage stage in this.Stages)
             {
-                PointList.Add(new List<float> { stage.StartPoint.Coordinates.X, stage.StartPoint.Coordinates.Y});
+                PointList.Add(new List<float> { stage.StartPoint.Coordinate.X, stage.StartPoint.Coordinate.Y});
 
                 if (stage.ThroughPoints != null)
                 {
                     foreach (ThroughPoint point in stage.ThroughPoints)
                     {
-                        PointList.Add(new List<float> { point.Coordinates.X, point.Coordinates.Y });
+                        PointList.Add(new List<float> { point.Coordinate.X, point.Coordinate.Y });
                     }
                 }
 
-                PointList.Add(new List<float> { stage.EndPoint.Coordinates.X, stage.EndPoint.Coordinates.Y });
+                PointList.Add(new List<float> { stage.EndPoint.Coordinate.X, stage.EndPoint.Coordinate.Y });
 
             }
             return PointList;

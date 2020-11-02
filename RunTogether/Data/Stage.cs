@@ -2,6 +2,8 @@
 using RunTogether.Data;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
 namespace RunTogether
@@ -22,10 +24,15 @@ namespace RunTogether
 
         public RunRoute RunRoute { get; set; }
 
-        public Stage(StartPoint start, EndPoint end)
+        public Stage(StartPoint startPoint, EndPoint endPoint)
         {
-            this.StartPoint = start;
-            this.EndPoint = end; 
+            this.StartPoint = startPoint;
+            this.EndPoint = endPoint;
+        }
+
+        private Stage()
+        {
+
         }
 
     }
