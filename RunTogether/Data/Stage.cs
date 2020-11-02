@@ -22,5 +22,11 @@ namespace RunTogether
 
         public RunRoute RunRoute { get; set; }
 
+        public Stage(StartPoint start, EndPoint end)
+        {
+            this.StartPoint = start;
+            this.EndPoint = end; 
+        }
+
     }
 }
