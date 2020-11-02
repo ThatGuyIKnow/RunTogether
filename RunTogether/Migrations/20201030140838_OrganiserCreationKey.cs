@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace RunTogether.Data.Migrations
+namespace RunTogether.Migrations
 {
-    public partial class RunnerUser : Migration
+    public partial class OrganiserCreationKey : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -196,6 +196,25 @@ namespace RunTogether.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrganiserCreationKeys",
+                columns: table => new
+                {
+                    Key = table.Column<string>(nullable: false),
+                    ExpirationDatetime = table.Column<DateTime>(nullable: false),
+                    GeneratedById = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrganiserCreationKeys", x => x.Key);
+                    table.ForeignKey(
+                        name: "FK_OrganiserCreationKeys_AspNetUsers_GeneratedById",
+                        column: x => x.GeneratedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stages",
                 columns: table => new
                 {
@@ -275,12 +294,12 @@ namespace RunTogether.Data.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "runner", "fe1cd569-28f5-44d6-b6a1-7915945def6d", "Runner", "RUNNER" });
+                values: new object[] { "runner", "c27a0bcc-6d75-4bb9-97a6-d70d4998f043", "Runner", "RUNNER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "organiser", "73b5b971-9df7-4d4f-9b86-16cf5c13a7d8", "Organiser", "ORGANISER" });
+                values: new object[] { "organiser", "a66202b0-3b38-4862-b35e-d8e8b5570e10", "Organiser", "ORGANISER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -333,6 +352,11 @@ namespace RunTogether.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_OrganiserCreationKeys_GeneratedById",
+                table: "OrganiserCreationKeys",
+                column: "GeneratedById");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RunRoutes_RunId",
                 table: "RunRoutes",
                 column: "RunId",
@@ -374,6 +398,9 @@ namespace RunTogether.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "EndPoints");
+
+            migrationBuilder.DropTable(
+                name: "OrganiserCreationKeys");
 
             migrationBuilder.DropTable(
                 name: "StartPoints");

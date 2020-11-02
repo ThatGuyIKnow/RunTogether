@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunTogether.Data;
 
-namespace RunTogether.Data.Migrations
+namespace RunTogether.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201028123001_RunnerUser")]
-    partial class RunnerUser
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,14 +49,14 @@ namespace RunTogether.Data.Migrations
                         new
                         {
                             Id = "runner",
-                            ConcurrencyStamp = "fe1cd569-28f5-44d6-b6a1-7915945def6d",
+                            ConcurrencyStamp = "c27a0bcc-6d75-4bb9-97a6-d70d4998f043",
                             Name = "Runner",
                             NormalizedName = "RUNNER"
                         },
                         new
                         {
                             Id = "organiser",
-                            ConcurrencyStamp = "73b5b971-9df7-4d4f-9b86-16cf5c13a7d8",
+                            ConcurrencyStamp = "a66202b0-3b38-4862-b35e-d8e8b5570e10",
                             Name = "Organiser",
                             NormalizedName = "ORGANISER"
                         });
@@ -253,6 +251,25 @@ namespace RunTogether.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("RunTogether.Areas.Identity.Data.OrganiserCreationKey", b =>
+                {
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("ExpirationDatetime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GeneratedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Key");
+
+                    b.HasIndex("GeneratedById");
+
+                    b.ToTable("OrganiserCreationKeys");
+                });
+
             modelBuilder.Entity("RunTogether.Data.EndPoint", b =>
                 {
                     b.Property<int>("EndPointId")
@@ -418,6 +435,15 @@ namespace RunTogether.Data.Migrations
                     b.HasOne("RunTogether.Run", "Run")
                         .WithMany("Runners")
                         .HasForeignKey("RunId");
+                });
+
+            modelBuilder.Entity("RunTogether.Areas.Identity.Data.OrganiserCreationKey", b =>
+                {
+                    b.HasOne("RunTogether.Areas.Identity.ApplicationUser", "GeneratedBy")
+                        .WithMany()
+                        .HasForeignKey("GeneratedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RunTogether.Data.EndPoint", b =>

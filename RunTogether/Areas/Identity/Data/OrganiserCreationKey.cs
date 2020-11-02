@@ -10,13 +10,15 @@ namespace RunTogether.Areas.Identity.Data
 {
     public class OrganiserCreationKey
     {
-        public OrganiserCreationKey(int generatedById, DateTime? expirationDatetime = null)
+        public OrganiserCreationKey(string generatedById)
         {
             GeneratedById = generatedById;
-            if (expirationDatetime.HasValue)
-            {
-                ExpirationDatetime = expirationDatetime.Value;
-            }
+        }
+
+        public OrganiserCreationKey(string generatedById, DateTime expirationDatetime)
+        {
+            GeneratedById = generatedById;
+            ExpirationDatetime = expirationDatetime;
         }
 
         [Key]
@@ -24,7 +26,7 @@ namespace RunTogether.Areas.Identity.Data
         public DateTime ExpirationDatetime { get; set; } = DateTime.Today.AddDays(1);
 
         [Required]
-        public int GeneratedById { get; private set; }
+        public string GeneratedById { get; private set; }
         [Required]
         [ForeignKey("GeneratedById")]
         public ApplicationUser GeneratedBy { get; private set; }
