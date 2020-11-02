@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using RunTogether.Shared.Forms;
+using Microsoft.EntityFrameworkCore;
 
 namespace RunTogether.Shared.Etc
 {
@@ -95,6 +96,33 @@ namespace RunTogether.Shared.Etc
             StateHasChanged();
         }
 
+        void OnUpdateRow(ApplicationUser order)
+        {
+            dbContext.Update(order);
+            // For production
+            //dbContext.SaveChanges();
+        }
+        void EditRow(ApplicationUser order)
+        {
+            runnerTable.EditRow(order);
+        }
 
+        void SaveRow(ApplicationUser order)
+        {
+            runnerTable.UpdateRow(order);
+        }
+
+        void CancelEdit(ApplicationUser order)
+        {
+            runnerTable.CancelEditRow(order);
+
+            // For production
+            var orderEntry = dbContext.Entry(order);
+            if (orderEntry.State == EntityState.Modified)
+            {
+                orderEntry.CurrentValues.SetValues(orderEntry.OriginalValues);
+                orderEntry.State = EntityState.Unchanged;
+            }
+        }
     }
 }

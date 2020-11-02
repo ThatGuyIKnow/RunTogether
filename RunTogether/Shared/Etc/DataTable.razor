@@ -42,11 +42,30 @@
                         new Dictionary<string, object>() { { "selectedRun", run } },
                         new DialogOptions() { Width = "700px", Height = "530px" }))" />
 
-                    <RadzenGrid @ref="runnerTable" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser" RowSelect="@(args => EditRunner(args))">
+                    <RadzenGrid @ref="runnerTable" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser" RowSelect="@(args => EditRunner(args))" EditMode="DataGridEditMode.Single" RowUpdate="@OnUpdateRow">
                         <Columns>
-                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn" />
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn">
+                                <EditTemplate Context="selectedRunner">
+                                    <RadzenTextBox @bind-Value="selectedRunner.FirstName" Data="@runners" TextProperty="FirstName" ValueProperty="FirstName" Style="width:100%" />
+                                </EditTemplate>
+                            </RadzenGridColumn>
                             <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn" />
                             <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email" />
+
+
+                            <RadzenGridColumn TItem="ApplicationUser" Context="sampleBlazorModelsSampleOrder" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                                <Template Context="selectedRunner">
+                                    <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow(selectedRunner))">
+                                    </RadzenButton>
+                                </Template>
+                                <EditTemplate Context="selectecRunner">
+                                    <RadzenButton Icon="save" Size="ButtonSize.Small" Click="@((args) => SaveRow(selectecRunner))">
+                                    </RadzenButton>
+                                    <RadzenButton Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(selectecRunner))">
+                                    </RadzenButton>
+                                </EditTemplate>
+                            </RadzenGridColumn>
+
                         </Columns>
                     </RadzenGrid>
                    }
