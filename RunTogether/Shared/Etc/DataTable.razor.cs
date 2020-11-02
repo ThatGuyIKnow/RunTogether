@@ -33,7 +33,8 @@ namespace RunTogether.Shared.Etc
         int slider = 50;
 
         //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
-        RadzenGrid<Run> table;
+        RadzenGrid<Run> runTable;
+        RadzenGrid<ApplicationUser> runnerTable;
 
         //henter hele data table ned og filtere client-side, men der laves ingen filtering her, så det er fint.
         IEnumerable<Run> runs;
@@ -81,7 +82,8 @@ namespace RunTogether.Shared.Etc
 
         void Close(dynamic result)
         {
-            table.Reload();
+            runTable.Reload();
+            runnerTable.Reload();
             StateHasChanged();
         }
 

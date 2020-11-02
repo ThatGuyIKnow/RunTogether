@@ -18,7 +18,7 @@
 
 <div class="row">
     <div class="col-md-6">
-        <RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
+        <RadzenGrid @ref="runTable" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
             <Columns>
                 <RadzenGridColumn TItem="Run" Property="Name" Title="Løb"></RadzenGridColumn>
                 <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Dato"></RadzenGridColumn>
@@ -32,16 +32,24 @@
         <RadzenTabs>
             <Tabs>
                 <RadzenTabsItem Text="Runners">
+                   @if (run.Name == null)
+                   {
+                    <p>Vælg et løb for at se løbere</p>
+                   }
+                   else
+                   {
                     <RadzenButton Icon="drirections_run" Text=@($"Opret ny løber til {run.Name}") Click="@(args => dialogService.Open<CreateNewRunner>($"Opret ny løber til {run.Name}",
-                        new Dictionary<string, object>(),
-                        new DialogOptions(){ Width = "700px", Height = "530px" }))" />
-                    <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
+                        new Dictionary<string, object>() { { "selectedRun", run } },
+                        new DialogOptions() { Width = "700px", Height = "530px" }))" />
+
+                    <RadzenGrid @ref="runnerTable" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
                         <Columns>
                             <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn" />
                             <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn" />
                             <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email" />
                         </Columns>
                     </RadzenGrid>
+                   }
                 </RadzenTabsItem>
 
                 <RadzenTabsItem Text="Route">

@@ -1,25 +1,49 @@
-﻿@inject DialogService dialogService
+﻿@using RunTogether.Data
+@using Microsoft.AspNetCore.Identity
+@using RunTogether.Areas.Identity
+
+@inject ApplicationDbContext dbContext
+@inject DialogService dialogService
+@inject UserManager<ApplicationUser> userManager
 
 <p>Udfyld formularen for at skabe en ny løber:</p>
 
-<div class="row">
-    <div class="col-md-6">
-        <h3>Fornavn:</h3>
-        <RadzenTextBox Style="margin-bottom: 20px" Change="@(args => Change(args, ""))" />
+<RadzenTemplateForm TItem="ApplicationUser" Data="@runner" Submit="()=> OnSubmit(runner.FirstName, runner.LastName, runner.Email, selectedRun)" InvalidSubmit="()=> OnInvalidSubmit()">
 
-        <h3>Efternavn:</h3>
-        <RadzenTextBox Style="margin-bottom: 20px" Change="@(args => Change(args, ""))" />
-
-        <h3>Email:</h3>
-        <RadzenTextBox Style="margin-bottom: 20px" Change="@(args => Change(args, ""))" />
-
-        <h3>Rute:</h3>
-        <RadzenDropDown AllowClear="true" TValue="string" Style="margin-bottom: 20px" Change="@(args => Change("string", "DropDown"))" />
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="Fornavn" />
+        </div>
+        <div class="col">
+            <RadzenTextBox Name="FirstName" @bind-Value="runner.FirstName" /><br>
+            <RadzenRequiredValidator Component="FirstName" Text="Fornavn skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-12">
-        <RadzenButton Click="@((args) => dialogService.Close(true))" Text="Tilføj" Style="margin-bottom: 10px; width: 150px" />
-        <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Annuler" Style="margin-bottom: 10px; width: 150px" />
+
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="Efternavn" />
+        </div>
+        <div class="col">
+            <RadzenTextBox Name="LastName" @bind-Value="runner.LastName" /><br>
+            <RadzenRequiredValidator Component="LastName" Text="Efternavn skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
     </div>
-</div>
+
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="Email" />
+        </div>
+        <div class="col">
+            <RadzenTextBox Name="Email" @bind-Value="runner.Email" /><br>
+            <RadzenRequiredValidator Component="Email" Text="Email skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+            <RadzenButton Click="()=> dialogService.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
+        </div>
+    </div>
+</RadzenTemplateForm>
