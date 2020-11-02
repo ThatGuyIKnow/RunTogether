@@ -45,7 +45,6 @@ namespace RunTogether
             services.AddRazorPages();
             services.AddServerSideBlazor(); 
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
-            services.AddSingleton<WeatherForecastService>();
             services.AddScoped<DialogService>();
             services.AddTransient<UserCreationHelper>();
             services.AddTransient<PromiseHelper>();
@@ -61,7 +60,6 @@ namespace RunTogether
                 options.AccessDeniedPath = "/Identity/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
-            services.AddSingleton<WeatherForecastService>();
 
             services.AddScoped<DialogService>();
         }

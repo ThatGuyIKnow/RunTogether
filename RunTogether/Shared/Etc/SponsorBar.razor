@@ -1,26 +1,15 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject IJSRuntime JSRuntime
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Sponsors</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+<div class="scrollable">
     <ul>
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/icon1.png" Style="width:100%" />
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/icon4.png" Style="width:100%" />
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/icon5.png" Style="width:100%" />
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png" Style="width:100%" />
+        <!-- This is just pulling from an array for new, needs to be changed to pulling form a different resource -->
+        @foreach (var sponsor in sponsors)
+        {
+            <RadzenImage Path="@sponsor" Style="height: 10rem; max-width: 100%; object-fit: contain" />
+        }
     </ul>
 </div>
-
-@code {
-    private bool collapseNavMenu = false;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}

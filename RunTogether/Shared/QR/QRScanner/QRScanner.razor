@@ -82,10 +82,10 @@ else
         PromiseHelper.SetResolve(CodeReceivedHandler);
 
         // (Creation function, video HTML id, objRef from PromiseHelper)
-        JsRuntime.InvokeVoidAsync(
-        "Main.QrScanner.CreateQrScanner",
-        "qrVideo",
-        DotNetObjectReference.Create(PromiseHelper));
+        JSRuntime.InvokeVoidAsync(
+            "Main.QrScanner.CreateQrScanner",
+            "qrVideo",
+            DotNetObjectReference.Create(PromiseHelper));
 
         // Check if camera has flash available
         hasFlash = await JsRuntime.InvokeAsync<bool>("Main.QrScanner.HasFlash");
