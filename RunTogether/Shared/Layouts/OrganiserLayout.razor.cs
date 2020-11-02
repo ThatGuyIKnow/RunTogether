@@ -6,6 +6,7 @@ namespace RunTogether.Shared.Layouts
 {
     public partial class OrganiserLayout
     {
+        /* Determine which dialog to open. Expects button text. */
         void ShowDialog(MenuItemEventArgs e)
         {
             if (e.Text == "Skab ny løber")
