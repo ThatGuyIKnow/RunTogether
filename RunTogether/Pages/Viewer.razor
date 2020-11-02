@@ -1,7 +1,11 @@
 ﻿@page "/viewer"
 
-@using RunTogether.Shared.QR.QRScanner
+@layout RunTogether.Shared.Layouts.ViewerLayout
+
+@using RunTogether.Shared.Map
+@using RunTogether.Shared.Etc
 
 @layout RunTogether.Shared.Layouts.ViewerLayout
 
 <h3>Viewer</h3>
+<LeafletMap></LeafletMap>

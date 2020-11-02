@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RunTogether.Shared.Map
 {
-    public partial class Map
+    public partial class LeafletMap
     {
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -31,20 +31,20 @@ namespace RunTogether.Shared.Map
         }
 
 
-   
-    /*
-        protected string Coordinates { get; set; }
 
-        protected void Mouse_Move(MouseEventArgs e)
-        {
-            Coordinates = $"X = {e.ClientX } Y = {e.ClientY}";
-        }
+        /*
+            protected string Coordinates { get; set; }
 
-        private async void CreateMarker()
-        {
-            await JsRunTime.InvokeVoidAsync("Main.onMapClick");
-        }
+            protected void Mouse_Move(MouseEventArgs e)
+            {
+                Coordinates = $"X = {e.ClientX } Y = {e.ClientY}";
+            }
 
-    */
+            private async void CreateMarker()
+            {
+                await JsRunTime.InvokeVoidAsync("Main.onMapClick");
+            }
+
+        */
     }
 }
