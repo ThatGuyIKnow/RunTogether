@@ -1,9 +1,11 @@
 ﻿@using RunTogether.Shared.Etc
 @using RunTogether.Shared.Forms
 
-@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
 
-<div class="sidebar">
+@inherits LayoutComponentBase
+<!-- Desktop navigation bar -->
+<div class="sidebar" id="navBarId">
     <NavMenuRunner />
 </div>
 
@@ -27,6 +29,7 @@
     </div>
 </div>
 
+<!-- Mobile navigation bar -->
 <div class="navMobile">
     <RadzenCard>
         <RadzenMenu>

@@ -1,4 +1,5 @@
 ﻿@using RunTogether.Shared.Forms
+@using Radzen
 
 @inject DialogService dialogService
 
@@ -12,8 +13,10 @@
         <LoginDisplay />
     </div>
 
+    <!-- Is required for Radzen dialogues -->
     <RadzenDialog />
 
+    <!-- Top navigation bar -->
     <RadzenCard Style="height: auto">
         <RadzenMenu Click="@(args => ShowDialog(args))">
             <RadzenMenuItem Text="Skab ny løber" Icon="person_add">
@@ -27,6 +30,7 @@
         </RadzenMenu>
     </RadzenCard>
 
+    <!-- Main content -->
     <div class="content px-4">
         @Body
     </div>

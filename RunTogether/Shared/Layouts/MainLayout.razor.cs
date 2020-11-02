@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.JSInterop;
 
-
 namespace RunTogether.Shared.Layouts
 {
     public partial class MainLayout

@@ -9,7 +9,7 @@ import { CommonJS } from "./common.js";
 
 export const Common = new CommonJS();
 export const QrScanner = new QrScannerClass();
-export const sidebar = new SidebarCollapseFunctionality();
+export const Sidebar = new SidebarCollapseFunctionality();
 
 /*Test array with startpoint and endpoint coordinates*/
 let latlngs = [
