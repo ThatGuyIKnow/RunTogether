@@ -16,12 +16,12 @@ namespace RunTogether.Shared.Layouts
 
             if (collapsed == false) /* Open */
             {
-                await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle",
+                await JSRuntime.InvokeVoidAsync("Main.Sidebar.sidebarToggle",
                     new { id = sidebarId, attribute = "width", value = "15rem" });
             }
             else /* Close */
             {
-                await JSRuntime.InvokeVoidAsync("Main.sidebar.sidebarToggle",
+                await JSRuntime.InvokeVoidAsync("Main.Sidebar.sidebarToggle",
                     new { id = sidebarId, attribute = "width", value = "0" });
             }
         }

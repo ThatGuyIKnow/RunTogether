@@ -7,7 +7,7 @@ export class QrScannerClass
     constructor() {
         this.qrScanner = null;
         this.dotnetHelper = null;
-        
+
         this.CreateQrScanner   = this.CreateQrScanner.bind(this);
         this.StartQrScanner    = this.StartQrScanner.bind(this);
         this.StopQrScanner     = this.StopQrScanner.bind(this);

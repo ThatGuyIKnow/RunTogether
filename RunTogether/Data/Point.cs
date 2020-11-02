@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace RunTogether.Data
@@ -9,11 +10,11 @@ namespace RunTogether.Data
     public abstract class Point
     {
 
-        ValueTuple<float, float> Coordinates { get; set; }
+        public virtual ValueTuple<float, float> Coordinates { get; set; }
 
-        public int StageId { get; set; }
+        public virtual int StageId { get; set; }
 
-        public Stage Stage { get; set; }
+        public virtual Stage Stage { get; set; }
 
     }
 
@@ -21,6 +22,12 @@ namespace RunTogether.Data
     {
         public int StartPointId { get; set; }
         //public Stage Stage { get; set; }
+
+        public override ValueTuple<float, float> Coordinates { get; set; }
+
+        public override int StageId { get; set; }
+
+        public override Stage Stage { get; set; }
     }
 
     public class EndPoint : Point

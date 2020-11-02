@@ -4,13 +4,12 @@
 @using RunTogether.Areas.Identity
 @using RunTogether.Shared.QR
 @using RunTogether.Shared.Forms
-@using RunTogether.Shared.Map 
+@using RunTogether.Shared.Map
 
 @inject IJSRuntime jsRuntime
 @inject ApplicationDbContext dbContext
 @inject UserManager<ApplicationUser> userManager
 @inject DialogService dialogService
-
 
 <RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret ny løber",
                         new Dictionary<string, object>(),
