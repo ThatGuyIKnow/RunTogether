@@ -27,8 +27,8 @@
             <Columns>
                 <RadzenGridColumn TItem="Stage" Property="StageId" Title="ID" />
                 <RadzenGridColumn TItem="Stage" Property="Date" Title="Startdato" />
-                <RadzenGridColumn TItem="Stage" Property="StartPoint" Title="Startlokation" />
-                <RadzenGridColumn TItem="Stage" Property="EndPoint" Title="Slutlokation" />
+                @*<RadzenGridColumn TItem="Stage" Property="StartPoint" Title="Startlokation" />
+                <RadzenGridColumn TItem="Stage" Property="EndPoint" Title="Slutlokation" />*@
             </Columns>
         </RadzenGrid>
         <br />
@@ -74,14 +74,14 @@
 
             <div class="row" style="margin-bottom: 48px">
                 <div class="col-md-4 align-right">
-                    <RadzenNumeric TValue="float" @bind-Value="yCoordinateEnd" Placeholder="Startlokation Y" />
+                    <RadzenNumeric TValue="float" @bind-Value="yCoordinateStart" Placeholder="Startlokation Y" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12">
                     @*<RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />*@
-                    <RadzenButton Click="()=> OnSubmit(date, xCoordinate, yCoordinate)" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+                    <RadzenButton Click="()=> OnSubmit(date, xCoordinateStart, yCoordinateStart)" Text="OK" Style="margin-bottom: 10px; width: 150px" />
                     <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
                 </div>
             </div>

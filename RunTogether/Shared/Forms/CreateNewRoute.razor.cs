@@ -36,7 +36,7 @@ namespace RunTogether.Shared.Forms
 
         DateTime date;
         float xCoordinateStart;
-        float yCoordinateEnd;
+        float yCoordinateStart;
 
 
 
