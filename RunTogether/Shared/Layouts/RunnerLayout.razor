@@ -9,9 +9,19 @@
 
 <div class="main">
     <div class="top-row px-4 auth">
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
+        <!-- Sidebar toggle open/close button -->
+        <button class="navbar-toggler navbar-toggler-left" @onclick="ToggleSidebar">
+            <span class="oi oi-menu"></span>
+        </button>
+
+        <!-- RunTogether logo -->
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png"
+                     Style="width:200px" class="logo"></RadzenImage>
+
         <LoginDisplay />
     </div>
+
+    <!-- Main content -->
     <div class="content px-4">
         @Body
     </div>
@@ -26,10 +36,3 @@
         </RadzenMenu>
     </RadzenCard>
 </div>
-
-@code {
-    public string Trademark { get; set; } =
-        "RunTogether 2020 - Designet af: SW318E20";
-
-    public string runnerStatus = "You are the active runner";
-}

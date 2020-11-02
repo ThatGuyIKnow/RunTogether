@@ -22,16 +22,4 @@
         <RadzenButton Click="@((args) => dialogService.Close(true))" Text="Tilføj" Style="margin-bottom: 10px; width: 150px" />
         <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Annuler" Style="margin-bottom: 10px; width: 150px" />
     </div>
-</div>  
-
-@code {
-    string value;
-
-    Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();
-
-    void Change(string value, string name)
-    {
-        events.Add(DateTime.Now, $"{name} value changed to {value}");
-        StateHasChanged();
-    }
-}
+</div>

@@ -1,14 +1,19 @@
 ﻿@using RunTogether.Shared.Etc
 
-@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
 
-<div class="sidebar">
-    <SponsorBar/>
-</div>
+@inherits LayoutComponentBase
 
 <div class="main">
     <div class="top-row px-4 auth">
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo"></RadzenImage>
+        <!-- Sidebar toggle open/close button -->
+        <button class="navbar-toggler" @onclick="ToggleSidebar">
+            <span class="oi oi-menu"></span>
+        </button>
+
+        <!-- RunTogether logo -->
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png"
+                     Style="width:200px" class="logo logo-align-left"></RadzenImage>
     </div>
 
     <div class="content px-4">
@@ -16,7 +21,7 @@
     </div>
 </div>
 
-@code {
-    public string Trademark { get; set; } = "RunTogether 2020" +
-        "Designet af: SW318E20";
-}
+<!-- Sponsor bar -->
+<div class="sidebar" id="sponsorbarId">
+    <SponsorBar />
+</div>

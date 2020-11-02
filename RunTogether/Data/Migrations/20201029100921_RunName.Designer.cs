@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunTogether.Data;
 
 namespace RunTogether.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201029100921_RunName")]
+    partial class RunName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,14 +51,14 @@ namespace RunTogether.Data.Migrations
                         new
                         {
                             Id = "runner",
-                            ConcurrencyStamp = "f3612e97-82fc-4f15-9b30-ca35cfe91b01",
+                            ConcurrencyStamp = "0b625af8-154f-4b53-8d92-038d1641c2ce",
                             Name = "Runner",
                             NormalizedName = "RUNNER"
                         },
                         new
                         {
                             Id = "organiser",
-                            ConcurrencyStamp = "e04a036a-f636-4c53-b033-9a67538c044a",
+                            ConcurrencyStamp = "b0d054f4-1572-4c55-88f3-3685bdfec5f7",
                             Name = "Organiser",
                             NormalizedName = "ORGANISER"
                         });
@@ -318,7 +320,7 @@ namespace RunTogether.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("QRString")
+                    b.Property<string>("QRstring")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

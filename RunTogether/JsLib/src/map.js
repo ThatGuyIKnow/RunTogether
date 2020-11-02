@@ -1,69 +1,82 @@
-﻿export function test() {
-    console.log("Funktion som tester om der er forbindelse");
+﻿
+/*Global variable for the map class*/
+let mymap, layerGroup, polyline;
+
+let maxBounds1 = [51.649, 0.49]; 
+let maxBounds2 = [59.799, 18.68];  
+
+let bounds = L.latLngBounds(maxBounds1, maxBounds2);
+
+
+
+
+/*Class for the map*/
+export class mapClass {
+
+    constructor(latlngs) {
+        this.latlngs = latlngs;
+
+        this.initializeMap = this.initializeMap.bind(this);
+        this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
+        this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
+    }
+
+    /* A Method that initializes the map */
+    initializeMap() {
+
+        /*Pointing mymap to leaflet map and setting the viewpoint and start zoom point*/
+        mymap = L.map('mapid').setView([55.964, 9.992], 6.5);
+
+        mymap.setMaxBounds(bounds);
+
+        /* Appling tile layer to the map*/
+        L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            subdomains: 'abcd',
+            minZoom: 6,
+            maxZoom: 13,
+            maxBounds: bounds,
+            maxBoundsViscosity: 1, 
+            ext: 'jpg'
+        }).addTo(mymap);
+    }
+
+    /* A Method to add markers and lines*/
+    addMarkersAndLines(latlngs) {
+        let i = 0;
+        let segNum = 0;
+        let marker;
+
+        /*Creating layer group and adding to map*/
+        layerGroup = L.layerGroup().addTo(mymap);
+
+        /*Creating markers*/
+        for (i = 0; i < this.latlngs.length; i++) {
+            segNum = i + 1;
+            marker = L.marker(this.latlngs[i]).bindPopup('Start for segment ' + segNum +
+                '<br />Dette segment er sponseret af [SPONSOR].</p>').openPopup();
+            layerGroup.addLayer(marker);
+        }
+
+        /*Creating polyline and fiting the polyline and markers to the map view*/
+        polyline = L.polyline(this.latlngs, { color: '#db5d57' });
+        layerGroup.addLayer(polyline);
+        mymap.fitBounds(polyline.getBounds());
+
+    }
+
+    /* A Method to remove markers and lines*/
+    removeMarkersAndLines() {
+        mymap.removeLayer(layerGroup);
+    }
 }
 
-let mymap;
-
-let latlngs = [
-    [57.0117789, 9.9907118],
-    [57.00967, 10.00404],
-    [58.0123239, 10.9940051]
-];
-
-export function leaflet_start() {
-
-    // Start view for map (zoomlevel and viewpoint)
-    mymap = L.map('mapid').setView([57.0117789, 9.9907118], 6);
-
-
-    L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
-        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        /*subdomains: 'abcd',*/
-        minZoom: 6,
-        maxZoom: 16,
-        ext: 'jpg'
-    }).addTo(mymap);
-
-
-    /*var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(mymap);
-   */
-    /*    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            maxZoom: 18,
-            id: 'mapbox/satellite-v9',
-            tileSize: 512,
-            zoomOffset: -1,
-            accessToken: 'pk.eyJ1IjoiZWF3b29wIiwiYSI6ImNrZ2piaXQ0ODB3b2YyenRldDh6dXV1YXAifQ.RkCts-bAJZYnuCAL_fBf0w'
-        }).addTo(mymap);*/
-
-    //Test for sponser images and test to markers 
-
-    addMarkers();
-    addPolyline(latlngs);
-
-    // Text to check that the function is done
-    console.log("leaflet_start() function is done ");
-
-}
-
-function addMarkers() {
-    L.marker([57.0117789, 9.9907118]).bindPopup('Start for segment 1<br/>Dette segment er sponseret af State.</p><br/><img src="/logos/State_Logo_v1.jpg" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
-    L.marker([57.00967, 10.00404]).bindPopup('Start for segment 2<br />Dette segment er sponseret af FrugtKurven.</p><br/><img src="/logos/Frugtkurven_Logo.png" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
-    L.marker([58.0123239, 10.9940051]).bindPopup('Start for segment 3<br />Dette segment er sponseret af FrugtKurven.</p><br/><img src="/logos/Frugtkurven_Logo.png" asp-append-version="true" width="300px" />').openPopup().addTo(mymap);
-}
-
-
-
-function addPolyline(latlngs) {
-
-    let polyline = L.polyline(latlngs, { color: 'red' }).addTo(mymap);
-    mymap.fitBounds(polyline.getBounds());
-
-    console.log("Add polyline");
-}
+/*
+ *   //If the layer group has to be spilt up
+     addPolyline(latlngs) {
+        polyline = L.polyline(this.latlngs, { color: 'red' }).addTo(mymap);
+        mymap.fitBounds(polyline.getBounds());
+    }
 
 
 export function onMapClick() {
@@ -79,3 +92,11 @@ export function onMapClick() {
 
     mymap.on('click', onMapClick);
 }
+
+
+*/
+
+
+
+
+

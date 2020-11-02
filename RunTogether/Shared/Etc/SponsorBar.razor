@@ -13,14 +13,3 @@
         <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png" Style="width:100%" />
     </ul>
 </div>
-
-@code {
-    private bool collapseNavMenu = false;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}
