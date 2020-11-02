@@ -1,13 +1,10 @@
-﻿@page "/DataTable"
-@using Microsoft.EntityFrameworkCore
-@using System.Collections.Generic
+﻿@using System.Collections.Generic
 @using RunTogether.Data
-@using RunTogether.Pages
 @using Microsoft.AspNetCore.Identity
-@using RunTogether.Areas.Identity.Helpers
 @using RunTogether.Areas.Identity
 @using RunTogether.Shared.QR
 @using RunTogether.Shared.Forms
+@using RunTogether.Shared.Map 
 
 @inject IJSRuntime jsRuntime
 @inject ApplicationDbContext dbContext
@@ -45,14 +42,7 @@
                 </RadzenTabsItem>
 
                 <RadzenTabsItem Text="Route">
-                    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@runners" TItem="ApplicationUser" PageSize="10">
-                        <Template Context="detail">
-                            <RadzenCard Style="width:100px;height:100px">
-                                Product:
-                                <b>@detail?.Email</b>
-                            </RadzenCard>
-                        </Template>
-                    </RadzenDataList>
+                    <LeafletMap></LeafletMap>
                 </RadzenTabsItem>
 
                 <RadzenTabsItem Text="QR Kode">
