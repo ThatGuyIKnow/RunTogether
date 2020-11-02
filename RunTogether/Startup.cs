@@ -19,7 +19,6 @@ using RunTogether.Data;
 using Radzen;
 using RunTogether.Areas.Identity.Helpers;
 using RunTogether.Shared.QR.QRScanner;
-using Radzen;
 
 namespace RunTogether
 {
@@ -43,11 +42,11 @@ namespace RunTogether
             //    .AddRoles<IdentityRole>()
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
-            services.AddServerSideBlazor(); 
+            services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
             services.AddScoped<DialogService>();
             services.AddTransient<PromiseHelper>();
-            
+
 
             services.ConfigureApplicationCookie(options =>
             {
