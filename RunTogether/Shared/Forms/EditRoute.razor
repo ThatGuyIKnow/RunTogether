@@ -1,6 +1,7 @@
-﻿@inject DialogService dialogService
-@using RunTogether.Data
-@inject ApplicationDbContext applicationDbContext 
+﻿@using RunTogether.Data
+
+@inject DialogService dialogService
+@inject ApplicationDbContext applicationDbContext
 
 <p>Vælg segment for at redigere.</p>
 
@@ -13,8 +14,8 @@
 
         @*Kan måske bruges til at populate dropdown-listen:*@
         @*<RadzenDropDown AllowClear="true" Data="@stages" TValue="string" TextProperty="StageName" ValueProperty="StageID" Style="margin-bottom: 20px; width:200px;" Change="@(args => Change("string", "DropDown with bound Value"))" />*@
-       
-        
+
+
         @*EXEMPEL:*@
         @*<RadzenDropDown AllowClear="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" Data="@products" @bind-Value="myModel.MyValue"*@
         @*TextProperty="ProductName" ValueProperty="ProductID" Style="margin-bottom: 20px; width:400px;" Change="@(args => ChangeBound(args, "DropDown with bound Value"))" />*@
@@ -70,8 +71,3 @@
         <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Annuller" Style="margin-bottom: 10px; width: 150px" />
     </div>
 </div>
-
-@code {
-
-    
-}

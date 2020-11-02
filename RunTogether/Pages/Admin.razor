@@ -1,8 +1,9 @@
-﻿@layout RunTogether.Shared.Layouts.AdminLayout
+﻿@page "/admin"
 
-@page "/admin"
 @using RunTogether.Shared.QR
 @using RunTogether.Shared.Etc
+
+@layout RunTogether.Shared.Layouts.AdminLayout
 
 @inject RunTogether.Data.ApplicationDbContext dbContext
 
@@ -10,9 +11,4 @@
 
 <QRGenerator code="ITSWORKING!" size="100" />
 
-
 <DataTable></DataTable>
-
-@code {
-
-}
