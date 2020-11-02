@@ -7,7 +7,6 @@ let maxBounds2 = [59.799, 18.68];
 
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 
-
 /*Class for the map*/
 export class mapClass {
 
