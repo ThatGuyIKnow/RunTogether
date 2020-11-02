@@ -27,6 +27,8 @@
             <Columns>
                 <RadzenGridColumn TItem="Stage" Property="StageId" Title="ID" />
                 <RadzenGridColumn TItem="Stage" Property="Date" Title="Startdato" />
+                <RadzenGridColumn TItem="Stage" Property="StartPoint" Title="Startlokation" />
+                <RadzenGridColumn TItem="Stage" Property="EndPoint" Title="Slutlokation" />
             </Columns>
         </RadzenGrid>
         <br />
@@ -51,6 +53,8 @@
 
     async Task ShowAddStageDialog() => await dialogService.OpenAsync("Tilføj segment", ds =>
         @<RadzenTemplateForm TItem="Stage">
+            
+            <div id="mapid" ; style="height: 200px"></div>
 
             <div class="row" style="margin-bottom: 48px">
                 <div class="col-md-4 align-right">
@@ -64,13 +68,13 @@
 
             <div class="row" style="margin-bottom: 48px">
                 <div class="col-md-4 align-right">
-                    <RadzenNumeric TValue="float" @bind-Value="xCoordinate" Placeholder="Startlokation X" />
+                    <RadzenNumeric TValue="float" @bind-Value="xCoordinateStart" Placeholder="Startlokation X" />
                 </div>
             </div>
 
             <div class="row" style="margin-bottom: 48px">
                 <div class="col-md-4 align-right">
-                    <RadzenNumeric TValue="float" @bind-Value="yCoordinate" Placeholder="Startlokation Y" />
+                    <RadzenNumeric TValue="float" @bind-Value="yCoordinateEnd" Placeholder="Startlokation Y" />
                 </div>
             </div>
 

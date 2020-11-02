@@ -12,13 +12,15 @@ namespace RunTogether.Shared.Forms
     public partial class CreateNewRoute
     {
         ElementReference mapid;
+
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                await JSRuntime.InvokeVoidAsync("Main.leaflet_start");
-                firstRender = false;
+                await JSRuntime.InvokeVoidAsync("Main.Map.initializeMap");
+                StateHasChanged();
             }
+
         }
 
         Stage Selected = new Stage();
@@ -33,8 +35,8 @@ namespace RunTogether.Shared.Forms
         List<Stage> newStages = new List<Stage>();
 
         DateTime date;
-        float xCoordinate;
-        float yCoordinate;
+        float xCoordinateStart;
+        float yCoordinateEnd;
 
 
 
