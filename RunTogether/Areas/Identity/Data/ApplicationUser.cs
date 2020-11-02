@@ -21,5 +21,10 @@ namespace RunTogether.Areas.Identity
 
         public ApplicationUser() : base() { }
         public ApplicationUser(string userName) : base(userName) { }
+
+        public override string ToString()
+        {
+            return this.FirstName;
+        }
     }
 }
