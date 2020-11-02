@@ -1,4 +1,6 @@
 RunTogether/bin/
 RunTogether/obj/
 RunTogether/wwwroot/js
+RunTogether/Properties/launchSettings.json
+RunTogether/RunTogether.csproj.user
 .vs/
