@@ -1,6 +1,4 @@
-import { QrScannerClass } from './qrScanner';
 import { SidebarCollapseFunctionality } from './SidebarHide';
-import "../styles/qrScanner.css";
 
 import { QrScannerClass } from './qrScanner'
 import "../styles/qrScanner.css";
