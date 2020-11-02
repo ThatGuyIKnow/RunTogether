@@ -47,7 +47,6 @@ namespace RunTogether.Shared.Etc
         protected override async Task OnInitializedAsync()
         {
             runs = dbContext.Runs;
-            var test = new UserCreationHelper(userManager, dbContext);
 
             colorList.Add(new Farver() { Name = "RT rød", code = "#cc4545" });
             colorList.Add(new Farver() { Name = "Sort", code = "#000000" });

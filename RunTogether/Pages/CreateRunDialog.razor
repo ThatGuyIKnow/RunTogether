@@ -47,20 +47,4 @@
             </div>
         </div>
     </RadzenTemplateForm>
-@code {
 
-
-    Run run = new Run();
-
-    void OnSubmit(Run run)
-    {
-        Console.WriteLine("YEY!");
-        this.dialogService.Close(true);
-
-    }
-
-    void OnInvalidSubmit(FormInvalidSubmitEventArgs args)
-    {
-        Console.WriteLine("AW");
-    }
-}

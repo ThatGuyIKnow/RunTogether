@@ -2,15 +2,16 @@
 @using RunTogether.Data
 @using Microsoft.AspNetCore.Identity
 @using RunTogether.Areas.Identity
+@using RunTogether.Areas.Identity.Helpers
 @using RunTogether.Shared.QR
 @using RunTogether.Shared.Forms
-@using RunTogether.Shared.Map 
+@using RunTogether.Shared.Map
 
 @inject IJSRuntime jsRuntime
 @inject ApplicationDbContext dbContext
 @inject UserManager<ApplicationUser> userManager
 @inject DialogService dialogService
-
+@inject UserCreationHelper userCreationHelper
 
 <RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret nyt løb",
                         new Dictionary<string, object>(),
