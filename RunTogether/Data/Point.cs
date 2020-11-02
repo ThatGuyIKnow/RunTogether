@@ -12,52 +12,24 @@ namespace RunTogether.Data
 {
     public abstract class Point
     {
-        [NotMapped]
-        public Vector2 Coordinate
-        {
-            get
-            {
-                return new Vector2(this.X, this.Y);
-            }
-
-            set
-            {
-                this.X = value.X;
-                this.Y = value.Y;
-            }
-        }
-
         [Required]
-        public float X { get; private set; }
+        public float X { get; set; }
         [Required]
-        public float Y { get; private set; }
+        public float Y { get; set; }
 
         public int StageId { get; set; }
-
-        public Stage Stage { get; set; }
-        public Point(float x, float y) 
+        
+        public Stage? Stage { get; set; } 
+        public Point(float x, float y)
         {
-            this.Coordinate = new Vector2( x, y);
+            this.X = x;
+            this.Y = y;
         }
 
         protected Point()
         {
 
         }
-
-    }
-
-    
-    [ComplexType]
-    public class Coordinate
-    {
-        public int CoordinateId { get; set; }
-
-        [Column("X")]
-        public float X { get; set; }
-
-        [Column("Y")]
-        public float Y { get; set; }
 
     }
 

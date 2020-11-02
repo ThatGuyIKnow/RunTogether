@@ -8,11 +8,11 @@ namespace RunTogether
     public class RunRoute
     {
         public int RunRouteId { get; set; }
-        public List<Stage> Stages { get; set; }
+        public List<Stage> Stages { get; set; } = new List<Stage>();
         
         public int RunId { get; set; }
 
-        public Run Run { get; set; }
+        public Run? Run { get; set; }
 
         public override string ToString()
         {
@@ -25,17 +25,17 @@ namespace RunTogether
             List<List<float>> PointList = new List<List<float>>(); 
             foreach (Stage stage in this.Stages)
             {
-                PointList.Add(new List<float> { stage.StartPoint.Coordinate.X, stage.StartPoint.Coordinate.Y});
+                PointList.Add(new List<float> { stage.StartPoint.X, stage.StartPoint.Y});
 
                 if (stage.ThroughPoints != null)
                 {
                     foreach (ThroughPoint point in stage.ThroughPoints)
                     {
-                        PointList.Add(new List<float> { point.Coordinate.X, point.Coordinate.Y });
+                        PointList.Add(new List<float> { point.X, point.Y });
                     }
                 }
 
-                PointList.Add(new List<float> { stage.EndPoint.Coordinate.X, stage.EndPoint.Coordinate.Y });
+                PointList.Add(new List<float> { stage.EndPoint.X, stage.EndPoint.Y });
 
             }
             return PointList;

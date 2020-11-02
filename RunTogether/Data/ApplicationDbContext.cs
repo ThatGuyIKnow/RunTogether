@@ -46,29 +46,13 @@ namespace RunTogether.Data
                 .HasOne(sp => sp.Stage)
                 .WithOne(s => s.StartPoint);
 
-            //modelBuilder.Entity<StartPoint>()
-            //    .Property(ep => ep.Coordinates)
-            //    .HasConversion(
-            //           v => $"{v.X}, {v.Y}", v => new Vector2(1F, 1F));
-
-
             modelBuilder.Entity<EndPoint>()
                 .HasOne(e => e.Stage)
                 .WithOne(s => s.EndPoint);
 
-            //modelBuilder.Entity<EndPoint>()
-            //    .Property(ep => ep.Coordinates)
-            //    .HasConversion(
-            //           v => $"{v.X}, {v.Y}", v => new Vector2(1F, 1F));
-
             modelBuilder.Entity<ThroughPoint>()
                 .HasOne(t => t.Stage)
                 .WithMany(s => s.ThroughPoints);
-
-            //modelBuilder.Entity<ThroughPoint>()
-            //.Property(ep => ep.Coordinates)
-            //.HasConversion(
-            //       v => $"{v.X}, {v.Y}", v => new Vector2(1F, 1F));
 
             modelBuilder.Entity<RunRoute>()
                 .HasMany(rr => rr.Stages)
