@@ -32,11 +32,13 @@ namespace RunTogether.Shared.Forms
         RunRoute runRoute = new RunRoute();
         Run run = new Run();
 
-        List<Stage> newStages = new List<Stage>();
+        //List<Stage> newStages = new List<Stage>();
 
         DateTime date;
         float xCoordinateStart;
         float yCoordinateStart;
+        float xCoordinateEnd;
+        float yCoordinateEnd;
 
 
 
@@ -49,16 +51,15 @@ namespace RunTogether.Shared.Forms
         //}
 
 
-    public void OnSubmit(DateTime Start, float xCoord, float yCoord)
+        void OnSubmit(DateTime Start, float xCoordStart, float yCoordStart, float xxCoordEnd, float yCoordEnd)
         {
             Stage StageObj = new Stage() { Date = Start, RunRoute = runRoute };
-            //StageObj.StartPoint.StageId = StageObj.StageId;
-            StartPoint startPoint = new StartPoint() { Coordinates = (xCoord, yCoord) };
+            StartPoint startPoint = new StartPoint() { Coordinates = (xCoordStart, yCoordStart) };
+            EndPoint endPoint = new EndPoint() { Coordinates = (xCoordinateEnd, yCoordinateEnd) };
             StageObj.StartPoint = startPoint;
+            StageObj.EndPoint = endPoint;
             runRoute.Stages.Add(StageObj);
-            newStages.Add(StageObj);
-            Console.WriteLine("I am in onsubmit");
-            Console.WriteLine(StageObj.StartPoint.Coordinates);
+            //newStages.Add(StageObj);
             this.dialogService.Close(true);
             table.Reload();
 
@@ -69,22 +70,22 @@ namespace RunTogether.Shared.Forms
             Console.WriteLine("AW");
         }
 
-        public void SaveRouteChanges()
+        void SaveRouteChanges()
         {
             runRoute.Run = run; //burde laves om til at automatisk tage det run man har valgt at edit route på
             dialogService.Close(true);
 
             dbContext.RunRoutes.Add(runRoute);
 
-            foreach (Stage stage in newStages)
-            {
-                dbContext.Stages.Add(stage);
-            }
+            //foreach (Stage stage in newStages)
+            //{
+            //    dbContext.Stages.Add(stage);
+            //}
 
             dbContext.SaveChanges();
         }
 
-        public void CancelRouteChanges()
+        void CancelRouteChanges()
         {
             dialogService.Close(true);
         }

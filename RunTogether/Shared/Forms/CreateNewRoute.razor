@@ -25,10 +25,10 @@
         @*Skal tilføje flere felter*@
         <RadzenGrid @ref="table" Data="@runRoute.Stages" AllowFiltering="true" AllowSorting="true" TItem="Stage" RowSelect="@(args => Selected = args)">
             <Columns>
-                <RadzenGridColumn TItem="Stage" Property="StageId" Title="ID" />
+                @*<RadzenGridColumn TItem="Stage" Property="StageId" Title="ID" />*@
                 <RadzenGridColumn TItem="Stage" Property="Date" Title="Startdato" />
-                @*<RadzenGridColumn TItem="Stage" Property="StartPoint" Title="Startlokation" />
-                <RadzenGridColumn TItem="Stage" Property="EndPoint" Title="Slutlokation" />*@
+                <RadzenGridColumn TItem="Stage" Property="StartPoint.Coordinates" Title="Startlokation" />
+                <RadzenGridColumn TItem="Stage" Property="EndPoint.Coordinates" Title="Slutlokation" />
             </Columns>
         </RadzenGrid>
         <br />
@@ -57,7 +57,7 @@
             <div id="mapid" ; style="height: 200px"></div>
 
             <div class="row" style="margin-bottom: 48px">
-                <div class="col-md-4 align-right">
+                <div class="col-md-4">
                     <RadzenLabel Text="Startdato" />
                 </div>
                 <div class="col">
@@ -67,21 +67,45 @@
             </div>
 
             <div class="row" style="margin-bottom: 48px">
-                <div class="col-md-4 align-right">
+                <div class="col-md-4">
+                    <RadzenLabel Text="Startlokation X" />
+                </div>
+                <div class="col-md-4">
                     <RadzenNumeric TValue="float" @bind-Value="xCoordinateStart" Placeholder="Startlokation X" />
                 </div>
             </div>
 
             <div class="row" style="margin-bottom: 48px">
-                <div class="col-md-4 align-right">
+                <div class="col-md-4">
+                    <RadzenLabel Text="Startlokation Y" />
+                </div>
+                <div class="col-md-4">
                     <RadzenNumeric TValue="float" @bind-Value="yCoordinateStart" Placeholder="Startlokation Y" />
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 48px">
+                <div class="col-md-4">
+                    <RadzenLabel Text="Slutlokation X" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenNumeric TValue="float" @bind-Value="xCoordinateEnd" Placeholder="Slutlokation X" />
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 48px">
+                <div class="col-md-4">
+                    <RadzenLabel Text="Slutlokation Y" />
+                </div>
+                <div class="col-md-4">
+                    <RadzenNumeric TValue="float" @bind-Value="yCoordinateEnd" Placeholder="Slutlokation Y" />
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-12">
                     @*<RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />*@
-                    <RadzenButton Click="()=> OnSubmit(date, xCoordinateStart, yCoordinateStart)" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+                    <RadzenButton Click="()=> OnSubmit(date, xCoordinateStart, yCoordinateStart, xCoordinateEnd, yCoordinateEnd)" Text="OK" Style="margin-bottom: 10px; width: 150px" />
                     <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
                 </div>
             </div>
