@@ -1,0 +1,54 @@
+﻿@using RunTogether.Data
+
+@inject ApplicationDbContext dbContext
+@inject DialogService dialogService
+
+<RadzenTemplateForm TItem="Run" Data="@run" Submit="()=> OnSubmit(run.Name, run.StartDate, run.EndDate, run.QRString)" InvalidSubmit="()=> OnInvalidSubmit()">
+
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="Løb navn" />
+        </div>
+        <div class="col">
+            <RadzenTextBox Name="Name" @bind-Value="run.Name" /><br>
+            <RadzenRequiredValidator Component="Name" Text="Navn skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="Start dato" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Name="StartDate" DateFormat="d" @bind-Value="run.StartDate" /><br>
+            <RadzenRequiredValidator Component="StartDate" Text="Start dato skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="Slut dato" />
+        </div>
+        <div class="col">
+            <RadzenDatePicker Name="EndDate" DateFormat="d" @bind-Value="run.EndDate" /><br>
+            <RadzenRequiredValidator Component="EndDate" Text="Slut dato skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
+    </div>
+
+    <div class="row" style="margin-bottom: 48px">
+        <div class="col-md-4 align-right">
+            <RadzenLabel Text="QR Kode" />
+        </div>
+        <div class="col">
+            <RadzenTextBox Name="QRString" @bind-Value="run.QRString" /><br>
+            <RadzenRequiredValidator Component="QRString" Text="QR Kode skal udfyldes" Popup=true Style="position: absolute" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+            <RadzenButton Click="()=> dialogService.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
+        </div>
+    </div>
+</RadzenTemplateForm>

@@ -1,30 +1,72 @@
-﻿
+﻿@page "/DataTable"
 @using Microsoft.EntityFrameworkCore
 @using System.Collections.Generic
 @using RunTogether.Data
+@using RunTogether.Pages
+@using Microsoft.AspNetCore.Identity
+@using RunTogether.Areas.Identity.Helpers
+@using RunTogether.Areas.Identity
+@using RunTogether.Shared.QR
+@using RunTogether.Shared.Forms
 
+@inject IJSRuntime jsRuntime
 @inject ApplicationDbContext dbContext
-
-<h3>DataTable</h3>
-
-<RadzenGrid Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run">
-    <Columns>
-        <RadzenGridColumn TItem="Run" Property="ID" Title="ID"></RadzenGridColumn>
-        <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Date"></RadzenGridColumn>
-        <RadzenGridColumn TItem="Run" Property="EndDate" Title="End Date"></RadzenGridColumn>
-        <RadzenGridColumn TItem="Run" Property="Route" Title="Route"></RadzenGridColumn>
-    </Columns>
-</RadzenGrid>
+@inject UserManager<ApplicationUser> userManager
+@inject DialogService dialogService
 
 
+<RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret ny løber",
+                        new Dictionary<string, object>(),
+                        new DialogOptions(){ Width = "700px", Height = "530px" }))" />
 
-@code {
+<div class="row">
+    <div class="col-md-6">
+        <RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
+            <Columns>
+                <RadzenGridColumn TItem="Run" Property="Name" Title="Løb"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Dato"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="EndDate" Title="Slut Dato"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="Route" Title="Rute"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
+            </Columns>
+        </RadzenGrid>
+    </div>
+    <div class="col-md-6">
+        <RadzenTabs>
+            <Tabs>
+                <RadzenTabsItem Text="Runners">
+                    <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
+                        <Columns>
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn" />
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn" />
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email" />
+                        </Columns>
+                    </RadzenGrid>
+                </RadzenTabsItem>
 
-    IEnumerable<Run> runs;
+                <RadzenTabsItem Text="Route">
+                    <RadzenDataList WrapItems="true" AllowPaging="true" Data="@runners" TItem="ApplicationUser" PageSize="10">
+                        <Template Context="detail">
+                            <RadzenCard Style="width:100px;height:100px">
+                                Product:
+                                <b>@detail?.Email</b>
+                            </RadzenCard>
+                        </Template>
+                    </RadzenDataList>
+                </RadzenTabsItem>
 
-    protected override void OnInitialized()
-    {
-        runs = dbContext.Runs;
-    }
+                <RadzenTabsItem Text="QR Kode">
+                    <div>
+                        <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
 
-}
+                        <RadzenDropDown @bind-Value="color" AllowClear="true" TValue="string" Data="@colorList" TextProperty="Name" ValueProperty="code" Style="margin-bottom: 20px" />
+
+                        <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
+
+                        <QRGenerator code="@run.QRString" size=@($"{slider}%") color="@color" />
+                    </div>
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+    </div>
+</div>

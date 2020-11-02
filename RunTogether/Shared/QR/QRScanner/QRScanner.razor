@@ -1,5 +1,12 @@
 ﻿@inject IJSRuntime JSRuntime
 @inject PromiseHelper PromiseHelper
+@inject UserManager<ApplicationUser> _userManager
+@inject ApplicationDbContext dbContext
+@using RunTogether.Areas.Identity
+@using RunTogether.Areas.Identity.Helpers
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using RunTogether.Data
 
 @if (hasCamera)
 {
@@ -57,7 +64,7 @@ else
     }
 
 
-    private void InitializeQrScanner()
+    private async void InitializeQrScanner()
     {
         // Create QR Scanner and start it up
         CreateQrScanner();
