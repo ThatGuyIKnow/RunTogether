@@ -42,7 +42,7 @@
                         new Dictionary<string, object>() { { "selectedRun", run } },
                         new DialogOptions() { Width = "700px", Height = "530px" }))" />
 
-                    <RadzenGrid @ref="runnerTable" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
+                    <RadzenGrid @ref="runnerTable" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser" RowSelect="@(args => EditRunner(args))">
                         <Columns>
                             <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn" />
                             <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn" />

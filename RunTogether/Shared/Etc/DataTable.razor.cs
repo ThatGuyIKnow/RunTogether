@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RunTogether.Shared.Forms;
 
 namespace RunTogether.Shared.Etc
 {
@@ -68,11 +69,17 @@ namespace RunTogether.Shared.Etc
         Run run = new Run();
         public void QueryForRunners(Run QueryRun)
         {
-
             run = QueryRun;
 
             runners = dbContext.Users
                 .Where(u => u.RunId == QueryRun.ID);
+        }
+
+        void EditRunner(ApplicationUser selectedRunner)
+        {
+                dialogService.Open<EditRunner>(($"Rediger: {selectedRunner.FirstName} {selectedRunner.LastName}"),
+                    new Dictionary<string, object>() { {"selectedRunner", selectedRunner } },
+                    new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
         }
 
         void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
@@ -83,7 +90,8 @@ namespace RunTogether.Shared.Etc
         void Close(dynamic result)
         {
             runTable.Reload();
-            runnerTable.Reload();
+            if(run.Name != null)
+                runnerTable.Reload();
             StateHasChanged();
         }
 
