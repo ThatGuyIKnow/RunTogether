@@ -27,10 +27,13 @@ namespace RunTogether
             {
                 PointList.Add(new List<float> { stage.StartPoint.Coordinates.X, stage.StartPoint.Coordinates.Y});
 
-                //foreach (ThroughPoint point in stage.ThroughPoints)
-                //{
-                //    PointList.Add(new List<float> { point.Coordinates.X, point.Coordinates.Y });
-                //}
+                if (stage.ThroughPoints != null)
+                {
+                    foreach (ThroughPoint point in stage.ThroughPoints)
+                    {
+                        PointList.Add(new List<float> { point.Coordinates.X, point.Coordinates.Y });
+                    }
+                }
 
                 PointList.Add(new List<float> { stage.EndPoint.Coordinates.X, stage.EndPoint.Coordinates.Y });
 
