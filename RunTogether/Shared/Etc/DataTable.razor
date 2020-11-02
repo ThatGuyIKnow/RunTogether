@@ -15,7 +15,7 @@
 @inject DialogService dialogService
 
 
-<RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret ny løber",
+<RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret nyt løb",
                         new Dictionary<string, object>(),
                         new DialogOptions(){ Width = "700px", Height = "530px" }))" />
 
@@ -35,6 +35,9 @@
         <RadzenTabs>
             <Tabs>
                 <RadzenTabsItem Text="Runners">
+                    <RadzenButton Icon="drirections_run" Text=@($"Opret ny løber til {run.Name}") Click="@(args => dialogService.Open<CreateNewRunner>($"Opret ny løber til {run.Name}",
+                        new Dictionary<string, object>(),
+                        new DialogOptions(){ Width = "700px", Height = "530px" }))" />
                     <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
                         <Columns>
                             <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn" />
