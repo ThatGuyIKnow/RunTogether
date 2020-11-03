@@ -1,5 +1,4 @@
 ﻿@using RunTogether.Shared.Etc
-@using RunTogether.Shared.Forms
 
 @inject IJSRuntime JSRuntime
 
@@ -19,7 +18,6 @@
         <!-- RunTogether logo -->
         <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png"
                      Style="width:200px" class="logo"></RadzenImage>
-
     </div>
 
     <!-- Main content -->
@@ -30,11 +28,9 @@
 
 <!-- Mobile navigation bar -->
 <div class="navMobile">
-    <RadzenCard>
-        <RadzenMenu>
-            <RadzenMenuItem Text="Grib stafet" Icon="phone" Path=""></RadzenMenuItem>
-            <RadzenMenuItem Text="Rute" Icon="map" Path=""></RadzenMenuItem>
-            <RadzenMenuItem Text="Indstillinger" Icon="favorite" Path=""></RadzenMenuItem>
-        </RadzenMenu>
-    </RadzenCard>
+    <ul class="navMobileItems">
+        <RadzenMenuItem Text="Grib stafet" Icon="phone" Path=""></RadzenMenuItem>
+        <RadzenMenuItem Text="Rute" Icon="map" Path=""></RadzenMenuItem>
+        <RadzenMenuItem Text="Indstillinger" Icon="favorite" Path=""></RadzenMenuItem>
+    </ul>
 </div>

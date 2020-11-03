@@ -151,10 +151,6 @@ app {
     }
 
 @media (max-width: 767.98px) {
-    .main .top-row:not(.auth) {
-        display: none;
-    }
-
     .sidebar {
         display: none;
     }
@@ -165,11 +161,27 @@ app {
 
     .navMobile {
         height: auto;
-        width: auto;
-        bottom: 0px;
-        justify-content: center;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+        margin: 0;
+        color: white;
+        background: var(--run-together);
+    }
+
+    .navMobileItems {
+        list-style-type: none;
         display: flex;
-        align-items: center;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-content: center;
+        padding: 0;
+    }
+
+    .navigation-item-link {
+        flex-direction: column;
+        padding: 1rem 1rem 0 1rem;
     }
 
     .main .top-row a, .main .top-row .btn-link {
