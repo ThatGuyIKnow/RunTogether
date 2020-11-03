@@ -1,10 +1,11 @@
 ﻿@using RunTogether.Data
 @using Microsoft.AspNetCore.Identity
 @using RunTogether.Areas.Identity
+@using RunTogether.Areas.Identity.Helpers
 
 @inject ApplicationDbContext dbContext
 @inject DialogService dialogService
-@inject UserManager<ApplicationUser> userManager
+@inject UserCreationHelper userCreation
 
 <p>Udfyld formularen for at skabe en ny løber:</p>
 

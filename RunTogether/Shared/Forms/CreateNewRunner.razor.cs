@@ -16,8 +16,8 @@ namespace RunTogether.Shared.Forms
 
         async public void OnSubmit(string firstName,string lastName, string email, Run selectedRun)
         {
-            var test = new UserCreationHelper(userManager, dbContext);
-            await test.CreateRunner(firstName, lastName, email, selectedRun);
+
+            await userCreation.CreateRunner(firstName, lastName, email, selectedRun);
             Console.WriteLine("YEY!");
             this.dialogService.Close(true);
         }

@@ -95,32 +95,32 @@ namespace RunTogether.Shared.Etc
             StateHasChanged();
         }
 
-        void OnUpdateRow(ApplicationUser order)
+
+
+        void OnUpdateRow(ApplicationUser runner)
         {
-            dbContext.Update(order);
+            dbContext.Update(runner);
+        }
+        void EditRow(ApplicationUser runner)
+        {
+            runnerTable.EditRow(runner);
+        }
+
+        void SaveRow(ApplicationUser runner)
+        {
+            runnerTable.UpdateRow(runner);
+        }
+
+        void CancelEdit(ApplicationUser runner)
+        {
+            runnerTable.CancelEditRow(runner);
+
             // For production
-            //dbContext.SaveChanges();
-        }
-        void EditRow(ApplicationUser order)
-        {
-            runnerTable.EditRow(order);
-        }
-
-        void SaveRow(ApplicationUser order)
-        {
-            runnerTable.UpdateRow(order);
-        }
-
-        void CancelEdit(ApplicationUser order)
-        {
-            runnerTable.CancelEditRow(order);
-
-            // For production
-            var orderEntry = dbContext.Entry(order);
-            if (orderEntry.State == EntityState.Modified)
+            var runnerEntry = dbContext.Entry(runner);
+            if (runnerEntry.State == EntityState.Modified)
             {
-                orderEntry.CurrentValues.SetValues(orderEntry.OriginalValues);
-                orderEntry.State = EntityState.Unchanged;
+                runnerEntry.CurrentValues.SetValues(runnerEntry.OriginalValues);
+                runnerEntry.State = EntityState.Unchanged;
             }
         }
     }

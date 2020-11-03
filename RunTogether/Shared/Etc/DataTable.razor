@@ -50,8 +50,16 @@
                                     <RadzenTextBox @bind-Value="selectedRunner.FirstName" Data="@runners" TextProperty="FirstName" ValueProperty="FirstName" Style="width:100%" />
                                 </EditTemplate>
                             </RadzenGridColumn>
-                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn" />
-                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email" />
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn">
+                                <EditTemplate Context="selectedRunner">
+                                    <RadzenTextBox @bind-Value="selectedRunner.LastName" Data="@runners" TextProperty="LastName" ValueProperty="LastName" Style="width:100%" />
+                                </EditTemplate>
+                            </RadzenGridColumn>
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email">
+                                <EditTemplate Context="selectedRunner">
+                                    <RadzenTextBox @bind-Value="selectedRunner.Email" Data="@runners" TextProperty="Email" ValueProperty="Email" Style="width:100%" />
+                                </EditTemplate>
+                            </RadzenGridColumn>
 
 
                             <RadzenGridColumn TItem="ApplicationUser" Context="sampleBlazorModelsSampleOrder" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
