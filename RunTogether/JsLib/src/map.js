@@ -1,10 +1,8 @@
 ﻿
 /*Global variable for the map class*/
 let mymap, layerGroup, polyline;
-
 let maxBounds1 = [51.649, 0.49]; 
 let maxBounds2 = [59.799, 18.68];  
-
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 
 
@@ -40,11 +38,18 @@ export class mapClass {
             maxBoundsViscosity: 1, 
             ext: 'jpg'
         }).addTo(mymap);
+
+        /*Creating layer group and adding to map*/
+        layerGroup = L.layerGroup().addTo(mymap);
+
     }
 
     /* A Method to add markers and lines*/
     addMarkersAndLines(obj) {
 
+        this.removeMarkersAndLines(); 
+/*        mymap.removeLayer(layerGroup); 
+*/
         let latlngs = JSON.parse(obj).Coordinates
 
         console.log(latlngs)
@@ -69,7 +74,8 @@ export class mapClass {
         layerGroup.addLayer(polyline);
         mymap.fitBounds(polyline.getBounds());
 
-    }
+    }   
+
 
     /* A Method to remove markers and lines*/
     removeMarkersAndLines() {
@@ -101,8 +107,3 @@ export function onMapClick() {
 
 
 */
-
-
-
-
-
