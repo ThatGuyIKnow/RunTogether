@@ -23,7 +23,8 @@
 
         @*Grid that shows the stages belonging to the new route*@
         @*Skal tilføje flere felter*@
-        <RadzenGrid @ref="table" Data="@runRoute.Stages" AllowFiltering="true" AllowSorting="true" TItem="Stage" RowSelect="@(args => Selected = args)">
+        @*<RadzenGrid @ref="table" Data="@runRoute.Stages" AllowFiltering="true" AllowSorting="true" TItem="Stage" RowSelect="@(args => Selected = args)">*@
+        <RadzenGrid @ref="table" Data="@runRoute.Stages" AllowFiltering="true" AllowSorting="true" TItem="Stage">
             <Columns>
                 @*<RadzenGridColumn TItem="Stage" Property="StageId" Title="ID" />*@
                 <RadzenGridColumn TItem="Stage" Property="Date" Title="Startdato" />
@@ -105,7 +106,7 @@
             <div class="row">
                 <div class="col-md-12">
                     @*<RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />*@
-                    <RadzenButton Click="()=> OnSubmit(date, xCoordinateStart, yCoordinateStart, xCoordinateEnd, yCoordinateEnd)" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+                    <RadzenButton Click="()=> OnSubmit()" Text="OK" Style="margin-bottom: 10px; width: 150px" />
                     <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
                 </div>
             </div>
