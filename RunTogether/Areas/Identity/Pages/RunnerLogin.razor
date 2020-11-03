@@ -1,0 +1,74 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using RunTogether.Areas.Identity
+@using RunTogether.Areas.Identity.Helpers
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using RunTogether.Data
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Server.IIS
+@using Microsoft.AspNetCore.WebUtilities
+@using Radzen 
+@inject UserManager<ApplicationUser> userManager
+@inject SignInManager<ApplicationUser> signInManager
+@inject NavigationManager navigationManager
+@inject IHostEnvironmentAuthenticationStateProvider HostAuthentication
+
+@page "/runner/login"
+
+<h3>RunnerLogin</h3>
+<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        string key = GetQueryValue("key");
+
+        ApplicationUser user = await GetUserFromKey(key);
+
+        ClaimsPrincipal principal = await CreatePrincipalFromUser(user);
+
+        LoginUser(principal);
+
+        navigationManager.NavigateTo("/runner");
+    }
+
+    protected string GetQueryValue(string value)
+    {
+        // Get a value from the query from the URL. Throws an FormatException if not found
+        Uri url = navigationManager.ToAbsoluteUri(navigationManager.Uri);
+        bool keyFound = QueryHelpers.ParseQuery(url.Query).TryGetValue(value, out var key);
+
+        if (!keyFound) throw new FormatException($"Missing {value} query");
+        return key;
+    }
+
+    protected async Task<ApplicationUser> GetUserFromKey(string key)
+    {
+        // Search the users for a user with a matching password.
+        return (await userManager.GetUsersInRoleAsync(IdentityRoleTypes.Runner))
+            .First(u => u.PasswordHash == key);
+    }
+
+    protected async Task<ClaimsPrincipal> CreatePrincipalFromUser(ApplicationUser user)
+    {
+        //Create User Claims Principal based on the SignInManagers in
+        //addition to the one's found in the default cookie authentication scheme
+        var principal = await signInManager.CreateUserPrincipalAsync(user);
+        var identity = new ClaimsIdentity(
+            principal.Claims,
+            Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme
+            );
+        return new ClaimsPrincipal(identity);
+    }
+
+    protected void LoginUser(ClaimsPrincipal principal)
+    {
+        // Pass on the User's info (principal claim) to the current HTTP request used to sign in
+        signInManager.Context.User = principal;
+        // Set the authentication state as based on the user claims. Applies to routing and authentication
+        HostAuthentication.SetAuthenticationState(Task.FromResult(new AuthenticationState(principal)));
+
+    }
+}

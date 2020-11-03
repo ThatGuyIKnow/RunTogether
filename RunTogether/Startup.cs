@@ -45,6 +45,7 @@ namespace RunTogether
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
             services.AddScoped<DialogService>();
+            services.AddTransient<UserCreationHelper>();
             services.AddTransient<PromiseHelper>();
 
 

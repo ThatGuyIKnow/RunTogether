@@ -2,6 +2,7 @@
 @using RunTogether.Data
 @using Microsoft.AspNetCore.Identity
 @using RunTogether.Areas.Identity
+@using RunTogether.Areas.Identity.Helpers
 @using RunTogether.Shared.QR
 @using RunTogether.Shared.Forms
 @using RunTogether.Shared.Map
@@ -10,6 +11,7 @@
 @inject ApplicationDbContext dbContext
 @inject UserManager<ApplicationUser> userManager
 @inject DialogService dialogService
+@inject UserCreationHelper userCreationHelper
 
 <RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret ny løber",
                         new Dictionary<string, object>(),
@@ -41,7 +43,10 @@
                 </RadzenTabsItem>
 
                 <RadzenTabsItem Text="Route">
-                    <LeafletMap></LeafletMap>
+                    @if (@run.Route != null)
+                    {
+                        <LeafletMap Route="@run.Route"></LeafletMap>
+                    }
                 </RadzenTabsItem>
 
                 <RadzenTabsItem Text="QR Kode">

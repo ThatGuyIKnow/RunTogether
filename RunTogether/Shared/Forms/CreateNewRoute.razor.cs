@@ -23,8 +23,8 @@ namespace RunTogether.Shared.Forms
 
         }
 
-        //Stage Selected = new Stage();
-        //IQueryable<Stage> Selecteds;
+        Stage Selected = new Stage(new StartPoint(0F,0F), new EndPoint(0F,0F));
+        IQueryable<Stage> Selecteds;
 
         //Stage stage = new Stage();
         RadzenGrid<Stage> table;
@@ -53,12 +53,14 @@ namespace RunTogether.Shared.Forms
 
         void OnSubmit()
         {
-            StartPoint startPoint = new StartPoint(xCoordinateStart, yCoordinateStart);
-            EndPoint endPoint = new EndPoint(xCoordinateEnd, yCoordinateEnd);
-            Stage StageObj = new Stage(startPoint, endPoint) { Date = date, RunRoute = runRoute };
-            
+            Stage StageObj = new Stage(new StartPoint(0F, 0F), new EndPoint(0F, 0F)) { Date = Start, RunRoute = runRoute };
+            //StageObj.StartPoint.StageId = StageObj.StageId;
+            StartPoint startPoint = new StartPoint(xCoord, yCoord);
+            StageObj.StartPoint = startPoint;
             runRoute.Stages.Add(StageObj);
-            //newStages.Add(StageObj);
+            newStages.Add(StageObj);
+            Console.WriteLine("I am in onsubmit");
+            Console.WriteLine(StageObj.StartPoint.X + "," + StageObj.StartPoint.Y);
             this.dialogService.Close(true);
             table.Reload();
 

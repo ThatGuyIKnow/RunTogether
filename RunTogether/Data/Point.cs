@@ -1,25 +1,33 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Numerics;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
 namespace RunTogether.Data
 {
     public abstract class Point
     {
+        [Required]
+        public float X { get; set; }
+        [Required]
+        public float Y { get; set; }
 
-        public Vector2 Coordinates;
-
-        public virtual int StageId { get; set; }
-
-        public virtual Stage Stage { get; set; }
-
+        public int StageId { get; set; }
+        
+        public Stage? Stage { get; set; } 
         public Point(float x, float y)
         {
-            this.Coordinates.X = x;
-            this.Coordinates.Y = y; 
+            this.X = x;
+            this.Y = y;
+        }
+
+        protected Point()
+        {
 
         }
 
@@ -33,6 +41,10 @@ namespace RunTogether.Data
         {
 
         }
+        protected StartPoint() : base()
+        {
+
+        }
     }
 
     public class EndPoint : Point
@@ -43,6 +55,11 @@ namespace RunTogether.Data
         {
 
         }
+
+        protected EndPoint() : base()
+        {
+
+        }
     }
 
     public class ThroughPoint : Point
@@ -50,6 +67,11 @@ namespace RunTogether.Data
         public int ThroughPointId { get; set; }
 
         public ThroughPoint(float x, float y) : base(x, y)
+        {
+
+        }
+
+        protected ThroughPoint() : base()
         {
 
         }

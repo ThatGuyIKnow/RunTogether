@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RunTogether.Areas.Identity;
+using RunTogether.Areas.Identity.Data;
 
 namespace RunTogether.Data
 {
@@ -17,16 +20,13 @@ namespace RunTogether.Data
         public DbSet<StartPoint> StartPoints { get; set; }
         public DbSet<EndPoint> EndPoints { get; set; }
         public DbSet<ThroughPoint> ThroughPoints { get; set; }
+        public DbSet<OrganiserCreationKey> OrganiserCreationKeys { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
-
-            //modelBuilder.Entity<Post>()
-            //    .HasOne(p => p.Blog)
-            //    .WithMany(b => b.Posts);
 
             modelBuilder.Entity<Stage>()
                 .HasOne(s => s.RunRoute)
@@ -47,11 +47,11 @@ namespace RunTogether.Data
             modelBuilder.Entity<StartPoint>()
                 .HasOne(sp => sp.Stage)
                 .WithOne(s => s.StartPoint);
-            
+
             modelBuilder.Entity<EndPoint>()
                 .HasOne(e => e.Stage)
                 .WithOne(s => s.EndPoint);
-            
+
             modelBuilder.Entity<ThroughPoint>()
                 .HasOne(t => t.Stage)
                 .WithMany(s => s.ThroughPoints);
