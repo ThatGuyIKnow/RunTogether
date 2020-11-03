@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
@@ -9,35 +12,69 @@ namespace RunTogether.Data
 {
     public abstract class Point
     {
+        [Required]
+        public float X { get; set; }
+        [Required]
+        public float Y { get; set; }
 
-        public virtual ValueTuple<float, float> Coordinates { get; set; }
+        public int StageId { get; set; }
+        
+        public Stage? Stage { get; set; } 
+        public Point(float x, float y)
+        {
+            this.X = x;
+            this.Y = y;
+        }
 
-        public virtual int StageId { get; set; }
+        protected Point()
+        {
 
-        public virtual Stage Stage { get; set; }
+        }
 
     }
 
     public class StartPoint : Point
     {
         public int StartPointId { get; set; }
-        //public Stage Stage { get; set; }
 
-        public override ValueTuple<float, float> Coordinates { get; set; }
+        public StartPoint(float x, float y) : base(x, y)
+        {
 
-        public override int StageId { get; set; }
+        }
+        protected StartPoint() : base()
+        {
 
-        public override Stage Stage { get; set; }
+        }
     }
 
     public class EndPoint : Point
     {
         public int EndPointId { get; set; }
+
+        public EndPoint(float x, float y) : base(x, y)
+        {
+
+        }
+
+        protected EndPoint() : base()
+        {
+
+        }
     }
 
     public class ThroughPoint : Point
     {
         public int ThroughPointId { get; set; }
+
+        public ThroughPoint(float x, float y) : base(x, y)
+        {
+
+        }
+
+        protected ThroughPoint() : base()
+        {
+
+        }
     }
 
 }
