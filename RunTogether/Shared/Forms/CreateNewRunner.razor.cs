@@ -16,7 +16,7 @@ namespace RunTogether.Shared.Forms
 
         async public void OnSubmit(string firstName,string lastName, string email, Run selectedRun)
         {
-
+            Console.WriteLine(selectedRun.Name + " " + selectedRun.ID);
             await userCreation.CreateRunner(firstName, lastName, email, selectedRun);
             Console.WriteLine("YEY!");
             this.dialogService.Close(true);
