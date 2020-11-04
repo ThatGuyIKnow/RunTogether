@@ -49,14 +49,14 @@ namespace RunTogether.Migrations
                         new
                         {
                             Id = "runner",
-                            ConcurrencyStamp = "71fc51bb-b9f9-484b-adfa-bbb5427d2af7",
+                            ConcurrencyStamp = "de6efe0b-9106-44d2-a449-54b548a575ea",
                             Name = "Runner",
                             NormalizedName = "RUNNER"
                         },
                         new
                         {
                             Id = "organiser",
-                            ConcurrencyStamp = "2d4f6f1a-0ff7-4673-8a58-f889fefce996",
+                            ConcurrencyStamp = "aac3c37f-9e85-4460-8571-0ff7511421b1",
                             Name = "Organiser",
                             NormalizedName = "ORGANISER"
                         });

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RunTogether.Migrations
 {
-    public partial class OrganiserCreationKey : Migration
+    public partial class NewMigrateThatWorks : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,6 +27,8 @@ namespace RunTogether.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false),
+                    QRString = table.Column<string>(nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false)
                 },
@@ -240,6 +242,8 @@ namespace RunTogether.Migrations
                 {
                     EndPointId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    X = table.Column<float>(nullable: false),
+                    Y = table.Column<float>(nullable: false),
                     StageId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -259,6 +263,8 @@ namespace RunTogether.Migrations
                 {
                     StartPointId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    X = table.Column<float>(nullable: false),
+                    Y = table.Column<float>(nullable: false),
                     StageId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -278,6 +284,8 @@ namespace RunTogether.Migrations
                 {
                     ThroughPointId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    X = table.Column<float>(nullable: false),
+                    Y = table.Column<float>(nullable: false),
                     StageId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -294,12 +302,12 @@ namespace RunTogether.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "runner", "c27a0bcc-6d75-4bb9-97a6-d70d4998f043", "Runner", "RUNNER" });
+                values: new object[] { "runner", "de6efe0b-9106-44d2-a449-54b548a575ea", "Runner", "RUNNER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "organiser", "a66202b0-3b38-4862-b35e-d8e8b5570e10", "Organiser", "ORGANISER" });
+                values: new object[] { "organiser", "aac3c37f-9e85-4460-8571-0ff7511421b1", "Organiser", "ORGANISER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

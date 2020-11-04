@@ -11,36 +11,21 @@ namespace RunTogether.Shared.Forms
 {
     public partial class CreateNewRoute
     {
-        ElementReference mapid;
-
-        protected override async Task OnAfterRenderAsync(bool firstRender)
-        {
-            if (firstRender)
-            {
-                await JSRuntime.InvokeVoidAsync("Main.Map.initializeMap");
-                StateHasChanged();
-            }
-
-        }
-
-        Stage Selected = new Stage(new StartPoint(0F,0F), new EndPoint(0F,0F));
-        IQueryable<Stage> Selecteds;
+        //Stage Selected = new Stage(new StartPoint(0F,0F), new EndPoint(0F,0F));
+        //IQueryable<Stage> Selecteds;
 
         //Stage stage = new Stage();
         RadzenGrid<Stage> table;
 
         RunRoute runRoute = new RunRoute();
+        RunRoute initialMapRoute = new RunRoute() { Stages = new List<Stage> { new Stage(new StartPoint(0F, 0F), new EndPoint(0F, 0F)) } };
         Run run = new Run();
-
-        //List<Stage> newStages = new List<Stage>();
 
         DateTime date;
         float xCoordinateStart;
         float yCoordinateStart;
         float xCoordinateEnd;
         float yCoordinateEnd;
-
-
 
         //IEnumerable<RunRoute> runRoutes;
         //IEnumerable<Stage> stages;
@@ -53,14 +38,11 @@ namespace RunTogether.Shared.Forms
 
         void OnSubmit()
         {
-            Stage StageObj = new Stage(new StartPoint(0F, 0F), new EndPoint(0F, 0F)) { Date = Start, RunRoute = runRoute };
-            //StageObj.StartPoint.StageId = StageObj.StageId;
-            StartPoint startPoint = new StartPoint(xCoord, yCoord);
-            StageObj.StartPoint = startPoint;
+            StartPoint startPoint = new StartPoint(xCoordinateStart, yCoordinateStart);
+            EndPoint endPoint = new EndPoint(xCoordinateEnd, yCoordinateEnd);
+            Stage StageObj = new Stage(startPoint, endPoint) { Date = date, RunRoute = runRoute };
+            
             runRoute.Stages.Add(StageObj);
-            newStages.Add(StageObj);
-            Console.WriteLine("I am in onsubmit");
-            Console.WriteLine(StageObj.StartPoint.X + "," + StageObj.StartPoint.Y);
             this.dialogService.Close(true);
             table.Reload();
 
@@ -77,11 +59,6 @@ namespace RunTogether.Shared.Forms
             dialogService.Close(true);
 
             dbContext.RunRoutes.Add(runRoute);
-
-            //foreach (Stage stage in newStages)
-            //{
-            //    dbContext.Stages.Add(stage);
-            //}
 
             dbContext.SaveChanges();
         }

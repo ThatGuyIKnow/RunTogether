@@ -6,20 +6,72 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h3>Rutens navn:</h3>
-        <RadzenTextBox Placeholder="Indtast navn" Style="margin-bottom: 20px; width: 200px" />
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <div id="mapid" ; style="height: 200px"></div>
+        <RunTogether.Shared.Map.LeafletMap Route="@initialMapRoute"></RunTogether.Shared.Map.LeafletMap>
         <br />
 
-        @*Button that allows for adding a new stage, via the ShowAddStageDialog*@
-        <RadzenButton Text=@($"Tilføj nyt segment") Click="@ShowAddStageDialog" />
-        <br />
-        <br />
+        <RadzenTemplateForm TItem="Stage">
+            <RadzenFieldset Text="Tilføj nyt segment til ruten">
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Startdato" />
+                    </div>
+                    <div class="col">
+                        <RadzenDatePicker Name="Date" DateFormat="d" @bind-Value="date" /><br>
+                        @*<RadzenRequiredValidator Component="Date" Text="Start date is required" Popup=true Style="position: absolute" />*@
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Startlokation" />
+                    </div>
+                    <div class="col-md-4">
+                        <RadzenNumeric TValue="float" @bind-Value="xCoordinateStart" Placeholder="Startlokation X" />
+                    </div>
+                    <div class="col-md-4">
+                        <RadzenNumeric TValue="float" @bind-Value="yCoordinateStart" Placeholder="Startlokation Y" />
+                    </div>
+                </div>
+
+                @*<div class="row" style="margin-bottom: 20px">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Startlokation Y" />
+                    </div>
+                    <div class="col-md-4">
+                        <RadzenNumeric TValue="float" @bind-Value="yCoordinateStart" Placeholder="Startlokation Y" />
+                    </div>
+                </div>*@
+
+                <div class="row" style="margin-bottom: 20px">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Slutlokation" />
+                    </div>
+                    <div class="col-md-4">
+                        <RadzenNumeric TValue="float" @bind-Value="xCoordinateEnd" Placeholder="Slutlokation X" />
+                    </div>
+                    <div class="col-md-4">
+                        <RadzenNumeric TValue="float" @bind-Value="yCoordinateEnd" Placeholder="Slutlokation Y" />
+                    </div>
+                </div>
+
+                @*<div class="row" style="margin-bottom: 20px">
+                    <div class="col-md-4">
+                        <RadzenLabel Text="Slutlokation Y" />
+                    </div>
+                    <div class="col-md-4">
+                        <RadzenNumeric TValue="float" @bind-Value="yCoordinateEnd" Placeholder="Slutlokation Y" />
+                    </div>
+                </div>*@
+
+                <div class="row">
+                    <div class="col-md-12">
+                        @*<RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />*@
+                        <RadzenButton Click="()=> OnSubmit()" Text="Tilføj segment" Style="margin-bottom: 10px; width: 200px" />
+                    </div>
+                </div>
+            </RadzenFieldset>>
+        </RadzenTemplateForm>
+
 
         @*Grid that shows the stages belonging to the new route*@
         @*Skal tilføje flere felter*@
@@ -52,66 +104,7 @@
 
 @code {
 
-    async Task ShowAddStageDialog() => await dialogService.OpenAsync("Tilføj segment", ds =>
-        @<RadzenTemplateForm TItem="Stage">
-            
-            <div id="mapid" ; style="height: 200px"></div>
-
-            <div class="row" style="margin-bottom: 48px">
-                <div class="col-md-4">
-                    <RadzenLabel Text="Startdato" />
-                </div>
-                <div class="col">
-                    <RadzenDatePicker Name="Date" DateFormat="d" @bind-Value="date" /><br>
-                    @*<RadzenRequiredValidator Component="Date" Text="Start date is required" Popup=true Style="position: absolute" />*@
-                </div>
-            </div>
-
-            <div class="row" style="margin-bottom: 48px">
-                <div class="col-md-4">
-                    <RadzenLabel Text="Startlokation X" />
-                </div>
-                <div class="col-md-4">
-                    <RadzenNumeric TValue="float" @bind-Value="xCoordinateStart" Placeholder="Startlokation X" />
-                </div>
-            </div>
-
-            <div class="row" style="margin-bottom: 48px">
-                <div class="col-md-4">
-                    <RadzenLabel Text="Startlokation Y" />
-                </div>
-                <div class="col-md-4">
-                    <RadzenNumeric TValue="float" @bind-Value="yCoordinateStart" Placeholder="Startlokation Y" />
-                </div>
-            </div>
-
-            <div class="row" style="margin-bottom: 48px">
-                <div class="col-md-4">
-                    <RadzenLabel Text="Slutlokation X" />
-                </div>
-                <div class="col-md-4">
-                    <RadzenNumeric TValue="float" @bind-Value="xCoordinateEnd" Placeholder="Slutlokation X" />
-                </div>
-            </div>
-
-            <div class="row" style="margin-bottom: 48px">
-                <div class="col-md-4">
-                    <RadzenLabel Text="Slutlokation Y" />
-                </div>
-                <div class="col-md-4">
-                    <RadzenNumeric TValue="float" @bind-Value="yCoordinateEnd" Placeholder="Slutlokation Y" />
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-12">
-                    @*<RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />*@
-                    <RadzenButton Click="()=> OnSubmit()" Text="OK" Style="margin-bottom: 10px; width: 150px" />
-                    <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
-                </div>
-            </div>
-        </RadzenTemplateForm>
-    );
+    
 
     
     }
