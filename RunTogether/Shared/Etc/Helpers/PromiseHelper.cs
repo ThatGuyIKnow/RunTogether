@@ -6,35 +6,40 @@ using System.Threading.Tasks;
 
 namespace RunTogether.Shared.QR.QRScanner
 {
-    public class PromiseHelper
+    public class PromiseHelper<T>
     {
-        private DotNetObjectReference<PromiseHelper> objRef;
+        private readonly DotNetObjectReference<PromiseHelper<T>> objRef;
 
         // Generic Types isn't available via JS Interop as of current, so...
-        private Action<string> _resolve;
-        private Action<string> _reject;
+        private Action<T>? _resolve;
+        private Action<T>? _reject;
 
-        public void SetResolve(Action<string> resolve)
+        public PromiseHelper()
+        {
+            this.objRef = DotNetObjectReference.Create<PromiseHelper<T>>(this);
+        }
+
+        public void SetResolve(Action<T> resolve)
         {
             _resolve = resolve;
         }
-        public void SetReject(Action<string> reject)
+        public void SetReject(Action<T> reject)
         {
             _reject = reject;
         }
 
         [JSInvokable]
-        public void ResolvePromiseString(string data)
+        public void ResolvePromise(T data)
         {
             objRef?.Dispose();
-            _resolve(data);
+            _resolve?.Invoke(data);
         }
 
         [JSInvokable]
-        public void RejectPromiseString(string data)
+        public void RejectPromiseString(T data)
         {
             objRef?.Dispose();
-            _reject(data);
+            _reject?.Invoke(data);
         }
     }
 }
