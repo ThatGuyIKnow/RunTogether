@@ -72,9 +72,9 @@ namespace RunTogether.Shared.Etc
             //RunRoute route1 = new RunRoute() { Stages = new List<Stage>() { stage1 } };
             //RunRoute route2 = new RunRoute() { Stages = new List<Stage>() { stage2 } };
             //RunRoute route3 = new RunRoute() { Stages = new List<Stage>() { stage3 } };
-            //dbContext.Runs.Add(new Run { Name = "Løb 1", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1), QRString = "test code", Route = route1 });
-            //dbContext.Runs.Add(new Run { Name = "Løb 2", StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(3), QRString = "ajuf_££$dafdf", Route = route2 });
-            //dbContext.Runs.Add(new Run { Name = "Løb 3", StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(5), QRString = "asdafgds", Route = route3 });
+            //dbContext.Runs.Add(new Run { Name = "Løb 1", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1), QRString = "test code"});
+            //dbContext.Runs.Add(new Run { Name = "Løb 2", StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(3), QRString = "ajuf_££$dafdf"});
+            //dbContext.Runs.Add(new Run { Name = "Løb 3", StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(5), QRString = "asdafgds"});
             //dbContext.SaveChanges();
             //await test.CreateRunner("Frederik", "Deiborg", "HejMedDig@gmail.com", runs.ElementAt(0));
             //await test.CreateRunner("Oliver", "Hansen", "Coolguy@gmail.com", runs.ElementAt(0));
