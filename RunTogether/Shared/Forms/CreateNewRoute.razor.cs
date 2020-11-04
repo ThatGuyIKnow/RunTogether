@@ -21,7 +21,7 @@ namespace RunTogether.Shared.Forms
             }
         }
 
-        Stage Selected = new Stage();
+        Stage Selected = new Stage(new StartPoint(0F, 0F), new EndPoint(0F, 0F));
         IQueryable<Stage> Selecteds;
 
         //Stage stage = new Stage();
@@ -49,7 +49,7 @@ namespace RunTogether.Shared.Forms
 
     public void OnSubmit(DateTime Start, float xCoord, float yCoord)
         {
-            Stage StageObj = new Stage() { Date = Start, RunRoute = runRoute };
+            Stage StageObj = new Stage(new StartPoint(0F, 0F), new EndPoint(0F, 0F)) { Date = Start, RunRoute = runRoute };
             //StageObj.StartPoint.StageId = StageObj.StageId;
             StartPoint startPoint = new StartPoint(xCoord, yCoord);
             StageObj.StartPoint = startPoint;
