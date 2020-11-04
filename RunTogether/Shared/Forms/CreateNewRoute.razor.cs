@@ -51,15 +51,14 @@ namespace RunTogether.Shared.Forms
         {
             Stage StageObj = new Stage() { Date = Start, RunRoute = runRoute };
             //StageObj.StartPoint.StageId = StageObj.StageId;
-            StartPoint startPoint = new StartPoint() { Coordinates = (xCoord, yCoord) };
+            StartPoint startPoint = new StartPoint(xCoord, yCoord);
             StageObj.StartPoint = startPoint;
             runRoute.Stages.Add(StageObj);
             newStages.Add(StageObj);
             Console.WriteLine("I am in onsubmit");
-            Console.WriteLine(StageObj.StartPoint.Coordinates);
+            Console.WriteLine(StageObj.StartPoint.X + "," + StageObj.StartPoint.Y);
             this.dialogService.Close(true);
             table.Reload();
-
         }
 
         void OnInvalidSubmit()
