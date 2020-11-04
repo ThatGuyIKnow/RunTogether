@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace RunTogether.Migrations
 {
-    public partial class OrganiserCreationKey : Migration
+    public partial class newMigrate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,6 +27,8 @@ namespace RunTogether.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: false),
+                    QRString = table.Column<string>(nullable: false),
                     StartDate = table.Column<DateTime>(nullable: false),
                     EndDate = table.Column<DateTime>(nullable: false)
                 },
@@ -97,7 +99,7 @@ namespace RunTogether.Migrations
                 {
                     RunRouteId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RunId = table.Column<int>(nullable: false)
+                    RunId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -107,7 +109,7 @@ namespace RunTogether.Migrations
                         column: x => x.RunId,
                         principalTable: "Runs",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -240,6 +242,8 @@ namespace RunTogether.Migrations
                 {
                     EndPointId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    X = table.Column<float>(nullable: false),
+                    Y = table.Column<float>(nullable: false),
                     StageId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -259,6 +263,8 @@ namespace RunTogether.Migrations
                 {
                     StartPointId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    X = table.Column<float>(nullable: false),
+                    Y = table.Column<float>(nullable: false),
                     StageId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -278,6 +284,8 @@ namespace RunTogether.Migrations
                 {
                     ThroughPointId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    X = table.Column<float>(nullable: false),
+                    Y = table.Column<float>(nullable: false),
                     StageId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -294,12 +302,12 @@ namespace RunTogether.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "runner", "c27a0bcc-6d75-4bb9-97a6-d70d4998f043", "Runner", "RUNNER" });
+                values: new object[] { "runner", "e78687cd-82b1-433e-811e-7f2c662369ed", "Runner", "RUNNER" });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "organiser", "a66202b0-3b38-4862-b35e-d8e8b5570e10", "Organiser", "ORGANISER" });
+                values: new object[] { "organiser", "62cf713b-8521-46bc-9402-82374a0e556e", "Organiser", "ORGANISER" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -360,7 +368,8 @@ namespace RunTogether.Migrations
                 name: "IX_RunRoutes_RunId",
                 table: "RunRoutes",
                 column: "RunId",
-                unique: true);
+                unique: true,
+                filter: "[RunId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Stages_RunRouteId",

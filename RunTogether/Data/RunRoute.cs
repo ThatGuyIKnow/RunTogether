@@ -8,20 +8,20 @@ namespace RunTogether
     public class RunRoute
     {
         public int RunRouteId { get; set; }
-        public List<Stage> Stages { get; set; } = new List<Stage>();
+        public List<Stage> Stages { get; set; } //= new List<Stage>();
         
         public int? RunId { get; set; }
 
         public Run? Run { get; set; }
 
-        public RunRoute()
-        {
-            Stages = new List<Stage>();
-        }
+        //public RunRoute()
+        //{
+        //    Stages = new List<Stage>();
+        //}
 
         public override string ToString()
         {
-            return "This here sure is a route";
+            return RunRouteId.ToString();
             //return $"Route with {Stages.Count} stages";
         }
 

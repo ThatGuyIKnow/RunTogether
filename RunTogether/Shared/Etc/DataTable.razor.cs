@@ -47,7 +47,7 @@ namespace RunTogether.Shared.Etc
 
         protected override async Task OnInitializedAsync()
         {
-            runs = dbContext.Runs;
+            runs = dbContext.Runs.Include(r => r.Route);
 
             colorList.Add(new Farver() { Name = "RT rød", code = "#cc4545" });
             colorList.Add(new Farver() { Name = "Sort", code = "#000000" });
@@ -55,39 +55,59 @@ namespace RunTogether.Shared.Etc
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
+            //await GenerateTestData();
+        }
 
+        public async Task GenerateTestData()
+        {
+                var testRun = new Run
+                {
+                    Name = "Løb 1",
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddDays(1),
+                    QRString = "test code",
 
+                    Runners = new List<ApplicationUser>
+                    {
+                        new ApplicationUser { FirstName = "Oliver", LastName = "Hansen", Email = "Coolguy@gmail.com" },
+                        new ApplicationUser { FirstName = "Kurt", LastName = "C.Kode", Email = "CisGod@gmail.com" },
+                        new ApplicationUser { FirstName = "Mads", LastName = "Madsen", Email = "SejtNavnGod@gmail.com" }
+                    },
 
-            //dbContext.Stages.Add(new Stage(new StartPoint(57.0117789F, 9.9907118F), new EndPoint(56.7499F, 9.9921F)));
-            //dbContext.Stages.Add(new Stage(new StartPoint(56.467F, 9.2708F), new EndPoint(56.0221F, 9.2288F)));
-            //dbContext.Stages.Add(new Stage(new StartPoint(55.6123F, 9.1428F), new EndPoint(56.3F, 9.3F)));
-            //dbContext.SaveChanges();
-            //dbContext.RunRoutes.Add(new RunRoute() { Stages = new List<Stage>() });
-            //dbContext.RunRoutes.Add(new RunRoute() { Stages = new List<Stage>() });
-            //dbContext.RunRoutes.Add(new RunRoute() { Stages = new List<Stage>() });
-            //dbContext.SaveChanges();
-            //Stage stage1 = new Stage(new StartPoint(57.0117789F, 9.9907118F), new EndPoint(56.7499F, 9.9921F));
-            //Stage stage2 = new Stage(new StartPoint(55.6123F, 9.1428F), new EndPoint(56.3F, 9.3F));
-            //Stage stage3 = new Stage(new StartPoint(56.467F, 9.2708F), new EndPoint(56.0221F, 9.2288F));
-            //RunRoute route1 = new RunRoute() { Stages = new List<Stage>() { stage1 } };
-            //RunRoute route2 = new RunRoute() { Stages = new List<Stage>() { stage2 } };
-            //RunRoute route3 = new RunRoute() { Stages = new List<Stage>() { stage3 } };
-            //dbContext.Runs.Add(new Run { Name = "Løb 1", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1), QRString = "test code"});
-            //dbContext.Runs.Add(new Run { Name = "Løb 2", StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(3), QRString = "ajuf_££$dafdf"});
-            //dbContext.Runs.Add(new Run { Name = "Løb 3", StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(5), QRString = "asdafgds"});
-            //dbContext.SaveChanges();
-            //await test.CreateRunner("Frederik", "Deiborg", "HejMedDig@gmail.com", runs.ElementAt(0));
-            //await test.CreateRunner("Oliver", "Hansen", "Coolguy@gmail.com", runs.ElementAt(0));
-            //await test.CreateRunner("Kurt", "C.Kode", "CisGod@gmail.com", runs.ElementAt(1));
-            //await test.CreateRunner("Mads", "Madsen", "SejtNavnGod@gmail.com", runs.ElementAt(1));
-            //await test.CreateRunner("Ran", "D.Om", "RandomMaild@gmail.com", runs.ElementAt(1));
-            //await test.CreateRunner("All", "Alone", "Lonely@gmail.com", runs.ElementAt(2));
+                    Route = new RunRoute
+                    {
+                        Stages = new List<Stage>
+                        {
+                            new Stage() {StartPoint = new StartPoint(57.0117789F, 9.9907118F), EndPoint = new EndPoint(56.7499F, 9.9921F)}
+                        }
+                    }
+                };
+
+                dbContext.Runs.Add(testRun);
+                await dbContext.SaveChangesAsync();
         }
 
         Run run = new Run();
-        public void QueryForRunners(Run QueryRun)
+        RunRoute Route = new RunRoute();
+        public async Task QueryForRunners(Run QueryRun)
         {
             run = QueryRun;
+
+            Route = await dbContext.RunRoutes
+                .Where(r => r.RunId == QueryRun.ID)
+                .Include(r => r.Stages).ThenInclude(s => s.EndPoint)
+                .FirstOrDefaultAsync();
+
+            //await dbContext.Entry(Route).Collection(r => r.Stages).LoadAsync();
+            //dbContext.Entry(Route.Stages[0]).Collection(s => s.EndPoint).Load();
+
+            //Stage stage = await dbContext.Stages
+            //    .Where(s => s.RunRouteId == Route.RunRouteId)
+            //    .Include(s => s.StartPoint)
+            //    .Include(s => s.EndPoint)
+            //    .FirstOrDefaultAsync();
+
+            Console.WriteLine(Route.Stages.Count);
 
             runners = dbContext.Users
                 .Where(u => u.RunId == QueryRun.ID);
