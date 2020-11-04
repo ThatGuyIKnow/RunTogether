@@ -43,7 +43,10 @@
                 </RadzenTabsItem>
 
                 <RadzenTabsItem Text="Route">
-                    <LeafletMap></LeafletMap>
+                    @if (@run.Route != null)
+                    {
+                        <LeafletMap Route="@run.Route"></LeafletMap>
+                    }
                 </RadzenTabsItem>
 
                 <RadzenTabsItem Text="QR Kode">

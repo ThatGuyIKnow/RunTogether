@@ -1,9 +1,9 @@
 ﻿@using RunTogether.Shared.Etc
-@using RunTogether.Shared.Forms
 
 @inject IJSRuntime JSRuntime
 
 @inherits LayoutComponentBase
+
 <!-- Navigation bar -->
 <div class="sidebar" id="navBarId">
     <NavMenu />
@@ -19,10 +19,6 @@
         <!-- RunTogether logo -->
         <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png"
                      Style="width:200px" class="logo"></RadzenImage>
-
-        <div class="loginDisplay">
-            <LoginDisplay />
-        </div>
     </div>
 
     <!-- Main content -->

@@ -11,13 +11,22 @@ export const Common = new CommonJS();
 export const QrScanner = new QrScannerClass();
 export const Sidebar = new SidebarCollapseFunctionality();
 
-/*Test array with startpoint and endpoint coordinates*/
-let latlngs = [
-    [57.0117789, 9.9907118],
-    [56.7499, 9.9921],
-    [56.467, 9.2708],
-    [56.0221, 9.2288],
-    [55.6123, 9.1428]
-];
+//export async function tester(object) {
+//    console.log(object);
+    
+//    latlngs = await JSON.parse(object).Coordinates;
 
-export const Map = new mapClass(latlngs);
+//    console.log(latlngs);
+//}
+
+/*Test array with startpoint and endpoint coordinates*/
+//let latlngs = [
+//    [57.0117789, 9.9907118],
+//    [56.7499, 9.9921],
+//    [56.467, 9.2708],
+//    [56.0221, 9.2288],
+//    [55.6123, 9.1428]
+//];
+
+export const Map = new mapClass();
+

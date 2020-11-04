@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -26,10 +28,6 @@ namespace RunTogether.Data
 
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
 
-            //modelBuilder.Entity<Post>()
-            //    .HasOne(p => p.Blog)
-            //    .WithMany(b => b.Posts);
-
             modelBuilder.Entity<Stage>()
                 .HasOne(s => s.RunRoute)
                 .WithMany(r => r.Stages);
@@ -49,11 +47,11 @@ namespace RunTogether.Data
             modelBuilder.Entity<StartPoint>()
                 .HasOne(sp => sp.Stage)
                 .WithOne(s => s.StartPoint);
-            
+
             modelBuilder.Entity<EndPoint>()
                 .HasOne(e => e.Stage)
                 .WithOne(s => s.EndPoint);
-            
+
             modelBuilder.Entity<ThroughPoint>()
                 .HasOne(t => t.Stage)
                 .WithMany(s => s.ThroughPoints);
