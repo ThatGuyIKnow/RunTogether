@@ -5,7 +5,7 @@ using Microsoft.JSInterop;
 
 namespace RunTogether.Shared.QR.QRScanner
 {
-    public partial class QRScanner : IDisposable
+    public partial class QRScanner
     {
         private const string HideCss = "display-none";
         private const string EnterCss = "enterUp";
@@ -17,6 +17,8 @@ namespace RunTogether.Shared.QR.QRScanner
         private bool hasCamera = false;
         private bool hasFlash = false;
         private bool flashOn = false;
+
+        private PromiseHelper<string> promise;
 
         [Parameter]
         public int FadeTime { get; set; } = 500;
@@ -51,14 +53,15 @@ namespace RunTogether.Shared.QR.QRScanner
 
         private async Task CreateQrScanner()
         {
+            promise = new PromiseHelper<string>();
             // When the QR Scanner returns a code, execute the function
-            PromiseHelper.SetResolve(CodeReceivedHandler);
+            promise.SetResolve(CodeReceivedHandler);
 
             // (Creation function, video HTML id, objRef from PromiseHelper)
             jsRuntime.InvokeVoidAsync(
                 "Main.QrScanner.CreateQrScanner",
                 "qrVideo",
-                DotNetObjectReference.Create(PromiseHelper));
+                promise.objRef);
 
             // Check if camera has flash available
             hasFlash = await jsRuntime.InvokeAsync<bool>("Main.QrScanner.HasFlash");
@@ -77,6 +80,7 @@ namespace RunTogether.Shared.QR.QRScanner
         {
             // Animate exit and wait for animation to finish
             _currentClass = ExitCss;
+            StateHasChanged();
 
             Task.Run(async () =>
             {
@@ -85,6 +89,7 @@ namespace RunTogether.Shared.QR.QRScanner
                     "Main.QrScanner.DestroyQrScanner",
                     "qrVideo");
                 _currentClass = HideCss;
+                StateHasChanged();
             });
         }
 
@@ -107,11 +112,5 @@ namespace RunTogether.Shared.QR.QRScanner
                 flashOn);
             StateHasChanged();
         }
-
-        public void Dispose()
-        {
-            DestroyQrScanner();
-        }
-
-}
+    }
 }
