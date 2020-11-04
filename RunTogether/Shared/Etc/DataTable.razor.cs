@@ -64,22 +64,22 @@ namespace RunTogether.Shared.Etc
             //dbContext.RunRoutes.Add(new RunRoute() { Stages = new List<Stage>() });
             //dbContext.RunRoutes.Add(new RunRoute() { Stages = new List<Stage>() });
             //dbContext.SaveChanges();
-            Stage stage1 = new Stage(new StartPoint(57.0117789F, 9.9907118F), new EndPoint(56.7499F, 9.9921F));
-            Stage stage2 = new Stage(new StartPoint(55.6123F, 9.1428F), new EndPoint(56.3F, 9.3F));
-            Stage stage3 = new Stage(new StartPoint(56.467F, 9.2708F), new EndPoint(56.0221F, 9.2288F));
-            RunRoute route1 = new RunRoute() { Stages = new List<Stage>() { stage1 } };
-            RunRoute route2 = new RunRoute() { Stages = new List<Stage>() { stage2 } };
-            RunRoute route3 = new RunRoute() { Stages = new List<Stage>() { stage3 } };
-            dbContext.Runs.Add(new Run { Name = "Løb 1", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1), QRString = "test code", Route = route1 });
-            dbContext.Runs.Add(new Run { Name = "Løb 2", StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(3), QRString = "ajuf_££$dafdf", Route = route2 });
-            dbContext.Runs.Add(new Run { Name = "Løb 3", StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(5), QRString = "asdafgds", Route = route3 });
-            dbContext.SaveChanges();
-            await test.CreateRunner("Frederik", "Deiborg", "HejMedDig@gmail.com", runs.ElementAt(0));
-            await test.CreateRunner("Oliver", "Hansen", "Coolguy@gmail.com", runs.ElementAt(0));
-            await test.CreateRunner("Kurt", "C.Kode", "CisGod@gmail.com", runs.ElementAt(1));
-            await test.CreateRunner("Mads", "Madsen", "SejtNavnGod@gmail.com", runs.ElementAt(1));
-            await test.CreateRunner("Ran", "D.Om", "RandomMaild@gmail.com", runs.ElementAt(1));
-            await test.CreateRunner("All", "Alone", "Lonely@gmail.com", runs.ElementAt(2));
+            //Stage stage1 = new Stage(new StartPoint(57.0117789F, 9.9907118F), new EndPoint(56.7499F, 9.9921F));
+            //Stage stage2 = new Stage(new StartPoint(55.6123F, 9.1428F), new EndPoint(56.3F, 9.3F));
+            //Stage stage3 = new Stage(new StartPoint(56.467F, 9.2708F), new EndPoint(56.0221F, 9.2288F));
+            //RunRoute route1 = new RunRoute() { Stages = new List<Stage>() { stage1 } };
+            //RunRoute route2 = new RunRoute() { Stages = new List<Stage>() { stage2 } };
+            //RunRoute route3 = new RunRoute() { Stages = new List<Stage>() { stage3 } };
+            //dbContext.Runs.Add(new Run { Name = "Løb 1", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1), QRString = "test code"});
+            //dbContext.Runs.Add(new Run { Name = "Løb 2", StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(3), QRString = "ajuf_££$dafdf"});
+            //dbContext.Runs.Add(new Run { Name = "Løb 3", StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(5), QRString = "asdafgds"});
+            //dbContext.SaveChanges();
+            //await test.CreateRunner("Frederik", "Deiborg", "HejMedDig@gmail.com", runs.ElementAt(0));
+            //await test.CreateRunner("Oliver", "Hansen", "Coolguy@gmail.com", runs.ElementAt(0));
+            //await test.CreateRunner("Kurt", "C.Kode", "CisGod@gmail.com", runs.ElementAt(1));
+            //await test.CreateRunner("Mads", "Madsen", "SejtNavnGod@gmail.com", runs.ElementAt(1));
+            //await test.CreateRunner("Ran", "D.Om", "RandomMaild@gmail.com", runs.ElementAt(1));
+            //await test.CreateRunner("All", "Alone", "Lonely@gmail.com", runs.ElementAt(2));
         }
 
         Run run = new Run();
