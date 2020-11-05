@@ -47,7 +47,17 @@ namespace RunTogether.Shared.Etc
 
         protected override async Task OnInitializedAsync()
         {
-            runs = dbContext.Runs.Include(r => r.Route);
+            runs = dbContext.Runs
+                .Include(r => r.Route)
+                    .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.StartPoint)
+                .Include(r => r.Route)
+                    .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.EndPoint)
+                .Include(r => r.Route)
+                    .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.ThroughPoints)
+                .Include(r => r.Runners);
 
             colorList.Add(new Farver() { Name = "RT rød", code = "#cc4545" });
             colorList.Add(new Farver() { Name = "Sort", code = "#000000" });
@@ -93,21 +103,7 @@ namespace RunTogether.Shared.Etc
         {
             run = QueryRun;
 
-            Route = await dbContext.RunRoutes
-                .Where(r => r.RunId == QueryRun.ID)
-                .Include(r => r.Stages).ThenInclude(s => s.EndPoint)
-                .FirstOrDefaultAsync();
-
-            //await dbContext.Entry(Route).Collection(r => r.Stages).LoadAsync();
-            //dbContext.Entry(Route.Stages[0]).Collection(s => s.EndPoint).Load();
-
-            //Stage stage = await dbContext.Stages
-            //    .Where(s => s.RunRouteId == Route.RunRouteId)
-            //    .Include(s => s.StartPoint)
-            //    .Include(s => s.EndPoint)
-            //    .FirstOrDefaultAsync();
-
-            Console.WriteLine(Route.Stages.Count);
+            Console.WriteLine(run.Route.Stages[0].StartPoint.X);
 
             runners = dbContext.Users
                 .Where(u => u.RunId == QueryRun.ID);
