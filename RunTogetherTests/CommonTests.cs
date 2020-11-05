@@ -1,11 +1,13 @@
 using System;
 using Xunit;
+using Bunit;
 
 namespace RunTogetherTests
 {
-    public class UnitTest1
+    public class CommonTests : TestContext
     {
         [Fact]
+        // Make sure tests are working
         public void SanityCheck()
         {
             // Arrange
