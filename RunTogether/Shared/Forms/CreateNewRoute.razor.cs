@@ -21,7 +21,7 @@ namespace RunTogether.Shared.Forms
             }
         }
 
-        Stage Selected = new Stage(new StartPoint(0F, 0F), new EndPoint(0F, 0F));
+        Stage Selected = new Stage(new StartPoint(0F,0F), new EndPoint(0F,0F));
         IQueryable<Stage> Selecteds;
 
         //Stage stage = new Stage();
