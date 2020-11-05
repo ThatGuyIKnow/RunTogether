@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunTogether.Data;
 
 namespace RunTogether.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201102142640_pointAsVector4")]
+    partial class pointAsVector4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,14 +51,14 @@ namespace RunTogether.Data.Migrations
                         new
                         {
                             Id = "runner",
-                            ConcurrencyStamp = "71fc51bb-b9f9-484b-adfa-bbb5427d2af7",
+                            ConcurrencyStamp = "5e3ebecb-dd2d-421b-a3c2-16e42adbd555",
                             Name = "Runner",
                             NormalizedName = "RUNNER"
                         },
                         new
                         {
                             Id = "organiser",
-                            ConcurrencyStamp = "2d4f6f1a-0ff7-4673-8a58-f889fefce996",
+                            ConcurrencyStamp = "fb4eb839-92f4-4194-a2c7-ea01bbf462b2",
                             Name = "Organiser",
                             NormalizedName = "ORGANISER"
                         });
@@ -261,12 +263,6 @@ namespace RunTogether.Data.Migrations
                     b.Property<int>("StageId")
                         .HasColumnType("int");
 
-                    b.Property<float>("X")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Y")
-                        .HasColumnType("real");
-
                     b.HasKey("EndPointId");
 
                     b.HasIndex("StageId")
@@ -285,12 +281,6 @@ namespace RunTogether.Data.Migrations
                     b.Property<int>("StageId")
                         .HasColumnType("int");
 
-                    b.Property<float>("X")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Y")
-                        .HasColumnType("real");
-
                     b.HasKey("StartPointId");
 
                     b.HasIndex("StageId")
@@ -308,12 +298,6 @@ namespace RunTogether.Data.Migrations
 
                     b.Property<int>("StageId")
                         .HasColumnType("int");
-
-                    b.Property<float>("X")
-                        .HasColumnType("real");
-
-                    b.Property<float>("Y")
-                        .HasColumnType("real");
 
                     b.HasKey("ThroughPointId");
 

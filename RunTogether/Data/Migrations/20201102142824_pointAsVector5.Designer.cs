@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunTogether.Data;
 
 namespace RunTogether.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201102142824_pointAsVector5")]
+    partial class pointAsVector5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,14 +51,14 @@ namespace RunTogether.Data.Migrations
                         new
                         {
                             Id = "runner",
-                            ConcurrencyStamp = "71fc51bb-b9f9-484b-adfa-bbb5427d2af7",
+                            ConcurrencyStamp = "115777b3-b8a2-4bfe-a236-24d4dd665ba4",
                             Name = "Runner",
                             NormalizedName = "RUNNER"
                         },
                         new
                         {
                             Id = "organiser",
-                            ConcurrencyStamp = "2d4f6f1a-0ff7-4673-8a58-f889fefce996",
+                            ConcurrencyStamp = "199f994c-dcfb-4385-b24e-5e3fe2b8829a",
                             Name = "Organiser",
                             NormalizedName = "ORGANISER"
                         });

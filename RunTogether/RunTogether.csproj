@@ -29,6 +29,10 @@
     <PackageReference Include="Radzen.Blazor" Version="2.15.17" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
         <Exec Command="npm --prefix $(ProjectDir)JsLib run build" />
   </Target>

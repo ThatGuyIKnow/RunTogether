@@ -1,17 +1,16 @@
 ﻿
 /*Global variable for the map class*/
 let mymap, layerGroup, polyline;
-
 let maxBounds1 = [51.649, 0.49]; 
 let maxBounds2 = [59.799, 18.68];  
-
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 
 /*Class for the map*/
 export class mapClass {
 
-    constructor(latlngs) {
-        this.latlngs = latlngs;
+    constructor() {
+
+        console.log("from constructor!");
 
         this.initializeMap = this.initializeMap.bind(this);
         this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
@@ -36,10 +35,22 @@ export class mapClass {
             maxBoundsViscosity: 1, 
             ext: 'jpg'
         }).addTo(mymap);
+
+        /*Creating layer group and adding to map*/
+        layerGroup = L.layerGroup().addTo(mymap);
+
     }
 
     /* A Method to add markers and lines*/
-    addMarkersAndLines(latlngs) {
+    addMarkersAndLines(obj) {
+
+        this.removeMarkersAndLines(); 
+/*        mymap.removeLayer(layerGroup); 
+*/
+        let latlngs = JSON.parse(obj).Coordinates
+
+        console.log(latlngs)
+
         let i = 0;
         let segNum = 0;
         let marker;
@@ -48,19 +59,20 @@ export class mapClass {
         layerGroup = L.layerGroup().addTo(mymap);
 
         /*Creating markers*/
-        for (i = 0; i < this.latlngs.length; i++) {
+        for (i = 0; i < latlngs.length; i++) {
             segNum = i + 1;
-            marker = L.marker(this.latlngs[i]).bindPopup('Start for segment ' + segNum +
+            marker = L.marker(latlngs[i]).bindPopup('Start for segment ' + segNum +
                 '<br />Dette segment er sponseret af [SPONSOR].</p>').openPopup();
             layerGroup.addLayer(marker);
         }
 
         /*Creating polyline and fiting the polyline and markers to the map view*/
-        polyline = L.polyline(this.latlngs, { color: '#db5d57' });
+        polyline = L.polyline(latlngs, { color: '#db5d57' });
         layerGroup.addLayer(polyline);
         mymap.fitBounds(polyline.getBounds());
 
-    }
+    }   
+
 
     /* A Method to remove markers and lines*/
     removeMarkersAndLines() {
@@ -92,8 +104,3 @@ export function onMapClick() {
 
 
 */
-
-
-
-
-
