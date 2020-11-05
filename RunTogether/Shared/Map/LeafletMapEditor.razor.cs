@@ -24,13 +24,6 @@ namespace RunTogether.Shared.Map
             }
         }
 
-
-        private async void CreateMarker()
-        {
-            await JsRunTime.InvokeVoidAsync("Main.Map.onMapClick");
-        }
-
-
     }
 
 }
