@@ -1,11 +1,12 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">RunTogether</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+﻿@inject IJSRuntime JSRuntime
+
+<!-- Navigation bar top title -->
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Navigation</a>
 </div>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+<!-- Pages/buttons on the navigation bar -->
+<div class="scrollable">
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -13,20 +14,19 @@
             </NavLink>
         </li>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
+            <NavLink class="nav-link" href="admin">
+                <span class="oi oi-plus" aria-hidden="true"></span> admin
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="viewer">
+                <span class="oi oi-plus" aria-hidden="true"></span> Viewer
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="runner">
+                <span class="oi oi-plus" aria-hidden="true"></span> Runner
             </NavLink>
         </li>
     </ul>
 </div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}

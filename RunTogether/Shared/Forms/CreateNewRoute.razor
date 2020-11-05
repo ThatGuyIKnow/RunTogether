@@ -1,0 +1,88 @@
+﻿@inject DialogService dialogService
+@inject IJSRuntime JSRuntime
+@using Data
+@inject ApplicationDbContext dbContext
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Rutens navn:</h3>
+        <RadzenTextBox Placeholder="Indtast navn" Style="margin-bottom: 20px; width: 200px" />
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="mapid" ; style="height: 200px"></div>
+        <br />
+
+        @*Button that allows for adding a new stage, via the ShowAddStageDialog*@
+        <RadzenButton Text=@($"Tilføj nyt segment") Click="@ShowAddStageDialog" />
+        <br />
+        <br />
+
+        @*Grid that shows the stages belonging to the new route*@
+        @*Skal tilføje flere felter*@
+        <RadzenGrid @ref="table" Data="@runRoute.Stages" AllowFiltering="true" AllowSorting="true" TItem="Stage" RowSelect="@(args => Selected = args)">
+            <Columns>
+                <RadzenGridColumn TItem="Stage" Property="StageId" Title="ID" />
+                <RadzenGridColumn TItem="Stage" Property="Date" Title="Startdato" />
+            </Columns>
+        </RadzenGrid>
+        <br />
+
+        @*<RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@(new List<Stage>(){Selected})" TItem="Stage">
+            <Columns>
+                <RadzenGridColumn TItem="Stage" Property="stage.StageId" Title="ID" />
+                <RadzenGridColumn TItem="Stage" Property="stage.Date" Title="Startdato" />
+                <RadzenGridColumn TItem="Stage" Property="stage.RunRouteId" Title="RuteID" />
+            </Columns>
+        </RadzenGrid>*@
+
+        <RadzenButton Text=@($"Gem rute") Click="@SaveRouteChanges" Style="margin-bottom: 20px; width: 200px" />
+        <RadzenButton Text=@($"Annuller") Click="@CancelRouteChanges" ButtonStyle="ButtonStyle.Secondary" Style="margin-bottom: 20px; width: 200px" />
+    </div>
+</div>
+
+    
+
+
+@code {
+
+    async Task ShowAddStageDialog() => await dialogService.OpenAsync("Tilføj segment", ds =>
+        @<RadzenTemplateForm TItem="Stage">
+
+            <div class="row" style="margin-bottom: 48px">
+                <div class="col-md-4 align-right">
+                    <RadzenLabel Text="Startdato" />
+                </div>
+                <div class="col">
+                    <RadzenDatePicker Name="Date" DateFormat="d" @bind-Value="date" /><br>
+                    @*<RadzenRequiredValidator Component="Date" Text="Start date is required" Popup=true Style="position: absolute" />*@
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 48px">
+                <div class="col-md-4 align-right">
+                    <RadzenNumeric TValue="float" @bind-Value="xCoordinate" Placeholder="Startlokation X" />
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 48px">
+                <div class="col-md-4 align-right">
+                    <RadzenNumeric TValue="float" @bind-Value="yCoordinate" Placeholder="Startlokation Y" />
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    @*<RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />*@
+                    <RadzenButton Click="()=> OnSubmit(date, xCoordinate, yCoordinate)" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+                    <RadzenButton Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
+                </div>
+            </div>
+        </RadzenTemplateForm>
+    );
+
+    
+    }

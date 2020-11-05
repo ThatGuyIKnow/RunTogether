@@ -1,32 +1,66 @@
-﻿
-@using Microsoft.EntityFrameworkCore
-@using System.Collections.Generic
+﻿@using System.Collections.Generic
+@using RunTogether.Data
+@using Microsoft.AspNetCore.Identity
+@using RunTogether.Areas.Identity
+@using RunTogether.Areas.Identity.Helpers
+@using RunTogether.Shared.QR
+@using RunTogether.Shared.Forms
+@using RunTogether.Shared.Map
 
-<h3>DataTable</h3>
+@inject IJSRuntime jsRuntime
+@inject ApplicationDbContext dbContext
+@inject UserManager<ApplicationUser> userManager
+@inject DialogService dialogService
+@inject UserCreationHelper userCreationHelper
 
-<RadzenGrid Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run">
-    <Columns>
-        <RadzenGridColumn TItem="Run" Property="distance" Title="distance"></RadzenGridColumn>
-        <RadzenGridColumn TItem="Run" Property="name" Title="name"></RadzenGridColumn>
-        <RadzenGridColumn TItem="Run" Property="city" Title="city"></RadzenGridColumn>
-    </Columns>
-</RadzenGrid>
+<RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret ny løber",
+                        new Dictionary<string, object>(),
+                        new DialogOptions(){ Width = "700px", Height = "530px" }))" />
 
+<div class="row">
+    <div class="col-md-6">
+        <RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
+            <Columns>
+                <RadzenGridColumn TItem="Run" Property="Name" Title="Løb"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Dato"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="EndDate" Title="Slut Dato"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="Route" Title="Rute"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
+            </Columns>
+        </RadzenGrid>
+    </div>
+    <div class="col-md-6">
+        <RadzenTabs>
+            <Tabs>
+                <RadzenTabsItem Text="Runners">
+                    <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
+                        <Columns>
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn" />
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn" />
+                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email" />
+                        </Columns>
+                    </RadzenGrid>
+                </RadzenTabsItem>
 
+                <RadzenTabsItem Text="Route">
+                    @if (@run.Route != null)
+                    {
+                        <LeafletMap Route="@run.Route"></LeafletMap>
+                    }
+                </RadzenTabsItem>
 
-@code {
-    Run[] runs;
+                <RadzenTabsItem Text="QR Kode">
+                    <div>
+                        <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
 
-    protected override async Task OnInitializedAsync()
-    {
+                        <RadzenDropDown @bind-Value="color" AllowClear="true" TValue="string" Data="@colorList" TextProperty="Name" ValueProperty="code" Style="margin-bottom: 20px" />
 
-        runs = await Task.FromResult(Enumerable.Range(1, 5).Select(index => new Run
-        {
-            distance = index,
-            name = "test run",
-            city = "aalborg"
-        }).ToArray());
+                        <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
 
-    }
-
-}
+                        <QRGenerator code="@run.QRString" size=@($"{slider}%") color="@color" />
+                    </div>
+                </RadzenTabsItem>
+            </Tabs>
+        </RadzenTabs>
+    </div>
+</div>

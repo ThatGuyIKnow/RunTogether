@@ -1,0 +1,17 @@
+﻿@inject IJSRuntime JSRuntime
+
+<!-- Sponsor bar top title -->
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Sponsors</a>
+</div>
+
+<!-- List of all sponsors -->
+<div class="scrollable">
+    <ul>
+        <!-- This is just pulling from an array for new, needs to be changed to pulling form a different resource -->
+        @foreach (var sponsor in sponsors)
+        {
+            <RadzenImage Path="@sponsor" Style="height: 10rem; max-width: 100%; object-fit: contain" />
+        }
+    </ul>
+</div>

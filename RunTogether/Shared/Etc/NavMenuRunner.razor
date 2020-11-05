@@ -1,0 +1,27 @@
+﻿@inject IJSRuntime JSRuntime
+
+<!-- Navigation bar top title -->
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Navigation</a>
+</div>
+
+<!-- Pages/buttons on the navigation bar -->
+<div class="scrollable">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <RadzenIcon Icon="phone" aria-hidden="true" Style="margin: 0 10px 0 0" /> Grib stafet
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <RadzenIcon Icon="map" aria-hidden="true" Style="margin: 0 10px 0 0" /> Rute
+            </NavLink>
+        </li>
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="fetchdata">
+                <RadzenIcon Icon="favorite" aria-hidden="true" Style="margin: 0 10px 0 0" /> Indstillinger
+            </NavLink>
+        </li>
+    </ul>
+</div>

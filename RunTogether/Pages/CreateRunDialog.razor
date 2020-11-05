@@ -1,0 +1,50 @@
+﻿@page "/dialogcard/{OrderID}"
+
+@using Microsoft.EntityFrameworkCore
+@using System.Text.Json
+@using System.Text.Json.Serialization
+
+@inject Radzen.DialogService dialogService
+
+<h1>Dialog with parameters</h1>
+
+<p>Fill in information to create a new run</p>
+    <RadzenTemplateForm TItem="Run" Data="@run" Submit="@OnSubmit" InvalidSubmit="@OnInvalidSubmit">
+        <div class="row" style="margin-bottom: 48px">
+            <div class="col-md-4 align-right">
+                <RadzenLabel Text="ID" />
+            </div>
+            <div class="col">
+                <RadzenNumeric Name="ID" TValue="int" @bind-Value="run.ID" /><br>
+                <RadzenRequiredValidator Component="ID" Text="ID is required" Popup=true Style="position: absolute" />
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 48px">
+            <div class="col-md-4 align-right">
+                <RadzenLabel Text="Start date" />
+            </div>
+            <div class="col">
+                <RadzenDatePicker Name="StartDate" DateFormat="d" @bind-Value="run.StartDate" /><br>
+                <RadzenRequiredValidator Component="StartDate" Text="Start date is required" Popup=true Style="position: absolute" />
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 48px">
+            <div class="col-md-4 align-right">
+                <RadzenLabel Text="End date" />
+            </div>
+            <div class="col">
+                <RadzenDatePicker Name="EndDate" DateFormat="d" @bind-Value="run.EndDate" /><br>
+                <RadzenRequiredValidator Component="EndDate" Text="End date is required" Popup=true Style="position: absolute" />
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <RadzenButton ButtonType="ButtonType.Submit" Text="OK" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Click="@((args) => dialogService.Close(false))" ButtonStyle="ButtonStyle.Secondary" Text="Cancel" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenTemplateForm>
+
