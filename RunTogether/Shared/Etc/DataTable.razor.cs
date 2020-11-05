@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using RunTogether.Shared.Forms;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components;
 
 namespace RunTogether.Shared.Etc
 {
@@ -28,8 +29,10 @@ namespace RunTogether.Shared.Etc
             public string Name { get; set; }
             public string code { get; set; }
         }
-
         List<Farver> colorList = new List<Farver>();
+
+        // variable til at holde det valgte løb
+        Run run = new Run();
 
         //Variabler for QRCode gen
         string color = "#000000";
@@ -39,11 +42,8 @@ namespace RunTogether.Shared.Etc
         RadzenGrid<Run> runTable;
         RadzenGrid<ApplicationUser> runnerTable;
 
-        //henter hele data table ned og filtere client-side, men der laves ingen filtering her, så det er fint.
-        IEnumerable<Run> runs;
-
         //alt querying bliver lavet i DB og kun det relevante data sendes til client.
-        IQueryable<ApplicationUser> runners;
+        IQueryable<Run> runs;
 
         protected override async Task OnInitializedAsync()
         {
@@ -65,7 +65,7 @@ namespace RunTogether.Shared.Etc
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
-            //await GenerateTestData();
+            await GenerateTestData();
         }
 
         public async Task GenerateTestData()
@@ -97,24 +97,14 @@ namespace RunTogether.Shared.Etc
                 await dbContext.SaveChangesAsync();
         }
 
-        Run run = new Run();
-        RunRoute Route = new RunRoute();
         public async Task QueryForRunners(Run QueryRun)
         {
             run = QueryRun;
-
-            Console.WriteLine(run.Route.Stages[0].StartPoint.X);
-
-            runners = dbContext.Users
-                .Where(u => u.RunId == QueryRun.ID);
-
         }
 
-        void EditRunner(ApplicationUser selectedRunner)
+        private void NavigateToPage(string path)
         {
-                dialogService.Open<EditRunner>(($"Rediger: {selectedRunner.FirstName} {selectedRunner.LastName}"),
-                    new Dictionary<string, object>() { {"selectedRunner", selectedRunner } },
-                    new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
+            NavigationManager.NavigateTo(path);
         }
 
         void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
@@ -128,53 +118,6 @@ namespace RunTogether.Shared.Etc
             if(run.ID != default)
                 runnerTable.Reload();
             StateHasChanged();
-        }
-
-
-
-        void OnUpdateRow(ApplicationUser runner)
-        {
-            dbContext.Update(runner);
-            dbContext.SaveChanges();
-        }
-        void EditRow(ApplicationUser runner)
-        {
-            runnerTable.EditRow(runner);
-        }
-
-        void SaveRow(ApplicationUser runner)
-        {
-            runnerTable.UpdateRow(runner);
-        }
-
-        void CancelEdit(ApplicationUser runner)
-        {
-            runnerTable.CancelEditRow(runner);
-
-            // For production
-            var runnerEntry = dbContext.Entry(runner);
-            if (runnerEntry.State == EntityState.Modified)
-            {
-                runnerEntry.CurrentValues.SetValues(runnerEntry.OriginalValues);
-                runnerEntry.State = EntityState.Unchanged;
-            }
-        }
-
-        void DeleteRow(ApplicationUser runner)
-        {
-            if (runners.Contains(runner))
-            {
-                dbContext.Remove<ApplicationUser>(runner);
-
-                // For production
-                dbContext.SaveChanges();
-
-                runnerTable.Reload();
-            }
-            else
-            {
-                runnerTable.CancelEditRow(runner);
-            }
         }
 
     }

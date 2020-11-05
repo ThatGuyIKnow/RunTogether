@@ -1,0 +1,18 @@
+﻿@page "/admin/{id:int}/qrcode"
+@layout RunTogether.Shared.Layouts.OrganiserLayout
+
+@using Microsoft.AspNetCore.Identity
+@using RunTogether.Shared.Forms
+@using RunTogether.Areas.Identity
+@using System.Collections.Generic
+@using RunTogether.Data
+@using Microsoft.EntityFrameworkCore;
+@using RunTogether.Shared.QR
+
+@inject DialogService dialogService
+@inject UserManager<ApplicationUser> userManager
+@inject ApplicationDbContext dbContext
+
+<h3>QR Kode</h3>
+
+<QRGenerator code="@run.QRString"/>

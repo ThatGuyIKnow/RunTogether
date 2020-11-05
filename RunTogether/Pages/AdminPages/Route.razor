@@ -1,0 +1,16 @@
+﻿@page "/admin/{id:int}/route"
+@layout RunTogether.Shared.Layouts.OrganiserLayout
+
+@using Microsoft.AspNetCore.Identity
+@using RunTogether.Shared.Forms
+@using RunTogether.Areas.Identity
+@using System.Collections.Generic
+@using RunTogether.Data
+@using Microsoft.EntityFrameworkCore;
+
+@inject DialogService dialogService
+@inject UserManager<ApplicationUser> userManager
+@inject ApplicationDbContext dbContext
+
+<h3>Route</h3>
+*import route editor component here*
