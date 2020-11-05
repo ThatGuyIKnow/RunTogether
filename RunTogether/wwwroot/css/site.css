@@ -231,6 +231,10 @@ app {
     left: 1rem;
 }
 
+.back-arrow {
+    color: black;
+}
+
 .scrollable {
     overflow: hidden;
     overflow-y: scroll;
