@@ -14,14 +14,14 @@ namespace RunTogether
 
         public Run? Run { get; set; }
 
-        public RunRoute()
-        {
-            Stages = new List<Stage>();
-        }
+        //public RunRoute()
+        //{
+        //    Stages = new List<Stage>();
+        //}
 
         public override string ToString()
         {
-            return "This here sure is a route";
+            return RunRouteId.ToString();
             //return $"Route with {Stages.Count} stages";
         }
 
