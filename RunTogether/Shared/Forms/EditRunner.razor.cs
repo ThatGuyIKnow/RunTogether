@@ -1,10 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using RunTogether.Areas.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace RunTogether.Shared.Forms
 {
     public partial class EditRunner
     {
+
+        [Parameter] public ApplicationUser selectedRunner { get; set; }
         string value;
 
         Dictionary<DateTime, string> events = new Dictionary<DateTime, string>();

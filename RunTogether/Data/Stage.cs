@@ -22,18 +22,18 @@ namespace RunTogether
 
         public int RunRouteId { get; set; } 
 
-        public RunRoute RunRoute { get; set; } = new RunRoute();
+        public RunRoute RunRoute { get; set; }
 
-        public Stage(StartPoint startPoint, EndPoint endPoint)
-        {
-            this.StartPoint = startPoint;
-            this.EndPoint = endPoint;
-        }
+        //public Stage(StartPoint startPoint, EndPoint endPoint)
+        //{
+        //    this.StartPoint = startPoint;
+        //    this.EndPoint = endPoint;
+        //}
 
-        private Stage()
-        {
+        //private Stage()
+        //{
 
-        }
+        //}
 
     }
 }
