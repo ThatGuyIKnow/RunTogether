@@ -80,19 +80,41 @@
 
                 <RadzenTabsItem Text="QR Kode">
                     <div>
-                        <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
+                        <div>
+                            <RadzenFieldset Text="Store Info">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <RadzenLabel Text="Farve:" />
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <RadzenLabel Text="Størelse:" />
+                                    </div>
+                                    <div class="col-sm-4">
+                                        
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <RadzenDropDown @bind-value="color" AllowClear="false" TValue="string" Placeholder="Select..." Data="@ColorList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
+                                    </div>
+                                    <div class="col-sm-4"
+                                        <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
+                                    </div>
+                                </div>
+                            </RadzenFieldset>
 
-                        <RadzenDropDown @bind-Value="color" AllowClear="true" TValue="string" Data="@colorList" TextProperty="Name" ValueProperty="code" Style="margin-bottom: 20px" />
-
-                        <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
-                        @if(run.ID == default)
-                        {
-                            <p>Vælg et løb for at se tilhørense QR kode</p>
-                        } 
-                        else 
-                        { 
-                            <QRGenerator code="@run.QRString" size=@($"{slider}%") color="@color" />
-                        }
+                            @if (run.ID == default)
+                            {
+                                <p>Vælg et løb for at se tilhørense QR kode</p>
+                            }
+                            else
+                            {
+                                <QRGenerator code="@run.QRString" size=@($"{slider}%") color="@color" />
+                            }
+                        </div>
                     </div>
                 </RadzenTabsItem>
             </Tabs>

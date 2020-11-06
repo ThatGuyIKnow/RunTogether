@@ -17,24 +17,17 @@ namespace RunTogether.Shared.Etc
     public partial class DataTable
     {
 
-
+        // Kalder JS function til at printe QR koden
         void PrintImage()
         {
             jsRuntime.InvokeVoidAsync("Main.Common.PrintImage", "QRCodeImg");
         }
 
-
-        public class Farver
-        {
-            public string Name { get; set; }
-            public string code { get; set; }
-        }
-        List<Farver> colorList = new List<Farver>();
-
         // variable til at holde det valgte løb
         Run run = new Run();
 
         //Variabler for QRCode gen
+        List<Tuple<string, string>> ColorList = new List<Tuple<string, string>>();
         string color = "#000000";
         int slider = 50;
 
@@ -59,13 +52,14 @@ namespace RunTogether.Shared.Etc
                         .ThenInclude(s => s.ThroughPoints)
                 .Include(r => r.Runners);
 
-            colorList.Add(new Farver() { Name = "RT rød", code = "#cc4545" });
-            colorList.Add(new Farver() { Name = "Sort", code = "#000000" });
+            ColorList.Add(new Tuple<string, string>("RT rød", "#cc4545"));
+            ColorList.Add(new Tuple<string, string>("Sort", "#000000"));
+            ColorList.Add(new Tuple<string, string>("Navy blå", "#000080"));
 
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
-            await GenerateTestData();
+            //await GenerateTestData();
         }
 
         public async Task GenerateTestData()
