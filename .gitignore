@@ -16,3 +16,4 @@ RunTogetherTest/RunTogether.csproj.user
 .vscode/
 /RunTogetherTests/obj/Debug/netcoreapp3.1
 /RunTogetherTests/obj
+/RunTogetherTests/bin/Debug/netcoreapp3.1
