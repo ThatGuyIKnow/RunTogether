@@ -33,7 +33,8 @@ namespace RunTogether.Areas.Identity.Helpers
 
         public async Task<IdentityResult> CreateRunner(string firstName, string lastName, string email, Run run)
         {
-            IdentityResult userInfoResult = await ValidateUserInformation(email, IdentityRoleTypes.Runner, run);
+            Run? selectedRun = await _dbContext.Runs.FindAsync(run.ID);
+            IdentityResult userInfoResult = ValidateUserInformation(email, selectedRun);
             if (!userInfoResult.Succeeded) { return userInfoResult; }
 
             _userManager.PasswordHasher = new PlainTextPasswordHasher();
@@ -52,10 +53,8 @@ namespace RunTogether.Areas.Identity.Helpers
             
             if(result.Succeeded)
             {
-                Run foundE = await _dbContext.Runs.FindAsync(run.ID);
-                foundE.Runners.Add(user);
-                foundE.IncrementRunnerId();
-
+                selectedRun.Runners.Add(user);
+                selectedRun.IncrementRunnerId();
                 await _dbContext.SaveChangesAsync();
                 await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Runner);
             }
@@ -65,49 +64,32 @@ namespace RunTogether.Areas.Identity.Helpers
         }
 
 
-        public async Task<IdentityResult> CreateOrganiser(string firstName, string lastName, string email)
+
+        private IdentityResult ValidateUserInformation(string email, Run? run)
         {
-            IdentityResult userInfoResult = await ValidateUserInformation(email, IdentityRoleTypes.Organiser);
-            if (!userInfoResult.Succeeded) { return userInfoResult; }
-            
-            ApplicationUser user = new ApplicationUser(email)
-            {
-                Email = email,
-                FirstName = firstName,
-                LastName = lastName
-            }; 
-            
-            IdentityResult result = await _userManager.CreateAsync(user, CreateRandomPassword(12));
-
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Organiser);
-            }
-
-            return result;
-        }
-
-        
-        private async Task<IdentityResult> ValidateUserInformation(string email, string role, Run? run = null)
-        {
-            bool isUsedEmail = false;
             string newNormEmail = _userManager.NormalizeEmail(email);
+            bool isUsedEmail = run?.Runners.Any(runner => 
+                runner.NormalizedEmail == newNormEmail) != null;
+            List<IdentityError> errors = new List<IdentityError>();
 
-            if (role == IdentityRoleTypes.Runner)
-            {
-                isUsedEmail = run.Runners.Any(runner => runner.NormalizedEmail == newNormEmail);
-            }
-            else if (role == IdentityRoleTypes.Organiser)
-            {
-                IList<ApplicationUser> organisers = await _userManager.GetUsersInRoleAsync(role);
-                isUsedEmail = organisers.Any(org => org.NormalizedEmail == newNormEmail);
-            }
 
             if (isUsedEmail)
             {
                 IdentityError error = new IdentityError();
-                error.Description = "Error creating user: Email is already in use!";
-                return IdentityResult.Failed(error);
+                error.Description = "Error creating runner: Email is already in use!";
+                errors.Add(error);
+            }
+
+            if (run == null)
+            {
+                IdentityError error = new IdentityError();
+                error.Description = "Error creating runner: Could not find run by ID!";
+                errors.Add(error);
+            }
+
+            if (errors.Count > 0)
+            {
+                return IdentityResult.Failed(errors.ToArray());
             }
 
             return IdentityResult.Success;

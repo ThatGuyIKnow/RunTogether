@@ -23,7 +23,7 @@ export class QrScannerClass
         this.dotnetHelper = objRef;
         const videoElem = document.getElementById(videoElemId);
         this.qrScanner = new QrScanner(videoElem,
-            result => this.dotnetHelper.invokeMethodAsync('ResolvePromiseString', result)
+            result => this.dotnetHelper.invokeMethodAsync('ResolvePromise', result)
         );
     }
 

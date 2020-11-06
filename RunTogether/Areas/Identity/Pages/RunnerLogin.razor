@@ -22,16 +22,20 @@
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender) return;
+        try{
+            string key = GetQueryValue("key");
 
-        string key = GetQueryValue("key");
+            ApplicationUser user = await GetUserFromKey(key);
 
-        ApplicationUser user = await GetUserFromKey(key);
+            ClaimsPrincipal principal = await CreatePrincipalFromUser(user);
 
-        ClaimsPrincipal principal = await CreatePrincipalFromUser(user);
+            LoginUser(principal);
 
-        LoginUser(principal);
+            navigationManager.NavigateTo("/runner");
+            return;
+        } catch(Exception e) { }
 
-        navigationManager.NavigateTo("/runner");
+        navigationManager.NavigateTo("/");
     }
 
     protected string GetQueryValue(string value)

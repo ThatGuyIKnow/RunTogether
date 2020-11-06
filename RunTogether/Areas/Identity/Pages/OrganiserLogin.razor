@@ -4,7 +4,8 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Authentication
-@using Radzen 
+@using Microsoft.AspNetCore.Http
+@using Radzen
 @inject UserManager<ApplicationUser> userManager
 @inject SignInManager<ApplicationUser> signInManager
 @inject NavigationManager navigationManager
@@ -28,13 +29,12 @@
 </div>
 
 @code {
-
     private string email = "";
     private string password = "";
     private bool showError = false;
     private bool loading = false;
 
-    private void Submit()
+    private async void Submit()
     {
         loading = true;
         Task.Run(LoginAsync);
