@@ -20,7 +20,7 @@ namespace RunTogether.Shared.Etc
         // Kalder JS function til at printe QR koden
         void PrintImage()
         {
-            jsRuntime.InvokeVoidAsync("Main.Common.PrintImage", "QRCodeImg");
+            jsRuntime.InvokeVoidAsync("Main.Common.PrintImage", "QRCodeImg", run.QRString);
         }
 
         // variable til at holde det valgte løb
