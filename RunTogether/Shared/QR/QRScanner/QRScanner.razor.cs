@@ -37,12 +37,6 @@ namespace RunTogether.Shared.QR.QRScanner
 
         private async void InitializeQrScanner()
         {
-            //UserCreationHelper userCreator = new UserCreationHelper(userManager, dbContext);
-            //IdentityResult r =  await userCreator.CreateOrganiser("Jonas", "Harold", "helloMellow@hotmail.com");
-            //JsRuntime.InvokeVoidAsync("console.log", r.Succeeded, " ", r.Errors);
-            //Run run = await dbContext.Runs.FindAsync(3);
-            //await userCreator.CreateRunner("Jonas", "Harold", "helloBellow@hotmail.com", run);
-
             // Create QR Scanner and start it up
             CreateQrScanner();
             StartQrScanner();
@@ -110,7 +104,9 @@ namespace RunTogether.Shared.QR.QRScanner
 
         public void Dispose()
         {
-            DestroyQrScanner();
+            jsRuntime.InvokeVoidAsync(
+                "Main.QrScanner.DestroyQrScanner",
+                "qrVideo");
         }
 
 }

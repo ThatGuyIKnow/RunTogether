@@ -17,6 +17,8 @@ export class QrScannerClass
         this.HasCamera         = this.HasCamera.bind(this);
     }
 
+    // Streams the camera to a <video> tag identified with 'videoElemId'
+    // Also receives a reference to the .NET instance responsible for the call
     CreateQrScanner(videoElemId, objRef) {
         this.dotnetHelper = objRef;
         const videoElem = document.getElementById(videoElemId);
