@@ -34,7 +34,7 @@ namespace RunTogether.Areas.Identity.Helpers
         public async Task<IdentityResult> CreateRunner(string firstName, string lastName, string email, Run run)
         {
             Run? selectedRun = await _dbContext.Runs.FindAsync(run.ID);
-            IdentityResult userInfoResult = await ValidateUserInformation(email, selectedRun);
+            IdentityResult userInfoResult = ValidateUserInformation(email, selectedRun);
             if (!userInfoResult.Succeeded) { return userInfoResult; }
 
             _userManager.PasswordHasher = new PlainTextPasswordHasher();
@@ -65,7 +65,7 @@ namespace RunTogether.Areas.Identity.Helpers
 
 
 
-        private async Task<IdentityResult> ValidateUserInformation(string email, Run? run)
+        private IdentityResult ValidateUserInformation(string email, Run? run)
         {
             string newNormEmail = _userManager.NormalizeEmail(email);
             bool isUsedEmail = run?.Runners.Any(runner => 
