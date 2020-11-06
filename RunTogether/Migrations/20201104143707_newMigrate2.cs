@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace RunTogether.Data.Migrations
+namespace RunTogether.Migrations
 {
-    public partial class WorkingMap : Migration
+    public partial class newMigrate2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,14 +11,14 @@ namespace RunTogether.Data.Migrations
                 keyColumn: "Id",
                 keyValue: "organiser",
                 column: "ConcurrencyStamp",
-                value: "2d4f6f1a-0ff7-4673-8a58-f889fefce996");
+                value: "5790124a-d127-40ed-9221-644bb254fe66");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "runner",
                 column: "ConcurrencyStamp",
-                value: "71fc51bb-b9f9-484b-adfa-bbb5427d2af7");
+                value: "f1c6de80-d725-4da8-b84c-6bfc63de7472");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -28,14 +28,14 @@ namespace RunTogether.Data.Migrations
                 keyColumn: "Id",
                 keyValue: "organiser",
                 column: "ConcurrencyStamp",
-                value: "199f994c-dcfb-4385-b24e-5e3fe2b8829a");
+                value: "62cf713b-8521-46bc-9402-82374a0e556e");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "runner",
                 column: "ConcurrencyStamp",
-                value: "115777b3-b8a2-4bfe-a236-24d4dd665ba4");
+                value: "e78687cd-82b1-433e-811e-7f2c662369ed");
         }
     }
 }

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RunTogether.Data;
 
-namespace RunTogether.Data.Migrations
+namespace RunTogether.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201102141511_pointAsVector3")]
-    partial class pointAsVector3
+    [Migration("20201104131835_newMigrate")]
+    partial class newMigrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,14 +51,14 @@ namespace RunTogether.Data.Migrations
                         new
                         {
                             Id = "runner",
-                            ConcurrencyStamp = "3a5a93a7-7c07-49bf-a0f4-8250620fb353",
+                            ConcurrencyStamp = "e78687cd-82b1-433e-811e-7f2c662369ed",
                             Name = "Runner",
                             NormalizedName = "RUNNER"
                         },
                         new
                         {
                             Id = "organiser",
-                            ConcurrencyStamp = "819e2cc0-d83b-48a0-b40a-eb76b5caa52d",
+                            ConcurrencyStamp = "62cf713b-8521-46bc-9402-82374a0e556e",
                             Name = "Organiser",
                             NormalizedName = "ORGANISER"
                         });
@@ -253,24 +253,23 @@ namespace RunTogether.Data.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("RunTogether.Data.Coordinate", b =>
+            modelBuilder.Entity("RunTogether.Areas.Identity.Data.OrganiserCreationKey", b =>
                 {
-                    b.Property<int>("CoordinateId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Key")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<float>("X")
-                        .HasColumnName("X")
-                        .HasColumnType("real");
+                    b.Property<DateTime>("ExpirationDatetime")
+                        .HasColumnType("datetime2");
 
-                    b.Property<float>("Y")
-                        .HasColumnName("Y")
-                        .HasColumnType("real");
+                    b.Property<string>("GeneratedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasKey("CoordinateId");
+                    b.HasKey("Key");
 
-                    b.ToTable("Coordinate");
+                    b.HasIndex("GeneratedById");
+
+                    b.ToTable("OrganiserCreationKeys");
                 });
 
             modelBuilder.Entity("RunTogether.Data.EndPoint", b =>
@@ -280,15 +279,16 @@ namespace RunTogether.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CoordinateId")
-                        .HasColumnType("int");
-
                     b.Property<int>("StageId")
                         .HasColumnType("int");
 
-                    b.HasKey("EndPointId");
+                    b.Property<float>("X")
+                        .HasColumnType("real");
 
-                    b.HasIndex("CoordinateId");
+                    b.Property<float>("Y")
+                        .HasColumnType("real");
+
+                    b.HasKey("EndPointId");
 
                     b.HasIndex("StageId")
                         .IsUnique();
@@ -303,15 +303,16 @@ namespace RunTogether.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CoordinateId")
-                        .HasColumnType("int");
-
                     b.Property<int>("StageId")
                         .HasColumnType("int");
 
-                    b.HasKey("StartPointId");
+                    b.Property<float>("X")
+                        .HasColumnType("real");
 
-                    b.HasIndex("CoordinateId");
+                    b.Property<float>("Y")
+                        .HasColumnType("real");
+
+                    b.HasKey("StartPointId");
 
                     b.HasIndex("StageId")
                         .IsUnique();
@@ -326,15 +327,16 @@ namespace RunTogether.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CoordinateId")
-                        .HasColumnType("int");
-
                     b.Property<int>("StageId")
                         .HasColumnType("int");
 
-                    b.HasKey("ThroughPointId");
+                    b.Property<float>("X")
+                        .HasColumnType("real");
 
-                    b.HasIndex("CoordinateId");
+                    b.Property<float>("Y")
+                        .HasColumnType("real");
+
+                    b.HasKey("ThroughPointId");
 
                     b.HasIndex("StageId");
 
@@ -374,13 +376,14 @@ namespace RunTogether.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("RunId")
+                    b.Property<int?>("RunId")
                         .HasColumnType("int");
 
                     b.HasKey("RunRouteId");
 
                     b.HasIndex("RunId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[RunId] IS NOT NULL");
 
                     b.ToTable("RunRoutes");
                 });
@@ -463,14 +466,17 @@ namespace RunTogether.Data.Migrations
                         .HasForeignKey("RunId");
                 });
 
-            modelBuilder.Entity("RunTogether.Data.EndPoint", b =>
+            modelBuilder.Entity("RunTogether.Areas.Identity.Data.OrganiserCreationKey", b =>
                 {
-                    b.HasOne("RunTogether.Data.Coordinate", "Coord")
+                    b.HasOne("RunTogether.Areas.Identity.ApplicationUser", "GeneratedBy")
                         .WithMany()
-                        .HasForeignKey("CoordinateId")
+                        .HasForeignKey("GeneratedById")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
 
+            modelBuilder.Entity("RunTogether.Data.EndPoint", b =>
+                {
                     b.HasOne("RunTogether.Stage", "Stage")
                         .WithOne("EndPoint")
                         .HasForeignKey("RunTogether.Data.EndPoint", "StageId")
@@ -480,12 +486,6 @@ namespace RunTogether.Data.Migrations
 
             modelBuilder.Entity("RunTogether.Data.StartPoint", b =>
                 {
-                    b.HasOne("RunTogether.Data.Coordinate", "Coord")
-                        .WithMany()
-                        .HasForeignKey("CoordinateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RunTogether.Stage", "Stage")
                         .WithOne("StartPoint")
                         .HasForeignKey("RunTogether.Data.StartPoint", "StageId")
@@ -495,12 +495,6 @@ namespace RunTogether.Data.Migrations
 
             modelBuilder.Entity("RunTogether.Data.ThroughPoint", b =>
                 {
-                    b.HasOne("RunTogether.Data.Coordinate", "Coord")
-                        .WithMany()
-                        .HasForeignKey("CoordinateId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RunTogether.Stage", "Stage")
                         .WithMany("ThroughPoints")
                         .HasForeignKey("StageId")
@@ -512,9 +506,7 @@ namespace RunTogether.Data.Migrations
                 {
                     b.HasOne("RunTogether.Run", "Run")
                         .WithOne("Route")
-                        .HasForeignKey("RunTogether.RunRoute", "RunId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RunTogether.RunRoute", "RunId");
                 });
 
             modelBuilder.Entity("RunTogether.Stage", b =>

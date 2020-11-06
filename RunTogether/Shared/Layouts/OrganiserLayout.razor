@@ -1,13 +1,27 @@
-﻿@using Radzen
+﻿@using RunTogether.Shared.Etc
+@using Radzen
+
+@inject IJSRuntime JSRuntime
 
 @inject DialogService dialogService
 
 @inherits LayoutComponentBase
 
+<!-- Desktop navigation bar -->
+<div class="sidebar" id="navBarOrgId">
+    <NavMenuOrganiser />
+</div>
+
 <div class="main">
     <div class="top-row px-4 auth">
+        <!-- Sidebar toggle open/close button -->
+        <button class="navbar-toggler navbar-toggler-left" @onclick="ToggleSidebar">
+            <span class="oi oi-menu"></span>
+        </button>
+
         <!-- RunTogether logo -->
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png" Style="width:200px" class="logo logo-align-left"></RadzenImage>
+        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png"
+                     Style="width:200px" class="logo"></RadzenImage>
     </div>
 
     <!-- Is required for Radzen dialogues -->

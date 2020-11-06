@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace RunTogether.Data.Migrations
+namespace RunTogether.Migrations
 {
-    public partial class pointAsVector2 : Migration
+    public partial class newMigrate3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -11,14 +11,14 @@ namespace RunTogether.Data.Migrations
                 keyColumn: "Id",
                 keyValue: "organiser",
                 column: "ConcurrencyStamp",
-                value: "41837bf7-080f-42c5-ba7c-904027cff45d");
+                value: "96664bbd-d881-4244-b18e-5514edfe81f5");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "runner",
                 column: "ConcurrencyStamp",
-                value: "03ddb555-e513-434e-8525-261ec9c9a163");
+                value: "28c8412d-20b4-4b13-b964-092076f3ef1d");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -28,14 +28,14 @@ namespace RunTogether.Data.Migrations
                 keyColumn: "Id",
                 keyValue: "organiser",
                 column: "ConcurrencyStamp",
-                value: "ea5460c4-70dc-4149-a541-ae94eaddd2c8");
+                value: "5790124a-d127-40ed-9221-644bb254fe66");
 
             migrationBuilder.UpdateData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "runner",
                 column: "ConcurrencyStamp",
-                value: "5705ba43-e468-40a2-9a77-ff9a32f0566e");
+                value: "f1c6de80-d725-4da8-b84c-6bfc63de7472");
         }
     }
 }

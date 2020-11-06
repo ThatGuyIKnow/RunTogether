@@ -59,7 +59,6 @@ namespace RunTogether.Shared.Forms
             Console.WriteLine(StageObj.StartPoint.X + "," + StageObj.StartPoint.Y);
             this.dialogService.Close(true);
             table.Reload();
-
         }
 
         void OnInvalidSubmit()

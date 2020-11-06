@@ -49,14 +49,14 @@ namespace RunTogether.Migrations
                         new
                         {
                             Id = "runner",
-                            ConcurrencyStamp = "71fc51bb-b9f9-484b-adfa-bbb5427d2af7",
+                            ConcurrencyStamp = "28c8412d-20b4-4b13-b964-092076f3ef1d",
                             Name = "Runner",
                             NormalizedName = "RUNNER"
                         },
                         new
                         {
                             Id = "organiser",
-                            ConcurrencyStamp = "2d4f6f1a-0ff7-4673-8a58-f889fefce996",
+                            ConcurrencyStamp = "96664bbd-d881-4244-b18e-5514edfe81f5",
                             Name = "Organiser",
                             NormalizedName = "ORGANISER"
                         });
@@ -374,13 +374,14 @@ namespace RunTogether.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("RunId")
+                    b.Property<int?>("RunId")
                         .HasColumnType("int");
 
                     b.HasKey("RunRouteId");
 
                     b.HasIndex("RunId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[RunId] IS NOT NULL");
 
                     b.ToTable("RunRoutes");
                 });
@@ -503,9 +504,7 @@ namespace RunTogether.Migrations
                 {
                     b.HasOne("RunTogether.Run", "Run")
                         .WithOne("Route")
-                        .HasForeignKey("RunTogether.RunRoute", "RunId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RunTogether.RunRoute", "RunId");
                 });
 
             modelBuilder.Entity("RunTogether.Stage", b =>

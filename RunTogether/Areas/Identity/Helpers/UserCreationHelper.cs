@@ -52,8 +52,10 @@ namespace RunTogether.Areas.Identity.Helpers
             
             if(result.Succeeded)
             {
-                run.Runners.Add(user);
-                run.IncrementRunnerId();
+                Run foundE = await _dbContext.Runs.FindAsync(run.ID);
+                foundE.Runners.Add(user);
+                foundE.IncrementRunnerId();
+
                 await _dbContext.SaveChangesAsync();
                 await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Runner);
             }

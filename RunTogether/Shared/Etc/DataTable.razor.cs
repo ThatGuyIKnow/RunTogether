@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RunTogether.Shared.Forms;
+using Microsoft.EntityFrameworkCore;
 
 namespace RunTogether.Shared.Etc
 {
@@ -34,7 +36,8 @@ namespace RunTogether.Shared.Etc
         int slider = 50;
 
         //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
-        RadzenGrid<Run> table;
+        RadzenGrid<Run> runTable;
+        RadzenGrid<ApplicationUser> runnerTable;
 
         //henter hele data table ned og filtere client-side, men der laves ingen filtering her, så det er fint.
         IEnumerable<Run> runs;
@@ -44,7 +47,17 @@ namespace RunTogether.Shared.Etc
 
         protected override async Task OnInitializedAsync()
         {
-            runs = dbContext.Runs;
+            runs = dbContext.Runs
+                .Include(r => r.Route)
+                    .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.StartPoint)
+                .Include(r => r.Route)
+                    .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.EndPoint)
+                .Include(r => r.Route)
+                    .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.ThroughPoints)
+                .Include(r => r.Runners);
 
             colorList.Add(new Farver() { Name = "RT rød", code = "#cc4545" });
             colorList.Add(new Farver() { Name = "Sort", code = "#000000" });
@@ -52,44 +65,56 @@ namespace RunTogether.Shared.Etc
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
+            //await GenerateTestData();
+        }
 
+        public async Task GenerateTestData()
+        {
+                var testRun = new Run
+                {
+                    Name = "Løb 1",
+                    StartDate = DateTime.Now,
+                    EndDate = DateTime.Now.AddDays(1),
+                    QRString = "test code",
 
+                    Runners = new List<ApplicationUser>
+                    {
+                        new ApplicationUser { FirstName = "Oliver", LastName = "Hansen", Email = "Coolguy@gmail.com" },
+                        new ApplicationUser { FirstName = "Kurt", LastName = "C.Kode", Email = "CisGod@gmail.com" },
+                        new ApplicationUser { FirstName = "Mads", LastName = "Madsen", Email = "SejtNavnGod@gmail.com" }
+                    },
 
-            //dbContext.Stages.Add(new Stage(new StartPoint(57.0117789F, 9.9907118F), new EndPoint(56.7499F, 9.9921F)));
-            //dbContext.Stages.Add(new Stage(new StartPoint(56.467F, 9.2708F), new EndPoint(56.0221F, 9.2288F)));
-            //dbContext.Stages.Add(new Stage(new StartPoint(55.6123F, 9.1428F), new EndPoint(56.3F, 9.3F)));
-            //dbContext.SaveChanges();
-            //dbContext.RunRoutes.Add(new RunRoute() { Stages = new List<Stage>() });
-            //dbContext.RunRoutes.Add(new RunRoute() { Stages = new List<Stage>() });
-            //dbContext.RunRoutes.Add(new RunRoute() { Stages = new List<Stage>() });
-            //dbContext.SaveChanges();
-            Stage stage1 = new Stage(new StartPoint(57.0117789F, 9.9907118F), new EndPoint(56.7499F, 9.9921F));
-            Stage stage2 = new Stage(new StartPoint(55.6123F, 9.1428F), new EndPoint(56.3F, 9.3F));
-            Stage stage3 = new Stage(new StartPoint(56.467F, 9.2708F), new EndPoint(56.0221F, 9.2288F));
-            RunRoute route1 = new RunRoute() { Stages = new List<Stage>() { stage1 } };
-            RunRoute route2 = new RunRoute() { Stages = new List<Stage>() { stage2 } };
-            RunRoute route3 = new RunRoute() { Stages = new List<Stage>() { stage3 } };
-            dbContext.Runs.Add(new Run { Name = "Løb 1", StartDate = DateTime.Now, EndDate = DateTime.Now.AddDays(1), QRString = "test code", Route = route1 });
-            dbContext.Runs.Add(new Run { Name = "Løb 2", StartDate = DateTime.Now.AddDays(2), EndDate = DateTime.Now.AddDays(3), QRString = "ajuf_££$dafdf", Route = route2 });
-            dbContext.Runs.Add(new Run { Name = "Løb 3", StartDate = DateTime.Now.AddDays(4), EndDate = DateTime.Now.AddDays(5), QRString = "asdafgds", Route = route3 });
-            dbContext.SaveChanges();
-            //await test.CreateRunner("Frederik", "Deiborg", "HejMedDig@gmail.com", runs.ElementAt(0));
-            //await test.CreateRunner("Oliver", "Hansen", "Coolguy@gmail.com", runs.ElementAt(0));
-            //await test.CreateRunner("Kurt", "C.Kode", "CisGod@gmail.com", runs.ElementAt(1));
-            //await test.CreateRunner("Mads", "Madsen", "SejtNavnGod@gmail.com", runs.ElementAt(1));
-            //await test.CreateRunner("Ran", "D.Om", "RandomMaild@gmail.com", runs.ElementAt(1));
-            //await test.CreateRunner("All", "Alone", "Lonely@gmail.com", runs.ElementAt(2));
+                    Route = new RunRoute
+                    {
+                        Stages = new List<Stage>
+                        {
+                            new Stage() {StartPoint = new StartPoint(57.0117789F, 9.9907118F), EndPoint = new EndPoint(56.7499F, 9.9921F)}
+                        }
+                    }
+                };
+
+                dbContext.Runs.Add(testRun);
+                await dbContext.SaveChangesAsync();
         }
 
         Run run = new Run();
-        public void QueryForRunners(Run QueryRun)
+        RunRoute Route = new RunRoute();
+        public async Task QueryForRunners(Run QueryRun)
         {
-
             run = QueryRun;
+
+            Console.WriteLine(run.Route.Stages[0].StartPoint.X);
 
             runners = dbContext.Users
                 .Where(u => u.RunId == QueryRun.ID);
 
+        }
+
+        void EditRunner(ApplicationUser selectedRunner)
+        {
+                dialogService.Open<EditRunner>(($"Rediger: {selectedRunner.FirstName} {selectedRunner.LastName}"),
+                    new Dictionary<string, object>() { {"selectedRunner", selectedRunner } },
+                    new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
         }
 
         void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
@@ -99,10 +124,58 @@ namespace RunTogether.Shared.Etc
 
         void Close(dynamic result)
         {
-            table.Reload();
+            runTable.Reload();
+            if(run.ID != default)
+                runnerTable.Reload();
             StateHasChanged();
         }
 
+
+
+        void OnUpdateRow(ApplicationUser runner)
+        {
+            dbContext.Update(runner);
+            dbContext.SaveChanges();
+        }
+        void EditRow(ApplicationUser runner)
+        {
+            runnerTable.EditRow(runner);
+        }
+
+        void SaveRow(ApplicationUser runner)
+        {
+            runnerTable.UpdateRow(runner);
+        }
+
+        void CancelEdit(ApplicationUser runner)
+        {
+            runnerTable.CancelEditRow(runner);
+
+            // For production
+            var runnerEntry = dbContext.Entry(runner);
+            if (runnerEntry.State == EntityState.Modified)
+            {
+                runnerEntry.CurrentValues.SetValues(runnerEntry.OriginalValues);
+                runnerEntry.State = EntityState.Unchanged;
+            }
+        }
+
+        void DeleteRow(ApplicationUser runner)
+        {
+            if (runners.Contains(runner))
+            {
+                dbContext.Remove<ApplicationUser>(runner);
+
+                // For production
+                dbContext.SaveChanges();
+
+                runnerTable.Reload();
+            }
+            else
+            {
+                runnerTable.CancelEditRow(runner);
+            }
+        }
 
     }
 }
