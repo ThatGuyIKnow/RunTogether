@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.Threading.Tasks;
 
 namespace RunTogether.Shared.Layouts
@@ -27,5 +28,19 @@ namespace RunTogether.Shared.Layouts
                     new { id = sidebarId, attribute = "width", value = "0" });
             }
         }
+
+        public string ID { get; set; }
+
+        protected override void OnParametersSet()
+        {
+            // pull out the "ID" parameter from the route data
+            object id = null;
+            if ((this.Body.Target as RouteView)?.RouteData.RouteValues?.TryGetValue("id", out id) == true)
+            {
+                ID = id?.ToString();
+            }
+
+        }
+
     }
 }

@@ -7,25 +7,32 @@
 @using RunTogether.Shared.Forms
 @using RunTogether.Shared.Map
 
+@inject NavigationManager NavigationManager
 @inject IJSRuntime jsRuntime
 @inject ApplicationDbContext dbContext
 @inject UserManager<ApplicationUser> userManager
 @inject DialogService dialogService
-@inject UserCreationHelper userCreationHelper
+@inject UserCreationHelper userCreation
 
-<RadzenButton Icon="drirections_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret ny løber",
+<RadzenButton Icon="directions_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret nyt løb",
                         new Dictionary<string, object>(),
                         new DialogOptions(){ Width = "700px", Height = "530px" }))" />
 
 <div class="row">
-    <div class="col-md-6">
-        <RadzenGrid @ref="table" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
+    <div class="col-md-6" >
+        <RadzenGrid @ref="runTable" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
             <Columns>
                 <RadzenGridColumn TItem="Run" Property="Name" Title="Løb"></RadzenGridColumn>
                 <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Dato"></RadzenGridColumn>
                 <RadzenGridColumn TItem="Run" Property="EndDate" Title="Slut Dato"></RadzenGridColumn>
                 <RadzenGridColumn TItem="Run" Property="Route" Title="Rute"></RadzenGridColumn>
                 <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
+                <RadzenGridColumn TItem="Run" Context="ID" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                    <Template Context="run">
+                        <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => NavigateToPage($"admin/{run.ID}/info"))">
+                        </RadzenButton>
+                    </Template>
+                </RadzenGridColumn>
             </Columns>
         </RadzenGrid>
     </div>
@@ -33,13 +40,35 @@
         <RadzenTabs>
             <Tabs>
                 <RadzenTabsItem Text="Runners">
-                    <RadzenGrid AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runners" TItem="ApplicationUser">
-                        <Columns>
-                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn" />
-                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn" />
-                            <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email" />
-                        </Columns>
-                    </RadzenGrid>
+                    @if (run.ID == default)
+                    {
+                        <p>Vælg et løb for at se løbere</p>
+                    }
+                    else
+                    {
+                        <RadzenGrid @ref="runnerTable" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@run.Runners" TItem="ApplicationUser">
+                            <Columns>
+                                <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn">
+                                    <EditTemplate Context="selectedRunner">
+                                        <RadzenTextBox @bind-Value="selectedRunner.FirstName" Style="width:100%; display: block" Name="FirstName" />
+                                        <RadzenRequiredValidator Text="Fornavn er påkrævet" Component="FirstName" Popup="true" />
+                                    </EditTemplate>
+                                </RadzenGridColumn>
+                                <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn">
+                                    <EditTemplate Context="selectedRunner">
+                                        <RadzenTextBox @bind-Value="selectedRunner.LastName" Style="width:100%; display: block" Name="LastName" />
+                                        <RadzenRequiredValidator Text="Efternavn er påkrævet" Component="LastName" Popup="true" />
+                                    </EditTemplate>
+                                </RadzenGridColumn>
+                                <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email">
+                                    <EditTemplate Context="selectedRunner">
+                                        <RadzenTextBox @bind-Value="selectedRunner.Email" Style="width:100%; display: block" Name="Email" />
+                                        <RadzenRequiredValidator Text="Email er påkrævet" Component="Email" Popup="true" />
+                                    </EditTemplate>
+                                </RadzenGridColumn>
+                            </Columns>
+                        </RadzenGrid>
+                    }
                 </RadzenTabsItem>
 
                 <RadzenTabsItem Text="Route">
@@ -51,13 +80,41 @@
 
                 <RadzenTabsItem Text="QR Kode">
                     <div>
-                        <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
+                        <div>
+                            <RadzenFieldset Text="QR Kode indstillinger">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <RadzenLabel Text="Farve:" />
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <RadzenLabel Text="Størelse:" />
+                                    </div>
+                                    <div class="col-sm-4">
+                                        
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <RadzenDropDown @bind-value="color" AllowClear="false" TValue="string" Placeholder="Select..." Data="@ColorList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
+                                    </div>
+                                    <div class="col-sm-4"
+                                        <RadzenDropDown @bind-value="size" AllowClear="false" TValue="int" Placeholder="Select..." Data="@SizeList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
+                                    </div>
+                                </div>
+                            </RadzenFieldset>
 
-                        <RadzenDropDown @bind-Value="color" AllowClear="true" TValue="string" Data="@colorList" TextProperty="Name" ValueProperty="code" Style="margin-bottom: 20px" />
-
-                        <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
-
-                        <QRGenerator code="@run.QRString" size=@($"{slider}%") color="@color" />
+                            @if (run.ID == default)
+                            {
+                                <p>Vælg et løb for at se tilhørense QR kode</p>
+                            }
+                            else
+                            {
+                                <QRGenerator code="@run.QRString" size="@size" color="@color" />
+                            }
+                        </div>
                     </div>
                 </RadzenTabsItem>
             </Tabs>

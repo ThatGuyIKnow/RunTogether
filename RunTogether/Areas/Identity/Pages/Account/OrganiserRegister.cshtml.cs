@@ -79,13 +79,12 @@ namespace RunTogether.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string organiserKey = null)
         {
             OrganiserKey = organiserKey;
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string organiserKey = null)
         {
             organiserKey = organiserKey ?? Url.Content("~/");
-            Console.WriteLine(" key " + organiserKey);
+
             if (ModelState.IsValid && (await IsValidKey(organiserKey)).Succeeded)
             {
                 var user = new ApplicationUser { UserName = Input.Email, Email = Input.Email, FirstName = Input.FirstName, LastName = Input.LastName };
