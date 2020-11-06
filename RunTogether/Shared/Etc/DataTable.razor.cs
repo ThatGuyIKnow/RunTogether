@@ -28,8 +28,9 @@ namespace RunTogether.Shared.Etc
 
         //Variabler for QRCode gen
         List<Tuple<string, string>> ColorList = new List<Tuple<string, string>>();
+        List<Tuple<string, int>> SizeList = new List<Tuple<string, int>>();
         string color = "#000000";
-        int slider = 50;
+        int size = 30;
 
         //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
         RadzenGrid<Run> runTable;
@@ -55,6 +56,11 @@ namespace RunTogether.Shared.Etc
             ColorList.Add(new Tuple<string, string>("RT rød", "#cc4545"));
             ColorList.Add(new Tuple<string, string>("Sort", "#000000"));
             ColorList.Add(new Tuple<string, string>("Navy blå", "#000080"));
+
+            SizeList.Add(new Tuple<string, int>("Stor (A4)", 30));
+            SizeList.Add(new Tuple<string, int>("Mellem", 20));
+            SizeList.Add(new Tuple<string, int>("Lille", 10));
+            SizeList.Add(new Tuple<string, int>("Meget lille", 1));
 
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;

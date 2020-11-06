@@ -98,7 +98,7 @@
                                         <RadzenDropDown @bind-value="color" AllowClear="false" TValue="string" Placeholder="Select..." Data="@ColorList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
                                     </div>
                                     <div class="col-sm-4"
-                                        <RadzenSlider @bind-Value="slider" TValue="int" Min="0" Max="100" Style="margin-bottom: 20px;" />
+                                        <RadzenDropDown @bind-value="size" AllowClear="false" TValue="int" Placeholder="Select..." Data="@SizeList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
                                     </div>
                                     <div class="col-sm-4">
                                         <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
@@ -112,7 +112,7 @@
                             }
                             else
                             {
-                                <QRGenerator code="@run.QRString" size=@($"{slider}%") color="@color" />
+                                <QRGenerator code="@run.QRString" size="@size" color="@color" />
                             }
                         </div>
                     </div>
