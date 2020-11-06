@@ -14,3 +14,5 @@ RunTogetherTest/Properties/launchSettings.json
 RunTogetherTest/RunTogether.csproj.user
 .vs/
 .vscode/
+/RunTogetherTests/obj/Debug/netcoreapp3.1
+/RunTogetherTests/obj
