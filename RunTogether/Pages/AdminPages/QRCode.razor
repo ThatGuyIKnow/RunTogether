@@ -12,7 +12,31 @@
 @inject DialogService dialogService
 @inject UserManager<ApplicationUser> userManager
 @inject ApplicationDbContext dbContext
+@inject IJSRuntime jsRuntime
 
 <h3>QR Kode</h3>
+<RadzenFieldset Text="QR Kode indstillinger">
+    <div class="row">
+        <div class="col-sm-4">
+            <RadzenLabel Text="Farve:" />
+        </div>
+        <div class="col-sm-4">
+            <RadzenLabel Text="Størelse:" />
+        </div>
+        <div class="col-sm-4">
 
-<QRGenerator code="@run.QRString"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <RadzenDropDown @bind-value="color" AllowClear="false" TValue="string" Placeholder="Select..." Data="@ColorList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
+        </div>
+        <div class="col-sm-4"
+                                        <RadzenDropDown @bind-value="size" AllowClear="false" TValue="int" Placeholder="Select..." Data="@SizeList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
+                                    </div>
+        <div class="col-sm-4">
+            <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
+        </div>
+    </div>
+</RadzenFieldset>
+<QRGenerator code="@run.QRString" />
