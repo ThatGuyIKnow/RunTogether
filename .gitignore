@@ -5,5 +5,12 @@ RunTogether/Data/Migrations/
 RunTogether/Migrations/
 RunTogether/Properties/launchSettings.json
 RunTogether/RunTogether.csproj.user
+RunTogetherTest/bin/
+RunTogetherTest/obj/
+RunTogetherTest/wwwroot/js/
+RunTogetherTest/Data/Migrations/
+RunTogetherTest/Migrations/
+RunTogetherTest/Properties/launchSettings.json
+RunTogetherTest/RunTogether.csproj.user
 .vs/
 .vscode/
