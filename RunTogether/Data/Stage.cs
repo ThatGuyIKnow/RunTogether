@@ -1,4 +1,5 @@
 ﻿using Radzen.Blazor;
+using RunTogether.Areas.Identity;
 using RunTogether.Data;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,12 @@ namespace RunTogether
         public int RunRouteId { get; set; } 
 
         public RunRoute RunRoute { get; set; }
+
+        public bool InProgress { get; set; }
+
+        public bool Completed { get; set; }
+
+        public ApplicationUser Runner { get; set; }
 
         //public Stage(StartPoint startPoint, EndPoint endPoint)
         //{

@@ -14,11 +14,6 @@ namespace RunTogether
 
         public Run? Run { get; set; }
 
-        //public RunRoute()
-        //{
-        //    Stages = new List<Stage>();
-        //}
-
         public override string ToString()
         {
             return RunRouteId.ToString();
@@ -45,6 +40,11 @@ namespace RunTogether
             }
             return PointList;
         }
+
+        //public Stage GetCurrentStage()
+        //{
+        //    return Stages.Find(s => s.Completed == false);
+        //}
 
         //public RunRoute(List<Stage> Stages)
         //{

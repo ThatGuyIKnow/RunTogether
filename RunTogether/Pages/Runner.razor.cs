@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RunTogether.Areas.Identity;
 using RunTogether.Areas.Identity.Data;
 using RunTogether.Data;
+using System.Collections.Generic;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -13,8 +14,8 @@ namespace RunTogether.Pages
     {
         private int currentCount = 0;
         private string qrCode = "";
-        private int? assignedRunId;
-        private string? runQrCode = null;
+        private Run assignedRun = new Run();
+        private List<Stage> assignedStages = new List<Stage>();
 
         private const string HideCss = "display-none";
         private string cameraCSS = "";
@@ -28,26 +29,34 @@ namespace RunTogether.Pages
             if (user.Identity.IsAuthenticated)
             {
                 var currentUser = await UserManager.GetUserAsync(user);
-                assignedRunId = currentUser.RunId;
-
-                Run run = new Run();
-                run = dbContext.Runs.Find(assignedRunId);
-                runQrCode = run.QRString;
+                assignedRun = currentUser.Run;
+                assignedStages = currentUser.Stages;
             }
         }
 
         public void CheckCode()
-        {
-            if (runQrCode != null && runQrCode.Equals(qrCode))
+        { 
+            if (assignedRun.QRString.Equals(qrCode))
             {
-                cameraCSS = HideCss;
-                startRunCSS = "";
+                //cameraCSS = HideCss;
+                //startRunCSS = "";
             }
         }
 
         public void StartRun()
         {
+            Stage activeStage = new Stage();
+            activeStage = assignedRun.GetCurrentStage();
 
+            foreach (Stage stage in assignedStages)
+            {
+                if (stage.StageId == activeStage.StageId)
+                {
+                    //pop-up med confirm at løbet skal starte
+                    //start timer
+                    //skift til at vise stop løb og current time(?)
+                }
+            }
         }
     }
 }
