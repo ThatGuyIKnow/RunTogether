@@ -44,7 +44,7 @@ namespace RunTogether.Shared.Map
         }
 
 
-        private async void button_add()
+/*        private async void button_add()
         {
             //json = JsonConvert.SerializeObject(new { Coordinates = Route.ToPointList() });
 
@@ -54,9 +54,9 @@ namespace RunTogether.Shared.Map
 
         private async void button_remove()
         {
-            //await JsRunTime.InvokeVoidAsync("Main.Map.removeMarkersAndLines");
+            await JsRunTime.InvokeVoidAsync("Main.Map.removeMarkersAndLines");
         }
-
+*/
 
 
         /*

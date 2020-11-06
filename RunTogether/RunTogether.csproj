@@ -8,16 +8,6 @@
 
   <ItemGroup>
     <Compile Remove="Areas\Identity\Pages\Account\Register.cshtml.cs" />
-    <Compile Remove="Data\Migrations\20201028123001_RunnerUser.cs" />
-    <Compile Remove="Data\Migrations\20201028123001_RunnerUser.Designer.cs" />
-    <Compile Remove="Data\Migrations\20201030135538_OrganiserCreationKey.cs" />
-    <Compile Remove="Data\Migrations\20201030135538_OrganiserCreationKey.Designer.cs" />
-    <Compile Remove="Data\Migrations\20201030135737_OrganiserCreationKey.cs" />
-    <Compile Remove="Data\Migrations\20201030135737_OrganiserCreationKey.Designer.cs" />
-    <Compile Remove="Data\Migrations\20201030140031_OrganiserCreationKey.cs" />
-    <Compile Remove="Data\Migrations\20201030140031_OrganiserCreationKey.Designer.cs" />
-    <Compile Remove="Migrations\20201030140637_OrganiserCreationKey.cs" />
-    <Compile Remove="Migrations\20201030140637_OrganiserCreationKey.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -48,7 +38,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Migrations\" />
     <Folder Include="wwwroot\js\" />
   </ItemGroup>
 
