@@ -10,40 +10,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using RunTogether.Shared.Forms;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Components;
 
 namespace RunTogether.Shared.Etc
 {
     public partial class DataTable
     {
 
-
+        // Kalder JS function til at printe QR koden
         void PrintImage()
         {
-            jsRuntime.InvokeVoidAsync("Main.Common.PrintImage", "QRCodeImg");
+            jsRuntime.InvokeVoidAsync("Main.Common.PrintImage", "QRCodeImg", run.QRString);
         }
 
-
-        public class Farver
-        {
-            public string Name { get; set; }
-            public string code { get; set; }
-        }
-
-        List<Farver> colorList = new List<Farver>();
+        // variable til at holde det valgte løb
+        Run run = new Run();
 
         //Variabler for QRCode gen
+        List<Tuple<string, string>> ColorList = new List<Tuple<string, string>>();
+        List<Tuple<string, int>> SizeList = new List<Tuple<string, int>>();
         string color = "#000000";
-        int slider = 50;
+        int size = 30;
 
         //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
         RadzenGrid<Run> runTable;
         RadzenGrid<ApplicationUser> runnerTable;
 
-        //henter hele data table ned og filtere client-side, men der laves ingen filtering her, så det er fint.
-        IEnumerable<Run> runs;
-
         //alt querying bliver lavet i DB og kun det relevante data sendes til client.
-        IQueryable<ApplicationUser> runners;
+        IQueryable<Run> runs;
 
         protected override async Task OnInitializedAsync()
         {
@@ -59,8 +53,14 @@ namespace RunTogether.Shared.Etc
                         .ThenInclude(s => s.ThroughPoints)
                 .Include(r => r.Runners);
 
-            colorList.Add(new Farver() { Name = "RT rød", code = "#cc4545" });
-            colorList.Add(new Farver() { Name = "Sort", code = "#000000" });
+            ColorList.Add(new Tuple<string, string>("RT rød", "#cc4545"));
+            ColorList.Add(new Tuple<string, string>("Sort", "#000000"));
+            ColorList.Add(new Tuple<string, string>("Navy blå", "#000080"));
+
+            SizeList.Add(new Tuple<string, int>("Stor (A4)", 30));
+            SizeList.Add(new Tuple<string, int>("Mellem", 20));
+            SizeList.Add(new Tuple<string, int>("Lille", 10));
+            SizeList.Add(new Tuple<string, int>("Meget lille", 1));
 
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
@@ -97,24 +97,14 @@ namespace RunTogether.Shared.Etc
                 await dbContext.SaveChangesAsync();
         }
 
-        Run run = new Run();
-        RunRoute Route = new RunRoute();
         public async Task QueryForRunners(Run QueryRun)
         {
             run = QueryRun;
-
-            Console.WriteLine(run.Route.Stages[0].StartPoint.X);
-
-            runners = dbContext.Users
-                .Where(u => u.RunId == QueryRun.ID);
-
         }
 
-        void EditRunner(ApplicationUser selectedRunner)
+        private void NavigateToPage(string path)
         {
-                dialogService.Open<EditRunner>(($"Rediger: {selectedRunner.FirstName} {selectedRunner.LastName}"),
-                    new Dictionary<string, object>() { {"selectedRunner", selectedRunner } },
-                    new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
+            NavigationManager.NavigateTo(path);
         }
 
         void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
@@ -128,53 +118,6 @@ namespace RunTogether.Shared.Etc
             if(run.ID != default)
                 runnerTable.Reload();
             StateHasChanged();
-        }
-
-
-
-        void OnUpdateRow(ApplicationUser runner)
-        {
-            dbContext.Update(runner);
-            dbContext.SaveChanges();
-        }
-        void EditRow(ApplicationUser runner)
-        {
-            runnerTable.EditRow(runner);
-        }
-
-        void SaveRow(ApplicationUser runner)
-        {
-            runnerTable.UpdateRow(runner);
-        }
-
-        void CancelEdit(ApplicationUser runner)
-        {
-            runnerTable.CancelEditRow(runner);
-
-            // For production
-            var runnerEntry = dbContext.Entry(runner);
-            if (runnerEntry.State == EntityState.Modified)
-            {
-                runnerEntry.CurrentValues.SetValues(runnerEntry.OriginalValues);
-                runnerEntry.State = EntityState.Unchanged;
-            }
-        }
-
-        void DeleteRow(ApplicationUser runner)
-        {
-            if (runners.Contains(runner))
-            {
-                dbContext.Remove<ApplicationUser>(runner);
-
-                // For production
-                dbContext.SaveChanges();
-
-                runnerTable.Reload();
-            }
-            else
-            {
-                runnerTable.CancelEditRow(runner);
-            }
         }
 
     }
