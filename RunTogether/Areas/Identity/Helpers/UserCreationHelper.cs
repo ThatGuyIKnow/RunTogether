@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -21,7 +22,7 @@ namespace RunTogether.Areas.Identity.Helpers
         private UserManager<ApplicationUser> _userManager { get; }
         private ApplicationDbContext _dbContext { get; }
         private IServiceScope _scope { get; }
-        
+
 
         public UserCreationHelper(IServiceScopeFactory scopeFactory)
         {
@@ -33,8 +34,7 @@ namespace RunTogether.Areas.Identity.Helpers
 
         public async Task<IdentityResult> CreateRunner(string firstName, string lastName, string email, Run run)
         {
-            Run? selectedRun = await _dbContext.Runs.FindAsync(run.ID);
-            IdentityResult userInfoResult = ValidateUserInformation(email, selectedRun);
+            IdentityResult userInfoResult = ValidateUserInformation(email, run);
             if (!userInfoResult.Succeeded) { return userInfoResult; }
 
             _userManager.PasswordHasher = new PlainTextPasswordHasher();
@@ -50,13 +50,18 @@ namespace RunTogether.Areas.Identity.Helpers
                 RunnerId = newRunnerId
             };
             IdentityResult result = await _userManager.CreateAsync(user, CreateRandomPassword(32));
-            
-            if(result.Succeeded)
+
+            if (result.Succeeded)
             {
-                selectedRun.Runners.Add(user);
-                selectedRun.IncrementRunnerId();
-                await _dbContext.SaveChangesAsync();
-                await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Runner);
+                try
+                {
+                    Run? selectedRun = await _dbContext.Runs.FindAsync(run.ID);
+                    selectedRun.Runners.Add(user);
+                    selectedRun.IncrementRunnerId();
+                    await _dbContext.SaveChangesAsync();
+                    await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Runner);
+                }
+                catch (Exception e) { return IdentityResult.Failed(); }
             }
 
             _userManager.PasswordHasher = new PasswordHasher<ApplicationUser>();
@@ -65,14 +70,23 @@ namespace RunTogether.Areas.Identity.Helpers
 
 
 
-        private IdentityResult ValidateUserInformation(string email, Run? run)
+        private IdentityResult ValidateUserInformation(string email, Run run)
         {
+            const string pattern = @"^[a-z][a-z|0-9|]*([_][a-z|0-9]+)*([.][a-z|0-9]+([_][a-z|0-9]+)*)?@[a-z][a-z|0-9|]*\.([a-z][a-z|0-9]*(\.[a-z][a-z|0-9]*)?)$";
             string newNormEmail = _userManager.NormalizeEmail(email);
-            bool isUsedEmail = run?.Runners.Any(runner => 
-                runner.NormalizedEmail == newNormEmail) != null;
+            bool isValidEmail = Regex.IsMatch(newNormEmail, pattern, RegexOptions.IgnoreCase);
+            bool isUsedEmail = run.Runners.Any(runner =>
+                    runner.NormalizedEmail == newNormEmail);
             List<IdentityError> errors = new List<IdentityError>();
 
 
+            if (!isValidEmail)
+            {
+                IdentityError error = new IdentityError();
+                error.Description = "Error creating runner: Email is invalid!";
+                errors.Add(error);
+            } 
+            
             if (isUsedEmail)
             {
                 IdentityError error = new IdentityError();
@@ -80,7 +94,7 @@ namespace RunTogether.Areas.Identity.Helpers
                 errors.Add(error);
             }
 
-            if (run == null)
+            if (_dbContext.Runs.Any(r => r.ID != run.ID))
             {
                 IdentityError error = new IdentityError();
                 error.Description = "Error creating runner: Could not find run by ID!";
