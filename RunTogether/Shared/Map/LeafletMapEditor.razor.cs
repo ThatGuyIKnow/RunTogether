@@ -24,6 +24,11 @@ namespace RunTogether.Shared.Map
             }
         }
 
+        public async Task ClickEvent()
+        {
+            await JsRunTime.InvokeVoidAsync("Main.Map.onMapClick");
+        }
+
     }
 
 }

@@ -33,8 +33,7 @@ namespace RunTogether.Areas.Identity.Helpers
 
         public async Task<IdentityResult> CreateRunner(string firstName, string lastName, string email, Run run)
         {
-            Run? selectedRun = await _dbContext.Runs.FindAsync(run.ID);
-            IdentityResult userInfoResult = ValidateUserInformation(email, selectedRun);
+            IdentityResult userInfoResult = ValidateUserInformation(email, run);
             if (!userInfoResult.Succeeded) { return userInfoResult; }
 
             _userManager.PasswordHasher = new PlainTextPasswordHasher();
@@ -53,10 +52,14 @@ namespace RunTogether.Areas.Identity.Helpers
             
             if(result.Succeeded)
             {
-                selectedRun.Runners.Add(user);
-                selectedRun.IncrementRunnerId();
-                await _dbContext.SaveChangesAsync();
-                await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Runner);
+                try
+                {
+                    Run? selectedRun = await _dbContext.Runs.FindAsync(run.ID);
+                    selectedRun.Runners.Add(user);
+                    selectedRun.IncrementRunnerId();
+                    await _dbContext.SaveChangesAsync();
+                    await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Runner);
+                } catch (Exception e) { return IdentityResult.Failed();}
             }
 
             _userManager.PasswordHasher = new PasswordHasher<ApplicationUser>();
@@ -65,11 +68,11 @@ namespace RunTogether.Areas.Identity.Helpers
 
 
 
-        private IdentityResult ValidateUserInformation(string email, Run? run)
+        private IdentityResult ValidateUserInformation(string email, Run run)
         {
             string newNormEmail = _userManager.NormalizeEmail(email);
-            bool isUsedEmail = run?.Runners.Any(runner => 
-                runner.NormalizedEmail == newNormEmail) != null;
+            bool isUsedEmail = run.Runners.Any(runner => 
+                    runner.NormalizedEmail == newNormEmail);
             List<IdentityError> errors = new List<IdentityError>();
 
 
