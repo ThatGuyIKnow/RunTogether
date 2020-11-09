@@ -21,7 +21,7 @@ namespace RunTogether.Pages
         private string cameraCSS = "";
         private string startRunCSS = HideCss;
 
-        private async Task GetRunQrCode()
+        private async Task GetCurrentUser()
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             var user = authState.User;
