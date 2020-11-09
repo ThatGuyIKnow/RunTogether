@@ -12,9 +12,7 @@ export const Common = new CommonJS();
 export const QrScanner = new QrScannerClass();
 export const Sidebar = new SidebarCollapseFunctionality();
 
-export async function tester() {
-    console.log("test fra index ");
-}
+
 
 /*Test array with startpoint and endpoint coordinates*/
 //let latlngs = [
@@ -30,4 +28,7 @@ export const MapEditor = new mapEditorClass();
 
 
 
-
+//export async function tester() {
+//    console.log("test fra index ");
+//    MapEditor.onMapClick();
+//}

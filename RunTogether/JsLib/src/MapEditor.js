@@ -29,6 +29,8 @@ export class mapEditorClass {
 
         myeditmap.setMaxBounds(bounds);
 
+        myeditmap.on('click', this.onMapClick);
+
         /* Appling tile layer to the map*/
         L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
             attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -83,20 +85,17 @@ export class mapEditorClass {
         myeditmap.removeLayer(layerGroup);
     }
 
-    onMapClick() {
 
-        var popup = L.popup();
 
-        function onMapClick(e) {
-            popup
-                .setLatLng(e.latlng)
-                .setContent("You clicked the map at " + e.latlng.toString())
-                .openOn(myeditmap);
+        
 
-            //pointArray.push(e.latlng.toString());
-            console.log("test");
-        }
-
-        myeditmap.on('click', onMapClick);
+    onMapClick(e) {
+        //pointArray.push(e.latlng.toString());
+        console.log("test");
     }
+
+        
+
+
+    
 }
