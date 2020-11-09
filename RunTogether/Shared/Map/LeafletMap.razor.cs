@@ -10,6 +10,16 @@ using System.Threading.Tasks;
 
 namespace RunTogether.Shared.Map
 {
+
+/*    public class ROUTE
+    {
+        public List<float> STARTPOINT = new List<float>();
+        public List<float> ENDPOINT = new List<float>();
+        public List<float> THROUGHPOINT = new List<float>();
+        public int Stagecomplete;
+
+    }*/
+
     public partial class LeafletMap
     {
 
@@ -32,8 +42,9 @@ namespace RunTogether.Shared.Map
                 StateHasChanged();
             }
 
-            await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
-
+            await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines");
+            /*            await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
+            */
         }
 
         protected override void OnParametersSet()

@@ -8,10 +8,11 @@ let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 /*Class for the map*/
 export class mapClass {
 
-    constructor() {
+    constructor(obj) {
 
-        console.log("from constructor!");
+        /*console.log("from constructor!");*/
 
+        this.obj = obj; 
         this.initializeMap = this.initializeMap.bind(this);
         this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
         this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
@@ -45,39 +46,84 @@ export class mapClass {
     addMarkersAndLines(obj) {
 
         this.removeMarkersAndLines(); 
-/*        mymap.removeLayer(layerGroup); 
-*/
-        let latlngs = JSON.parse(obj).Coordinates
 
-        console.log(latlngs)
+        /*      let latlngs = JSON.parse(obj).Coordinates; */
+        /*      console.log(latlngs);                       */
 
-        let i = 0;
-        let segNum = 0;
-        let marker;
+        let i = 0, marker;
 
         /*Creating layer group and adding to map*/
         layerGroup = L.layerGroup().addTo(mymap);
 
-        /*Creating markers*/
+        /*Creating startpoint and endpoint*//*
         for (i = 0; i < latlngs.length; i++) {
             segNum = i + 1;
             marker = L.marker(latlngs[i]).bindPopup('Start for segment ' + segNum +
                 '<br />Dette segment er sponseret af [SPONSOR].</p>').openPopup();
             layerGroup.addLayer(marker);
         }
+*/
 
-        /*Creating polyline and fiting the polyline and markers to the map view*/
-        polyline = L.polyline(latlngs, { color: '#db5d57' });
-        layerGroup.addLayer(polyline);
-        mymap.fitBounds(polyline.getBounds());
+        let stagenumber = 0, linjearray =[], j;
 
-    }   
+        for (i = 0; i < this.obj.Stages.length; i++) {
+            let startpoint = this.obj.Stages[i].StartPoint;
+            let endpoint = this.obj.Stages[i].EndPoint
+            let SponsorName = this.obj.Stages[i].Sponsor.Name;
+            let SponserMessage = this.obj.Stages[i].Sponsor.Message;
+            let RunnerName = this.obj.Stages[i].Runner.Name;
+            let SponsorPictureURL = this.obj.Stages[i].Sponsor.PictureURL; 
+
+            stagenumber++;
+/*            console.log("Stage: " + stagenumber +
+                ", Runner: " + this.obj.Stages[i].Runner.Name +
+                ", Sponsor: " + this.obj.Stages[i].Sponsor.Name);
+*/
+
+
+            marker = L.marker(startpoint).bindPopup('Start på segment: ' + stagenumber + '<br\>Bliver løbet af: ' + RunnerName).openPopup();
+            layerGroup.addLayer(marker);
+
+            linjearray.push(startpoint); 
+
+            for (j = 0; j < this.obj.Stages[i].Throughpoint.length; j++) {
+                linjearray.push(this.obj.Stages[i].Throughpoint[j]); 
+            }
+
+            linjearray.push(endpoint); 
+
+            if (i == (this.obj.Stages.length-1)) {
+                marker = L.marker(endpoint).bindPopup('Dette er endpoint for hele løbet').openPopup();
+                layerGroup.addLayer(marker);
+            }
+
+            polyline = L.polyline(linjearray).bindPopup('Dette er segment: ' + stagenumber +
+                '<br\>Sponsernavn: ' + SponsorName +
+                '<br\><p>Deres sponser besked: <p\>' + SponserMessage +
+                '<br\><img src=' + SponsorPictureURL + ' asp-append-version="true" width="300px" />')
+                .openPopup().addTo(mymap);
+
+                if (this.obj.Stages[i].StageNotStarted == true) {
+                    polyline.setStyle({ color: '#db5d57' });
+                } else if (this.obj.Stages[i].Stageactive == true) {
+                    polyline.setStyle({ color: 'yellow' });
+                } else if (this.obj.Stages[i].Stagecompleted == true) {
+                    polyline.setStyle({ color: 'green' });
+                }
+
+            linjearray = []; 
+        }
+
+/*         mymap.fitBounds(polyline.getBounds());*/
+    }
 
 
     /* A Method to remove markers and lines*/
     removeMarkersAndLines() {
         mymap.removeLayer(layerGroup);
     }
+
+
 }
 
 /*
