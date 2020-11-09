@@ -3,6 +3,8 @@
 @inject ApplicationDbContext dbContext
 @inject DialogService dialogService
 
+<p>Udfyld formularen for at skabe et nyt løbe:</p>
+
 <RadzenTemplateForm TItem="Run" Data="@run" Submit="()=> OnSubmit(run.Name, run.StartDate, run.EndDate, run.QRString)" InvalidSubmit="()=> OnInvalidSubmit()">
 
     <div class="row" style="margin-bottom: 48px">
