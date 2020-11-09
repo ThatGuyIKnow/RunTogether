@@ -13,20 +13,19 @@ namespace RunTogether.Shared.Map
     {
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-
-
-            //await JsRunTime.InvokeVoidAsync("Main.tester", json);
-
             if (firstRender)
             {
-                await JsRunTime.InvokeVoidAsync("Main.Map.initializeMap");
+                await JsRunTime.InvokeVoidAsync("Main.MapEditor.initializeMap");
+                System.Diagnostics.Debug.WriteLine("got here!!");
                 StateHasChanged();
             }
         }
 
-        public async Task ClickEvent()
+        public async void ClickEvent()
         {
-            await JsRunTime.InvokeVoidAsync("Main.Map.onMapClick");
+            //await JsRunTime.InvokeVoidAsync("Main.tester");
+            await JsRunTime.InvokeVoidAsync("Main.MapEditor.onMapClick");
+
         }
 
     }

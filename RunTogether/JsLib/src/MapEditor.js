@@ -1,15 +1,16 @@
 ﻿
 /*Global variable for the map class*/
-let mymap, layerGroup, polyline;
+let myeditmap, layerGroup, polyline;
 let maxBounds1 = [51.649, 0.49];
 let maxBounds2 = [59.799, 18.68];
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
+let pointArray = [];
 
 
 
 
 /*Class for the map*/
-export class mapClass {
+export class mapEditorClass {
 
     constructor() {
 
@@ -23,10 +24,10 @@ export class mapClass {
     /* A Method that initializes the map */
     initializeMap() {
 
-        /*Pointing mymap to leaflet map and setting the viewpoint and start zoom point*/
-        mymap = L.map('mapid').setView([55.964, 9.992], 6.5);
+        /*Pointing myeditmap to leaflet map and setting the viewpoint and start zoom point*/
+        myeditmap = L.map('mapid').setView([55.964, 9.992], 6.5);
 
-        mymap.setMaxBounds(bounds);
+        myeditmap.setMaxBounds(bounds);
 
         /* Appling tile layer to the map*/
         L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
@@ -37,10 +38,10 @@ export class mapClass {
             maxBounds: bounds,
             maxBoundsViscosity: 1,
             ext: 'jpg'
-        }).addTo(mymap);
+        }).addTo(myeditmap);
 
         /*Creating layer group and adding to map*/
-        layerGroup = L.layerGroup().addTo(mymap);
+        layerGroup = L.layerGroup().addTo(myeditmap);
 
     }
 
@@ -48,7 +49,7 @@ export class mapClass {
     addMarkersAndLines(obj) {
 
         this.removeMarkersAndLines();
-        /*        mymap.removeLayer(layerGroup); 
+        /*        myeditmap.removeLayer(layerGroup);
         */
         let latlngs = JSON.parse(obj).Coordinates
 
@@ -59,7 +60,7 @@ export class mapClass {
         let marker;
 
         /*Creating layer group and adding to map*/
-        layerGroup = L.layerGroup().addTo(mymap);
+        layerGroup = L.layerGroup().addTo(myeditmap);
 
         /*Creating markers*/
         for (i = 0; i < latlngs.length; i++) {
@@ -72,27 +73,30 @@ export class mapClass {
         /*Creating polyline and fiting the polyline and markers to the map view*/
         polyline = L.polyline(latlngs, { color: '#db5d57' });
         layerGroup.addLayer(polyline);
-        mymap.fitBounds(polyline.getBounds());
+        myeditmap.fitBounds(polyline.getBounds());
 
     }
 
 
     /* A Method to remove markers and lines*/
     removeMarkersAndLines() {
-        mymap.removeLayer(layerGroup);
-    }
-}
-
-export function onMapClick() {
-
-    var popup = L.popup();
-
-    function onMapClick(e) {
-        popup
-            .setLatLng(e.latlng)
-            .setContent("You clicked the map at " + e.latlng.toString())
-            .openOn(mymap);
+        myeditmap.removeLayer(layerGroup);
     }
 
-    mymap.on('click', onMapClick);
+    onMapClick() {
+
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the map at " + e.latlng.toString())
+                .openOn(myeditmap);
+
+            //pointArray.push(e.latlng.toString());
+            console.log("test");
+        }
+
+        myeditmap.on('click', onMapClick);
+    }
 }
