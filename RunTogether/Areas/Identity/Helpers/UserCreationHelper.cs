@@ -21,7 +21,7 @@ namespace RunTogether.Areas.Identity.Helpers
         private UserManager<ApplicationUser> _userManager { get; }
         private ApplicationDbContext _dbContext { get; }
         private IServiceScope _scope { get; }
-        
+
 
         public UserCreationHelper(IServiceScopeFactory scopeFactory)
         {
@@ -50,8 +50,8 @@ namespace RunTogether.Areas.Identity.Helpers
                 RunnerId = newRunnerId
             };
             IdentityResult result = await _userManager.CreateAsync(user, CreateRandomPassword(32));
-            
-            if(result.Succeeded)
+
+            if (result.Succeeded)
             {
                 selectedRun.Runners.Add(user);
                 selectedRun.IncrementRunnerId();
@@ -68,7 +68,7 @@ namespace RunTogether.Areas.Identity.Helpers
         private IdentityResult ValidateUserInformation(string email, Run? run)
         {
             string newNormEmail = _userManager.NormalizeEmail(email);
-            bool isUsedEmail = run?.Runners.Any(runner => 
+            bool isUsedEmail = run?.Runners.Any(runner =>
                 runner.NormalizedEmail == newNormEmail) != null;
             List<IdentityError> errors = new List<IdentityError>();
 
