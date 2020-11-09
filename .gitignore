@@ -7,3 +7,4 @@ RunTogether/Properties/launchSettings.json
 RunTogether/RunTogether.csproj.user
 .vs/
 .vscode/
+/RunTogetherTests
