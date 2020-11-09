@@ -91,10 +91,12 @@ namespace RunTogether.Shared.Etc
                     }
                 };
 
-                await userCreation.CreateRunner("Karin", "Wallsten", "asd@asd.dk", testRun);
+                
 
                 dbContext.Runs.Add(testRun);
                 await dbContext.SaveChangesAsync();
+
+                await userCreation.CreateRunner("Karin", "Wallsten", "asd@asd.dk", testRun);
         }
 
         public async Task QueryForRunners(Run QueryRun)

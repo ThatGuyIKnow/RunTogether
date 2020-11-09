@@ -29,7 +29,7 @@ namespace RunTogether
 
         public bool Completed { get; set; }
 
-        public ApplicationUser Runner { get; set; }
+        public ApplicationUser? Runner { get; set; }
 
         //public Stage(StartPoint startPoint, EndPoint endPoint)
         //{
