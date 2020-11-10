@@ -4,10 +4,12 @@
 @inject Microsoft.AspNetCore.Identity.UserManager<RunTogether.Areas.Identity.ApplicationUser> UserManager
 @inject RunTogether.Data.ApplicationDbContext dbContext
 @inject IJSRuntime JSRuntime
+@inject DialogService dialogService
 
 @using RunTogether.Shared.QR.QRScanner
 
 @layout RunTogether.Shared.Layouts.RunnerLayout
+<RadzenDialog />
 
 <div class="row @cameraCSS">
     <div class="col">
@@ -24,13 +26,18 @@
 <div class="row @startRunCSS">
     <div class="col">
         <h3>Når du er klar til at løbe, tryk på Start Løb.</h3>
-        <br />
-        <RadzenButton Click="@(async () => { StartRun(); })" Text="Start Løb" Style="margin-bottom: 20px;" Disabled="@buttonDisabled"/>
-        <RadzenButton Click="@(() => { stopWatchActive = false; })" Text="Pause" Style="margin-bottom: 20px;" Visible="@buttonVisible" />
-        <RadzenButton Click="@(() => { StopWatch(); })" Text="Fortsæt" Style="margin-bottom: 20px;" Visible="@buttonVisible" />
-        <RadzenButton Click="@(() => { stopWatchActive = false; })" Text="Stop Løb" Style="margin-bottom: 20px;" Visible="@buttonVisible" />
+        <RadzenButton Click="@(async () => { StartRun(); })" Text="Start Løb" ButtonStyle="ButtonStyle.Success" Style="margin-bottom: 20px; margin-right: 10px;" Disabled="@buttonDisabled" />
+        <RadzenButton Click="@(() => { stopWatchActive = false; })" Text="Pause" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
+        <RadzenButton Click="@(() => { StopWatch(); })" Text="Fortsæt" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
+        <RadzenButton Click="@(() => { stopWatchActive = false; DisplayResult(); })" Text="Stop Løb" ButtonStyle="ButtonStyle.Danger" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
+        <p>Løbetid: @stopWatchValue</p>
+    </div>
+</div>
 
-        <p>@stopWatchValue</p>
+<div class="row @displayResultCSS">
+    <div class="col">
+        <h3>Du er nu færdig med dit løb!</h3>
+        <h3>Din løbetid er @stopWatchValue</h3>
     </div>
 </div>
 

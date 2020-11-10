@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.JSInterop;
+using Radzen;
 using RunTogether.Areas.Identity;
 using RunTogether.Areas.Identity.Data;
 using RunTogether.Data;
@@ -26,20 +27,24 @@ namespace RunTogether.Pages
         private const string HideCss = "display-none";
         private string cameraCSS = "";
         private string startRunCSS = ""; //kom ihåg att ändra detta til hidecss
+        private string displayResultCSS = HideCss;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
-
-            if (user.Identity.IsAuthenticated)
+            if (firstRender)
             {
-                var currentUser = await UserManager.GetUserAsync(user);
-                assignedRun = await dbContext.Runs.Where(r => r.ID == currentUser.RunId).FirstOrDefaultAsync();
-                assignedStages = await dbContext.Stages.Where(s => s.Runner == currentUser).ToListAsync();
-                runnerName = currentUser.FirstName;
+                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+
+                if (user.Identity.IsAuthenticated)
+                {
+                    var currentUser = await UserManager.GetUserAsync(user);
+                    assignedRun = await dbContext.Runs.Where(r => r.ID == currentUser.RunId).FirstOrDefaultAsync();
+                    assignedStages = await dbContext.Stages.Where(s => s.Runner == currentUser).ToListAsync();
+                    runnerName = currentUser.FirstName;
+                }
+                StateHasChanged();
             }
-            StateHasChanged();
         }
 
         public void CheckCode()
@@ -59,11 +64,11 @@ namespace RunTogether.Pages
                     }
                 } 
 
-                if (!hasActiveStage) { /*besked om at stage ikke er aktiv*/}
+                if (!hasActiveStage) { /*besked om at stage ikke er aktiv - popup med dialogservice*/}
             }
             else
             {
-                //besked om at qr-kode er forkert
+                //besked om at qr-kode er forkert - popup med dialogservice
             }
         }
 
@@ -71,8 +76,11 @@ namespace RunTogether.Pages
         private bool buttonDisabled = false;
         public async void StartRun()
         {
-            bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Er du sikker på at du vil starte dit løb?");
-            if (confirmed)
+            //bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Er du sikker på at du vil starte dit løb?");
+
+            var confirmResult = await dialogService.Confirm("Er du sikker?", "Start løb", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nej" });
+
+            if (confirmResult.HasValue && confirmResult.Value)
             {
                 StopWatch();
                 buttonVisible = true;
@@ -84,8 +92,14 @@ namespace RunTogether.Pages
             }
         }
 
+        public void DisplayResult()
+        {
+            startRunCSS = HideCss;
+            displayResultCSS = "";
+        }
+
         TimeSpan stopWatchValue = new TimeSpan();
-        bool stopWatchActive = false;
+        private bool stopWatchActive = false;
 
         public async Task StopWatch()
         {
