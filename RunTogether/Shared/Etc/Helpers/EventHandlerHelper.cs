@@ -35,7 +35,7 @@ namespace RunTogether.Shared.Etc.Helpers
             {
                 _eventHandlers[eventTriggerNorm].Invoke(data);
             }
-            catch (KeyNotFoundException e)
+            catch (Exception e) when (e is ArgumentNullException || e is KeyNotFoundException)
             {
                 Console.WriteLine(e);
                 throw;
