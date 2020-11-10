@@ -6,8 +6,8 @@ namespace RunTogetherTests
 {
     public class CommonTests : TestContext
     {
-        [Fact]
         // Make sure tests are working
+        [Fact]
         public void SanityCheck()
         {
             // Arrange
