@@ -3,6 +3,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Microsoft.AspNetCore.Identity.UserManager<RunTogether.Areas.Identity.ApplicationUser> UserManager
 @inject RunTogether.Data.ApplicationDbContext dbContext
+@inject IJSRuntime JSRuntime
 
 @using RunTogether.Shared.QR.QRScanner
 
@@ -10,21 +11,26 @@
 
 <div class="row @cameraCSS">
     <div class="col">
-        <h3>Tryk på knappen for at scanne QR-koden.</h3>
-        <br />
+        <h2>Velkommen, @runnerName!</h2>
+        <h3>Tryk på knappen for at scanne QR-koden på Børnetelefonen.</h3>
+        <p>Efter koden er scannet kan du starte dit løb.</p>
         <QRScanner OnCodeScanned="((v) => { qrCode = v; })" />
-        <br />
     </div>
 </div>
 
-<RadzenButton Click="@CheckCode" Text="Tjek kode" Style="margin-bottom: 20px;" />
+@*<RadzenButton Click="@GetCurrentUser" Text="Tjek kode" Style="margin-bottom: 20px;" />*@
 
 
 <div class="row @startRunCSS">
     <div class="col">
         <h3>Når du er klar til at løbe, tryk på Start Løb.</h3>
         <br />
-        <RadzenButton Click="@StartRun" Text="Start Løb" Style="margin-bottom: 20px;" />
+        <RadzenButton Click="@(async () => { StartRun(); })" Text="Start Løb" Style="margin-bottom: 20px;" Disabled="@buttonDisabled"/>
+        <RadzenButton Click="@(() => { stopWatchActive = false; })" Text="Pause" Style="margin-bottom: 20px;" Visible="@buttonVisible" />
+        <RadzenButton Click="@(() => { StopWatch(); })" Text="Fortsæt" Style="margin-bottom: 20px;" Visible="@buttonVisible" />
+        <RadzenButton Click="@(() => { stopWatchActive = false; })" Text="Stop Løb" Style="margin-bottom: 20px;" Visible="@buttonVisible" />
+
+        <p>@stopWatchValue</p>
     </div>
 </div>
 

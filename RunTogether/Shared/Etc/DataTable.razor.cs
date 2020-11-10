@@ -96,7 +96,7 @@ namespace RunTogether.Shared.Etc
                 dbContext.Runs.Add(testRun);
                 await dbContext.SaveChangesAsync();
 
-                await userCreation.CreateRunner("Karin", "Wallsten", "asd@asd.dk", testRun);
+                //await userCreation.CreateRunner("Karin", "Wallsten", "asd@asd.dk", testRun);
         }
 
         public async Task QueryForRunners(Run QueryRun)
