@@ -47,7 +47,7 @@ namespace RunTogether.Pages
             }
         }
 
-        public void CheckCode()
+        public async void CheckCode()
         {
             Stage activeStage = new Stage();
             activeStage = assignedRun.GetCurrentStage();
@@ -64,12 +64,9 @@ namespace RunTogether.Pages
                     }
                 } 
 
-                if (!hasActiveStage) { /*besked om at stage ikke er aktiv - popup med dialogservice*/}
+                if (!hasActiveStage) await JSRuntime.InvokeVoidAsync("alert", "Dit løbesegment er endnu ikke aktivt. Venligst vent indtil forrige løber er færdig.");
             }
-            else
-            {
-                //besked om at qr-kode er forkert - popup med dialogservice
-            }
+            else await JSRuntime.InvokeVoidAsync("alert", "QR-koden er ikke gyldig");
         }
 
         private bool buttonVisible = false;
