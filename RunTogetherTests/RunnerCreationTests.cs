@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AngleSharp;
@@ -15,13 +16,21 @@ using RunTogether.Areas.Identity.Helpers;
 using RunTogether.Data;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
+using Xunit.Sdk;
 
 namespace RunTogetherTests
 {
-    public class UserCreationTests : TestContext
+  
+    public class RunnerCreationTests : TestContext, IDisposable
     {
-        private void SetupContext(TestContext ctx)
+        private TestContext ctx;
+        private ApplicationDbContext dbContext;
+        private UserManager<ApplicationUser> userManager;
+        private UserCreationHelper helper;
+
+        public RunnerCreationTests()
         {
+            ctx = new TestContext();
             ctx.Services.AddDbContext<ApplicationDbContext>(builder =>
             {
                 builder.UseInMemoryDatabase("testDB");
@@ -51,17 +60,25 @@ namespace RunTogetherTests
                 options.User.RequireUniqueEmail = false;
             });
 
+            ctx.Services.AddTransient<UserCreationHelper>();
+
+            dbContext = ctx.Services.GetService<ApplicationDbContext>();
+            userManager = ctx.Services.GetService<UserManager<ApplicationUser>>();
+            helper = ctx.Services.GetService<UserCreationHelper>();
+        }
+
+        public override void Dispose()
+        {
+            dbContext.Database.EnsureDeleted();
+            userManager?.Dispose();
+            helper?.Dispose();
+            ctx?.Dispose();
+            base.Dispose();
         }
 
         [Fact]
         public async void CreateRunner_ValidInformation_Created()
         {
-            using var ctx = new TestContext();
-            SetupContext(ctx);
-            ctx.Services.AddTransient<UserCreationHelper>();
-            var helper = ctx.Services.GetService<UserCreationHelper>();
-            var dbContext = ctx.Services.GetService<ApplicationDbContext>();
-            var userManager = ctx.Services.GetService<UserManager<ApplicationUser>>();
             Run run = new Run();
             var updatedRun = await dbContext.Runs.AddAsync(run);
             await dbContext.SaveChangesAsync();
@@ -69,18 +86,12 @@ namespace RunTogetherTests
             await helper.CreateRunner("Tommy", "Dada", "bobo@baba.com", updatedRun.Entity);
 
             var user = await userManager.FindByEmailAsync("bobo@baba.com");
-            Assert.Equal("Tommy", user.FirstName);
+            Assert.NotNull(user);
         }
 
         [Fact]
         public async void CreateRunner_InvalidEmail_NotCreated()
         {
-            using var ctx = new TestContext();
-            SetupContext(ctx);
-            ctx.Services.AddTransient<UserCreationHelper>();
-            var helper = ctx.Services.GetService<UserCreationHelper>();
-            var dbContext = ctx.Services.GetService<ApplicationDbContext>();
-            var userManager = ctx.Services.GetService<UserManager<ApplicationUser>>();
             Run run = new Run();
             var updatedRun = await dbContext.Runs.AddAsync(run);
             await dbContext.SaveChangesAsync();
@@ -91,22 +102,53 @@ namespace RunTogetherTests
             Assert.Null(user);
         }
         
-        public void CreateRunner_RunExistsInDatabase_Created()
+        [Fact]
+        public async void CreateRunner_RunDoesNOTExistsInDatabase_NotCreated()
         {
+            Run run = new Run();
+            run.ID = 9999;
 
+            await helper.CreateRunner("Tommy", "Dada", "bobo@baba.com", run);
+
+            var user = await userManager.FindByEmailAsync("bobo@baba.com");
+            Assert.Null(user);
         }
-        public void CreateRunner_RunDoesNOTExistsInDatabase_NotCreated()
-        {
 
+        [Fact]
+        public async void CreateRunner_DuplicateEmail_NotCreated()
+        {
+            Run run = new Run();
+            var updatedRun = await dbContext.Runs.AddAsync(run);
+            await dbContext.SaveChangesAsync();
+
+            await helper.CreateRunner("Christy", "Lala", "bobo@baba.com", updatedRun.Entity);
+            await helper.CreateRunner("Tommy", "Dada", "bobo@baba.com", updatedRun.Entity);
+            bool exceptionCaught = false;
+            try
+            {
+                // Throws if multiple of the same email is found
+                await userManager.FindByEmailAsync("bobo@baba.com");
+            }
+            catch(Exception e) { exceptionCaught = true; }
+
+            Assert.False(exceptionCaught);
         }
 
-        public void CreateRunner_DuplicateEmail_NotCreated()
+        [Fact]
+        public async void CreateRunner_UniquePassword_NotIdentical()
         {
+            Run run = new Run();
+            var updatedRun = await dbContext.Runs.AddAsync(run);
+            await dbContext.SaveChangesAsync();
 
-        }
-        public void CreateRunner_UniquePassword_NotIdentical()
-        {
+            await helper.CreateRunner("Christy", "Lala", "nana@baba.com", updatedRun.Entity);
+            await Task.Delay(20);
+            await helper.CreateRunner("Tommy", "Dada", "bobo@baba.com", updatedRun.Entity);
 
+            var user1 = await userManager.FindByEmailAsync("nana@baba.com");
+            var user2 = await userManager.FindByEmailAsync("bobo@baba.com");
+
+            Assert.NotEqual(user1.PasswordHash, user2.PasswordHash);
         }
     }
 }

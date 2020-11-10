@@ -77,6 +77,7 @@ namespace RunTogether.Areas.Identity.Helpers
             bool isValidEmail = Regex.IsMatch(newNormEmail, pattern, RegexOptions.IgnoreCase);
             bool isUsedEmail = run.Runners.Any(runner =>
                     runner.NormalizedEmail == newNormEmail);
+            bool runExists = _dbContext.Runs.Any(r => r.ID == run.ID);
             List<IdentityError> errors = new List<IdentityError>();
 
 
@@ -94,7 +95,7 @@ namespace RunTogether.Areas.Identity.Helpers
                 errors.Add(error);
             }
 
-            if (_dbContext.Runs.Any(r => r.ID != run.ID))
+            if (!runExists)
             {
                 IdentityError error = new IdentityError();
                 error.Description = "Error creating runner: Could not find run by ID!";
