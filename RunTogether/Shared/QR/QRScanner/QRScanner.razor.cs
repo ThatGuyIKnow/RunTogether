@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using RunTogether.Shared.Etc.Helpers;
 
 namespace RunTogether.Shared.QR.QRScanner
 {
