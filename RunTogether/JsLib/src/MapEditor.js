@@ -5,6 +5,7 @@ let maxBounds1 = [51.649, 0.49];
 let maxBounds2 = [59.799, 18.68];
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 let pointArray = [];
+let pointIds = {}; 
 
 
 
@@ -17,7 +18,6 @@ export class mapEditorClass {
         console.log("from constructor!");
 
         this.initializeMap = this.initializeMap.bind(this);
-        this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
         this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
     }
 
@@ -25,11 +25,11 @@ export class mapEditorClass {
     initializeMap() {
 
         /*Pointing myeditmap to leaflet map and setting the viewpoint and start zoom point*/
-        myeditmap = L.map('mapid').setView([55.964, 9.992], 6.5);
+        myeditmap = L.map('mapid', { doubleClickZoom: false}).setView([55.964, 9.992], 6.5);
 
         myeditmap.setMaxBounds(bounds);
 
-        myeditmap.on('click', this.onMapClick);
+        myeditmap.addEventListener('dblclick', e => this.onMapClick(e));
 
         /* Appling tile layer to the map*/
         L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
@@ -47,38 +47,6 @@ export class mapEditorClass {
 
     }
 
-    /* A Method to add markers and lines*/
-    addMarkersAndLines(obj) {
-
-        this.removeMarkersAndLines();
-        /*        myeditmap.removeLayer(layerGroup);
-        */
-        let latlngs = JSON.parse(obj).Coordinates
-
-        console.log(latlngs)
-
-        let i = 0;
-        let segNum = 0;
-        let marker;
-
-        /*Creating layer group and adding to map*/
-        layerGroup = L.layerGroup().addTo(myeditmap);
-
-        /*Creating markers*/
-        for (i = 0; i < latlngs.length; i++) {
-            segNum = i + 1;
-            marker = L.marker(latlngs[i]).bindPopup('Start for segment ' + segNum +
-                '<br />Dette segment er sponseret af [SPONSOR].</p>').openPopup();
-            layerGroup.addLayer(marker);
-        }
-
-        /*Creating polyline and fiting the polyline and markers to the map view*/
-        polyline = L.polyline(latlngs, { color: '#db5d57' });
-        layerGroup.addLayer(polyline);
-        myeditmap.fitBounds(polyline.getBounds());
-
-    }
-
 
     /* A Method to remove markers and lines*/
     removeMarkersAndLines() {
@@ -86,16 +54,63 @@ export class mapEditorClass {
     }
 
 
+    drawRoute() {
+        this.removeMarkersAndLines();
+        pointIds = {};
 
+        //Creating layer group and adding to map
+        layerGroup = L.layerGroup().addTo(myeditmap);
+
+        let i;
+        let segNum = 0;
+        let marker;
+
+        //Create polyline
+        polyline = L.polyline(pointArray, { color: '#db5d57' });
+        layerGroup.addLayer(polyline);
+
+        //Create markers
+        for (i = 0; i < pointArray.length; i++) {
+            segNum = i + 1;
+            marker = L.circleMarker(pointArray[i], { bubblingMouseEvents: false, fillOpacity: 1 });
+            this.moveableMarker(myeditmap, marker)
+            layerGroup.addLayer(marker);
+            pointIds[layerGroup.getLayerId(marker)] = i;
+        }
+    }
         
 
     onMapClick(e) {
-        //pointArray.push(e.latlng.toString());
-        console.log("test");
+        pointArray.push(e.latlng);
+        this.drawRoute();
+        console.log(pointIds);
     }
 
         
+    moveableMarker(map, marker) {
+        function trackCursor(evt) {
+            marker.setLatLng(evt.latlng)
+        }
 
+        marker.on("mousedown", () => {
+            map.dragging.disable();
+            map.on("mousemove", trackCursor);
+        })
+
+        marker.on("mouseup", () => {
+            map.dragging.enable();
+            map.off("mousemove", trackCursor);
+            this.markerDragEnd(marker);
+        }) 
+
+        return marker
+    }
+
+    markerDragEnd(marker) {
+        console.log("testererer")
+        pointArray[pointIds[layerGroup.getLayerId(marker)]] = marker.getLatLng();
+        this.drawRoute();
+    }
 
     
 }

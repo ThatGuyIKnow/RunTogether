@@ -24,7 +24,7 @@ namespace RunTogether.Shared.Map
         public async void ClickEvent()
         {
             //await JsRunTime.InvokeVoidAsync("Main.tester");
-            await JsRunTime.InvokeVoidAsync("Main.MapEditor.onMapClick");
+            //await JsRunTime.InvokeVoidAsync("Main.MapEditor.onMapClick");
 
         }
 
