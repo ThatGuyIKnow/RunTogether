@@ -136,13 +136,13 @@ export class mapClass {
         */
 
         let pathtwo = L.curve(['M', [57.6802, 10.4877],
-            'C', [57.5953, 10.2688], [57.334, 10.1976], [57.3057, 9.9371], 
+            'Q', [57.5953, 10.2688], [57.334, 10.1976],
             'T', [57.0838, 9.9449]]).addTo(mymap);
 
         L.marker([57.6802, 10.4877]).bindPopup('M er her').openPopup().addTo(mymap);
         L.marker([57.5953, 10.2688]).bindPopup('Q1 er her').openPopup().addTo(mymap);
-        L.marker([57.3248, 10.2641]).bindPopup('Q2 er her').openPopup().addTo(mymap);
-        L.marker([57.3248, 10.2641]).bindPopup('T er her').openPopup().addTo(mymap);
+        L.marker([57.334, 10.1976]).bindPopup('Q2 er her').openPopup().addTo(mymap);
+        L.marker([57.0838, 9.9449]).bindPopup('T er her').openPopup().addTo(mymap);
 
         let paththree = L.curve(['M', [50.54136296522163, 28.520507812500004],
             'C', [52.214338608258224, 28.564453125000004],
