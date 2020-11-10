@@ -81,7 +81,7 @@
                 <RadzenTabsItem Text="QR Kode">
                     <div>
                         <div>
-                            <RadzenFieldset Text="QR Kode indstillinger">
+                            <RadzenFieldset Text="QR Kode print indstillinger">
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <RadzenLabel Text="Farve:" />
@@ -97,7 +97,7 @@
                                     <div class="col-sm-4">
                                         <RadzenDropDown @bind-value="color" AllowClear="false" TValue="string" Placeholder="Select..." Data="@ColorList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
                                     </div>
-                                    <div class="col-sm-4"
+                                    <div class="col-sm-4">
                                         <RadzenDropDown @bind-value="size" AllowClear="false" TValue="int" Placeholder="Select..." Data="@SizeList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
                                     </div>
                                     <div class="col-sm-4">
