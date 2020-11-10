@@ -1,4 +1,9 @@
 ﻿
+body {
+    padding: 0px;
+    margin: 0px;
+}
+
 #mapid {
     height: 100vh;
     width: 100%;

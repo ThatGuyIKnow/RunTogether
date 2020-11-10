@@ -10,16 +10,6 @@ using System.Threading.Tasks;
 
 namespace RunTogether.Shared.Map
 {
-
-/*    public class ROUTE
-    {
-        public List<float> STARTPOINT = new List<float>();
-        public List<float> ENDPOINT = new List<float>();
-        public List<float> THROUGHPOINT = new List<float>();
-        public int Stagecomplete;
-
-    }*/
-
     public partial class LeafletMap
     {
 

@@ -26,7 +26,9 @@ let Route = {
 			StartPoint: [57.6802, 10.4877],
 			EndPoint: [57.0838, 9.9449],
 			Throughpoint: [[57.5953, 10.2688], [57.3248, 10.2641]],
-			StageNotStarted: false,
+			KeyStartpoint: true, 
+			KeyEndpoint: false, 
+			StageNotStarted: false,	
 			Stageactive: false,
 			Stagecompleted: true,
 			Runner: { Name: "Casper", RunnerID: 13 },
@@ -38,8 +40,10 @@ let Route = {
 		},	
 		{
 			StartPoint: [57.0838, 9.9449],
-			EndPoint: [56.1413, 9.3942],
-			Throughpoint: [[56.8062, 9.3465], [56.7239, 9.9995], [56.3757, 9.2638]],
+			EndPoint: [56.9750, 9.7498],
+			Throughpoint: [[57.0353, 9.9074], [57.0058, 9.9127], [56.9751, 9.8571]],
+			KeyStartpoint: true,
+			KeyEndpoint: false, 
 			StageNotStarted: false,
 			Stageactive: true,
 			Stagecompleted: false,
@@ -51,13 +55,31 @@ let Route = {
 			}
 		}, 
 		{
-			StartPoint: [56.1413, 9.3942],
-			EndPoint: [54.8856, 9.1176],
-			Throughpoint: [[55.815, 9.593], [55.744, 8.5993], [55.6216, 9.3512]],
+			StartPoint: [56.9750, 9.7498],
+			EndPoint: [56.8027, 9.515],
+			Throughpoint: [[56.9821, 9.6421], [56.9443, 9.6106], [56.9147, 9.6132]],
+			KeyStartpoint: false,
+			KeyEndpoint: true, 
 			StageNotStarted: true,
 			Stageactive: false,
 			Stagecompleted: false,
 			Runner: { Name: "Samsung", RunnerID: 15 },
+			Sponsor: {
+				Name: "Frugtkurven",
+				PictureURL: "https://www.runtogether.dk/wp-content/uploads/2020/03/icon1.png",
+				Message: "Dette er vores bedste sponsoret"
+			}
+		},
+		{
+			StartPoint: [56.8027, 9.515],
+			EndPoint: [56.6358, 9.7982],
+			Throughpoint: [[56.7681, 9.5772], [56.6811, 9.6597], [56.6732, 9.6788]],
+			KeyStartpoint: false,
+			KeyEndpoint: true,
+			StageNotStarted: true,
+			Stageactive: false,
+			Stagecompleted: false,
+			Runner: { Name: "Denver", RunnerID: 16 },
 			Sponsor: {
 				Name: "Frugtkurven",
 				PictureURL: "https://www.runtogether.dk/wp-content/uploads/2020/03/icon1.png",
