@@ -6,6 +6,8 @@ let maxBounds2 = [59.799, 18.68];
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 let pointArray = [];
 let pointIds = {}; 
+let lineIds = {};
+
 
 
 
@@ -57,21 +59,22 @@ export class mapEditorClass {
     drawRoute() {
         this.removeMarkersAndLines();
         pointIds = {};
+        lineIds = {};
 
         //Creating layer group and adding to map
         layerGroup = L.layerGroup().addTo(myeditmap);
 
         let i;
-        let segNum = 0;
         let marker;
 
         //Create polyline
         polyline = L.polyline(pointArray, { color: '#db5d57' });
+        //polyline.on('contextmenu', () => console.log("from line"))
         layerGroup.addLayer(polyline);
+        //lineIds[layerGroup.getLayerId(polyline)] = i;
 
         //Create markers
         for (i = 0; i < pointArray.length; i++) {
-            segNum = i + 1;
             marker = L.circleMarker(pointArray[i], { bubblingMouseEvents: false, fillOpacity: 1 });
             this.moveableMarker(myeditmap, marker)
             layerGroup.addLayer(marker);
