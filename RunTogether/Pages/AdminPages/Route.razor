@@ -7,10 +7,11 @@
 @using System.Collections.Generic
 @using RunTogether.Data
 @using Microsoft.EntityFrameworkCore;
+@using RunTogether.Shared.Map
 
 @inject DialogService dialogService
 @inject UserManager<ApplicationUser> userManager
 @inject ApplicationDbContext dbContext
 
 <h3>Route</h3>
-*import route editor component here*
+<LeafletMapEditor></LeafletMapEditor>
