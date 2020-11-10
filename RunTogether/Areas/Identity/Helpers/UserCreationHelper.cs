@@ -85,8 +85,8 @@ namespace RunTogether.Areas.Identity.Helpers
                 IdentityError error = new IdentityError();
                 error.Description = "Error creating runner: Email is invalid!";
                 errors.Add(error);
-            } 
-            
+            }
+
             if (isUsedEmail)
             {
                 IdentityError error = new IdentityError();

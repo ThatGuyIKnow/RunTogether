@@ -1,8 +1,8 @@
 ﻿
 /*Global variable for the map class*/
 let mymap, layerGroup, polyline;
-let maxBounds1 = [51.649, 0.49]; 
-let maxBounds2 = [59.799, 18.68];  
+let maxBounds1 = [51.649, 0.49];
+let maxBounds2 = [59.799, 18.68];
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 
 
@@ -35,7 +35,7 @@ export class mapClass {
             minZoom: 6,
             maxZoom: 13,
             maxBounds: bounds,
-            maxBoundsViscosity: 1, 
+            maxBoundsViscosity: 1,
             ext: 'jpg'
         }).addTo(mymap);
 
@@ -47,9 +47,9 @@ export class mapClass {
     /* A Method to add markers and lines*/
     addMarkersAndLines(obj) {
 
-        this.removeMarkersAndLines(); 
-/*        mymap.removeLayer(layerGroup); 
-*/
+        this.removeMarkersAndLines();
+        /*        mymap.removeLayer(layerGroup); 
+        */
         let latlngs = JSON.parse(obj).Coordinates
 
         console.log(latlngs)
@@ -74,55 +74,25 @@ export class mapClass {
         layerGroup.addLayer(polyline);
         mymap.fitBounds(polyline.getBounds());
 
-    }   
+    }
 
 
     /* A Method to remove markers and lines*/
     removeMarkersAndLines() {
         mymap.removeLayer(layerGroup);
     }
-
-    onMapClick() {
-
-        let pointArray = [];  
-
-        var popup = L.popup();
-
-        function onMapClick(e) {
-            popup
-                .setLatLng(e.latlng)
-                .setContent("You clicked the map at " + e.latlng.toString())
-                .openOn(mymap);
-
-            pointArray.push(e.latlng.toString());
-            console.log(pointArry);
-        }
-
-        mymap.on('click', onMapClick);
-    }
 }
 
+export function onMapClick() {
 
-   //If the layer group has to be spilt up
-    // addPolyline(latlngs) {
-    //    polyline = L.polyline(this.latlngs, { color: 'red' }).addTo(mymap);
-    //    mymap.fitBounds(polyline.getBounds());
-    //}
+    var popup = L.popup();
 
+    function onMapClick(e) {
+        popup
+            .setLatLng(e.latlng)
+            .setContent("You clicked the map at " + e.latlng.toString())
+            .openOn(mymap);
+    }
 
-//export function onMapClick() {
-
-//    var popup = L.popup();
-
-//    function onMapClick(e) {
-//        popup
-//            .setLatLng(e.latlng)
-//            .setContent("You clicked the map at " + e.latlng.toString())
-//            .openOn(mymap);
-//    }
-
-//    mymap.on('click', onMapClick);
-//}
-
-
-
+    mymap.on('click', onMapClick);
+}

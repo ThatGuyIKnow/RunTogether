@@ -30,3 +30,5 @@ export const Sidebar = new SidebarCollapseFunctionality();
 
 export const Map = new mapClass();
 
+
+
