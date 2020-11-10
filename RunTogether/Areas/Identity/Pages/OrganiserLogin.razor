@@ -1,0 +1,108 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using RunTogether.Areas.Identity
+@using System.Security.Claims
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Authentication
+@using Microsoft.AspNetCore.Http
+@using Radzen
+@inject UserManager<ApplicationUser> userManager
+@inject SignInManager<ApplicationUser> signInManager
+@inject NavigationManager navigationManager
+@inject IHostEnvironmentAuthenticationStateProvider HostAuthentication
+
+
+@page "/organiser/login"
+
+<h3>OrganiserLogin</h3>
+
+<div class="col-md-6">
+    <p style="color: red;">@(showError ? "Invalid Email/Password" : "")</p>
+    <p>@(loading ? "Loading..." : "")</p>
+    <h3>Email</h3>
+    <RadzenTextBox Disabled="loading" Style="margin-bottom: 20px" Change="@(args => email = (string) args)" />
+    <br />
+    <h3>Password</h3>
+    <RadzenPassword Disabled="loading" Placeholder="Enter password..." Change="@(args => password = (string) args)" Style="margin-bottom: 20px" />
+    <br />
+    <RadzenButton Click="@(Submit)" Text="Login" Style="margin-bottom: 20px; width: 150px" />
+</div>
+
+@code {
+    private string email = "";
+    private string password = "";
+    private bool showError = false;
+    private bool loading = false;
+
+    private async void Submit()
+    {
+        loading = true;
+        Task.Run(LoginAsync);
+        StateHasChanged();
+    }
+
+    protected async Task LoginAsync()
+    {
+        InvalidOperationException? err = null;
+        ApplicationUser user = new ApplicationUser();
+        try
+        {
+            user = await ValidateUser();
+        }
+        catch (InvalidOperationException e)
+        {
+            err = e;
+            showError = true;
+        }
+        finally
+        {
+            loading = false;
+            StateHasChanged();
+        }
+        if (err != null)
+        {
+            loading = false;
+            StateHasChanged();
+            return;
+        }
+        ClaimsPrincipal principal = await CreatePrincipalFromUser(user);
+
+        LoginUser(principal);
+
+        navigationManager.NavigateTo("/organiser");
+
+    }
+
+    protected async Task<ApplicationUser> ValidateUser()
+    {
+        // Search the users for a user with a matching password.
+        ApplicationUser user = (await userManager.GetUsersInRoleAsync(IdentityRoleTypes.Organiser))
+            .First(u => u.NormalizedEmail == userManager.NormalizeEmail(email));
+        if (userManager.PasswordHasher.VerifyHashedPassword(user, user.PasswordHash, password) == PasswordVerificationResult.Success)
+        {
+            return user;
+        }
+        throw new AuthenticationException("Invalid Email/Password");
+    }
+
+    protected async Task<ClaimsPrincipal> CreatePrincipalFromUser(ApplicationUser user)
+    {
+        //Create User Claims Principal based on the SignInManagers in
+        //addition to the one's found in the default cookie authentication scheme
+        var principal = await signInManager.CreateUserPrincipalAsync(user);
+        var identity = new ClaimsIdentity(
+            principal.Claims,
+            Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme
+            );
+        return new ClaimsPrincipal(identity);
+    }
+
+    protected void LoginUser(ClaimsPrincipal principal)
+    {
+        // Pass on the User's info (principal claim) to the current HTTP request used to sign in
+        signInManager.Context.User = principal;
+        // Set the authentication state as based on the user claims. Applies to routing and authentication
+        HostAuthentication.SetAuthenticationState(Task.FromResult(new AuthenticationState(principal)));
+
+    }
+}

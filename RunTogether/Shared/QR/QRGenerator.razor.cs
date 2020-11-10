@@ -13,7 +13,7 @@ namespace RunTogether.Shared.QR
 
 
         [Parameter] public string code { get; set; } = null;
-        [Parameter] public string size { get; set; } = "100%";
+        [Parameter] public int size { get; set; } = 30;
         [Parameter] public string color { get; set; } = "#000000";
 
         protected override void OnParametersSet()
@@ -29,7 +29,7 @@ namespace RunTogether.Shared.QR
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(code, QRCodeGenerator.ECCLevel.Q);
             Base64QRCode qrCode = new Base64QRCode(qrCodeData);
-            qrCodeImageAsBase64 = qrCode.GetGraphic(30, color, "#ffffff", true);
+            qrCodeImageAsBase64 = qrCode.GetGraphic(size, color, "#ffffff", true);
         }
     }
 }

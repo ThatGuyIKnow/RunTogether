@@ -2,10 +2,6 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
-    "iis": {
-      "applicationUrl": "http://localhost/RunTogether",
-      "sslPort": 0
-    },
     "iisExpress": {
       "applicationUrl": "http://localhost:53387",
       "sslPort": 44315
@@ -14,7 +10,7 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "commandLineArgs": "npm --prefix $(ProjectDir)JsLib run build",
+      "commandLineArgs": "npm --prefix $(ProjectDir)JsLib run builds",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

@@ -1,40 +1,46 @@
-﻿using Radzen;
-using RunTogether.Shared.Forms;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
+using System.Threading.Tasks;
 
 namespace RunTogether.Shared.Layouts
 {
     public partial class OrganiserLayout
     {
-        void ShowDialog(MenuItemEventArgs e)
+        public string runnerStatus = "You are the active runner";
+
+        /* Keeps track of whether sidebar is collapsed or not. By default not collapsed */
+        bool collapsed = false;
+
+        readonly string sidebarId = "navBarOrgId";
+
+        async Task ToggleSidebar()
         {
-            if (e.Text == "Skab ny løber")
-            {
-                dialogService.Open<CreateNewRunner>("Skab ny løber",
-                    new Dictionary<string, object>(),
-                    new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
-            }
+            collapsed = !collapsed;
 
-            if (e.Text == "Rediger løber")
+            if (collapsed == false) /* Open */
             {
-                dialogService.Open<EditRunner>("Rediger løber",
-                    new Dictionary<string, object>(),
-                    new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
+                await JSRuntime.InvokeVoidAsync("Main.Sidebar.sidebarToggle",
+                    new { id = sidebarId, attribute = "width", value = "15rem" });
             }
-
-            if (e.Text == "Skab ny rute")
+            else /* Close */
             {
-                dialogService.Open<CreateNewRoute>("Skab ny rute",
-                    new Dictionary<string, object>(),
-                    new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
-            }
-
-            if (e.Text == "Rediger rute")
-            {
-                dialogService.Open<EditRoute>("Rediger rute",
-                    new Dictionary<string, object>(),
-                    new DialogOptions() { Width = "700px", Height = "530px", Left = "calc(50% - 350px)", Top = "calc(50% - 265px)" });
+                await JSRuntime.InvokeVoidAsync("Main.Sidebar.sidebarToggle",
+                    new { id = sidebarId, attribute = "width", value = "0" });
             }
         }
+
+        public string ID { get; set; }
+
+        protected override void OnParametersSet()
+        {
+            // pull out the "ID" parameter from the route data
+            object id = null;
+            if ((this.Body.Target as RouteView)?.RouteData.RouteValues?.TryGetValue("id", out id) == true)
+            {
+                ID = id?.ToString();
+            }
+
+        }
+
     }
 }

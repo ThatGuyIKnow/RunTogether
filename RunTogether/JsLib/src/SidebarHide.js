@@ -1,5 +1,4 @@
-﻿export class SidebarCollapseFunctionality
-{
+﻿export class SidebarCollapseFunctionality {
     /* Open or close the sidebar */
     sidebarToggle(style) {
 

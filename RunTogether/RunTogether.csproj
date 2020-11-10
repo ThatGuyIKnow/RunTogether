@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Areas\Identity\Pages\Account\Register.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Areas\Identity\Pages\Account\Register.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="JsLib\styles\qrScanner.css" />
   </ItemGroup>
 

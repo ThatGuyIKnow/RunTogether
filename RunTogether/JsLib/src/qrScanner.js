@@ -7,7 +7,7 @@ export class QrScannerClass
     constructor() {
         this.qrScanner = null;
         this.dotnetHelper = null;
-        
+
         this.CreateQrScanner   = this.CreateQrScanner.bind(this);
         this.StartQrScanner    = this.StartQrScanner.bind(this);
         this.StopQrScanner     = this.StopQrScanner.bind(this);
@@ -17,11 +17,13 @@ export class QrScannerClass
         this.HasCamera         = this.HasCamera.bind(this);
     }
 
+    // Streams the camera to a <video> tag identified with 'videoElemId'
+    // Also receives a reference to the .NET instance responsible for the call
     CreateQrScanner(videoElemId, objRef) {
         this.dotnetHelper = objRef;
         const videoElem = document.getElementById(videoElemId);
         this.qrScanner = new QrScanner(videoElem,
-            result => this.dotnetHelper.invokeMethodAsync('ResolvePromiseString', result)
+            result => this.dotnetHelper.invokeMethodAsync('ResolvePromise', result)
         );
     }
 

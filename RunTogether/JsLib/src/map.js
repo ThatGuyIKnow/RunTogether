@@ -208,30 +208,47 @@ export class mapClass {
         mymap.removeLayer(layerGroup);
     }
 
+    onMapClick() {
 
-}
+        let pointArray = [];  
 
-/*
- *   //If the layer group has to be spilt up
-     addPolyline(latlngs) {
-        polyline = L.polyline(this.latlngs, { color: 'red' }).addTo(mymap);
-        mymap.fitBounds(polyline.getBounds());
+        var popup = L.popup();
+
+        function onMapClick(e) {
+            popup
+                .setLatLng(e.latlng)
+                .setContent("You clicked the map at " + e.latlng.toString())
+                .openOn(mymap);
+
+            pointArray.push(e.latlng.toString());
+            console.log(pointArry);
+        }
+
+        mymap.on('click', onMapClick);
     }
-
-
-export function onMapClick() {
-
-    var popup = L.popup();
-
-    function onMapClick(e) {
-        popup
-            .setLatLng(e.latlng)
-            .setContent("You clicked the map at " + e.latlng.toString())
-            .openOn(mymap);
-    }
-
-    mymap.on('click', onMapClick);
 }
 
 
-*/
+   //If the layer group has to be spilt up
+    // addPolyline(latlngs) {
+    //    polyline = L.polyline(this.latlngs, { color: 'red' }).addTo(mymap);
+    //    mymap.fitBounds(polyline.getBounds());
+    //}
+
+
+//export function onMapClick() {
+
+//    var popup = L.popup();
+
+//    function onMapClick(e) {
+//        popup
+//            .setLatLng(e.latlng)
+//            .setContent("You clicked the map at " + e.latlng.toString())
+//            .openOn(mymap);
+//    }
+
+//    mymap.on('click', onMapClick);
+//}
+
+
+
