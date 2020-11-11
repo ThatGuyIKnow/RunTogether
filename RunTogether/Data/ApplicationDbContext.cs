@@ -72,9 +72,13 @@ namespace RunTogether.Data
                 .HasMany(r => r.Runners)
                 .WithOne(rr => rr.Run);
 
-            modelBuilder.Entity<Stage>()
-                .HasOne(s => s.Runner)
-                .WithMany(r => r.Stages);
+            modelBuilder.Entity<StageAssignment>()
+                .HasOne(r => r.Runner)
+                .WithMany(rr => rr.StageAssignments);
+
+            modelBuilder.Entity<StageAssignment>()
+                .HasOne(r => r.Stage)
+                .WithMany(rr => rr.AssignedRunners);
         }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

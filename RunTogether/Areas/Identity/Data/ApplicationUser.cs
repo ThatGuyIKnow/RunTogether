@@ -19,7 +19,7 @@ namespace RunTogether.Areas.Identity
         public int? RunId { get; set; }
         public Run? Run { get; set; }
 
-        public List<Stage> Stages { get; set; } = new List<Stage>();
+        public List<StageAssignment> StageAssignments { get; set; } = new List<StageAssignment>();
 
         public ApplicationUser() : base() { }
         public ApplicationUser(string userName) : base(userName) { }

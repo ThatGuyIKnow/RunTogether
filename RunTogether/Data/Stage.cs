@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
+using RunTogether.Areas.Identity;
+using RunTogether.Pages;
 
 namespace RunTogether
 {
@@ -25,22 +27,30 @@ namespace RunTogether
 
         public RunRoute RunRoute { get; set; }
 
-        public bool InProgress { get; set; }
+        public List<StageAssignment> AssignedRunners { get; set; } = new List<StageAssignment>();
+        public RunningStatus status { get; set; } = RunningStatus.NotStarted;
 
-        public bool Completed { get; set; }
+    }
 
-        public ApplicationUser? Runner { get; set; }
 
-        //public Stage(StartPoint startPoint, EndPoint endPoint)
-        //{
-        //    this.StartPoint = startPoint;
-        //    this.EndPoint = endPoint;
-        //}
+    public class StageAssignment
+    {
+        public int Id { get; set; }
+        public int Order { get; set; } = 0;
+        
+        public ApplicationUser Runner { get; set; }
+        public int RunnerId { get; set; }
 
-        //private Stage()
-        //{
+        public Stage Stage { get; set; }
+        public int StageId { get; set; }
 
-        //}
+        public RunningStatus Status { get; set; } = RunningStatus.NotStarted;
+    }
 
+    public enum RunningStatus
+    {
+        NotStarted,
+        Active,
+        Completed
     }
 }

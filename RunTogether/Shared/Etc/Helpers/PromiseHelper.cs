@@ -1,10 +1,7 @@
-﻿using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
+using Microsoft.JSInterop;
 
-namespace RunTogether.Shared.QR.QRScanner
+namespace RunTogether.Shared.Etc.Helpers
 {
     public class PromiseHelper<T> : IDisposable
     {
