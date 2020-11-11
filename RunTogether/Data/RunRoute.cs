@@ -1,4 +1,5 @@
-﻿using Radzen.Blazor;
+﻿using Newtonsoft.Json;
+using Radzen.Blazor;
 using RunTogether.Data;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace RunTogether
         
         public int? RunId { get; set; }
 
+        [JsonIgnore]
         public Run? Run { get; set; }
 
         //public RunRoute()

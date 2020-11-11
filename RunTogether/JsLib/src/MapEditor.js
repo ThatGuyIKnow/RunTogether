@@ -21,6 +21,7 @@ export class mapEditorClass {
 
         this.initializeMap = this.initializeMap.bind(this);
         this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
+        this.loadRoute = this.loadRoute.bind(this); 
     }
 
     /* A Method that initializes the map */
@@ -49,6 +50,20 @@ export class mapEditorClass {
 
     }
 
+    loadRoute(serialData) {
+        let json = JSON.parse(serialData);
+        //console.log(json);
+        let stages = [];
+        stages = json.Stages; 
+
+        stages.forEach(element => {
+            console.log(element);
+            pointArray.push({ lat: element.StartPoint.X, lng: element.StartPoint.Y });
+            pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
+        });
+
+        this.drawRoute();
+    }
 
     /* A Method to remove markers and lines*/
     removeMarkersAndLines() {
@@ -93,9 +108,7 @@ export class mapEditorClass {
     onMapClick(e) {
         pointArray.push(e.latlng);
         this.drawRoute();
-        console.log(pointIds);
-        console.log("line IDs:");
-        console.log(lineIds);
+        console.log(pointArray);
     }
 
         

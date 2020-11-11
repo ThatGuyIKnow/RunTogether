@@ -27,8 +27,19 @@ namespace RunTogether.Pages.AdminPages
 
             run = dbContext.Runs
                 .Where(r => r.ID == id)
-                .Include(r => r.Runners).FirstOrDefault();
+                .Include(r => r.Runners)
+                .Include(r => r.Route)
+                    .ThenInclude(r => r.Stages)
+                        .ThenInclude(s => s.StartPoint)
+                .Include(r => r.Route)
+                    .ThenInclude(r => r.Stages)
+                        .ThenInclude(s => s.EndPoint)
+                .Include(r => r.Route)
+                    .ThenInclude(r => r.Stages)
+                        .ThenInclude(s => s.ThroughPoints)
+                .FirstOrDefault();
 
+            System.Diagnostics.Debug.WriteLine(run.Route.Stages[0].StageId);
         }
     }
 }

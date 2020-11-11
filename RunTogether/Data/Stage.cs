@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using RunTogether.Areas.Identity;
 using RunTogether.Pages;
+using Newtonsoft.Json;
 
 namespace RunTogether
 {
@@ -22,8 +23,9 @@ namespace RunTogether
 
         public List<ThroughPoint> ThroughPoints { get; set; } = new List<ThroughPoint>();
 
-        public int RunRouteId { get; set; } 
+        public int RunRouteId { get; set; }
 
+        [JsonIgnore]
         public RunRoute RunRoute { get; set; }
 
         public List<StageAssignment> AssignedRunners { get; set; } = new List<StageAssignment>();
