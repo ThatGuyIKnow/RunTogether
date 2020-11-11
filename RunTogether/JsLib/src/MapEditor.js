@@ -68,17 +68,24 @@ export class mapEditorClass {
         let marker;
 
         //Create polyline
-        polyline = L.polyline(pointArray, { color: '#db5d57' });
-        //polyline.on('contextmenu', () => console.log("from line"))
-        layerGroup.addLayer(polyline);
-        //lineIds[layerGroup.getLayerId(polyline)] = i;
+        for (i = 0; i < pointArray.length - 1; i++) {
+            polyline = L.polyline(pointArray.slice(i, i + 2), { color: '#db5d57', weight: 6 });
+            layerGroup.addLayer(polyline);
+            lineIds[layerGroup.getLayerId(polyline)] = i;
+
+            this.interactableLine(polyline);
+        }
+
+        
+        
 
         //Create markers
         for (i = 0; i < pointArray.length; i++) {
             marker = L.circleMarker(pointArray[i], { bubblingMouseEvents: false, fillOpacity: 1 });
-            this.moveableMarker(myeditmap, marker)
             layerGroup.addLayer(marker);
             pointIds[layerGroup.getLayerId(marker)] = i;
+
+            this.moveableMarker(myeditmap, marker);
         }
     }
         
@@ -87,12 +94,14 @@ export class mapEditorClass {
         pointArray.push(e.latlng);
         this.drawRoute();
         console.log(pointIds);
+        console.log("line IDs:");
+        console.log(lineIds);
     }
 
         
     moveableMarker(map, marker) {
         function trackCursor(evt) {
-            marker.setLatLng(evt.latlng)
+            marker.setLatLng(evt.latlng);
         }
 
         marker.on("mousedown", () => {
@@ -110,10 +119,22 @@ export class mapEditorClass {
     }
 
     markerDragEnd(marker) {
-        console.log("testererer")
+        console.log("dragEnd")
         pointArray[pointIds[layerGroup.getLayerId(marker)]] = marker.getLatLng();
         this.drawRoute();
+        }
+
+
+    interactableLine(polyline) {
+        polyline.on('mouseover', () => {
+            polyline.setStyle({ color: '#ff5c26', weight: 12 });
+        })
+
+        polyline.on('mouseout', () => {
+            polyline.setStyle({ color: '#db5d57', weight: 6  });
+        })
+
+        polyline.on('click', () => console.log("from line"))
     }
 
-    
-}
+ }
