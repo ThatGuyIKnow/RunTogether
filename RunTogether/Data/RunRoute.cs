@@ -1,8 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿//using Newtonsoft.Json;
 using Radzen.Blazor;
 using RunTogether.Data;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace RunTogether
 {

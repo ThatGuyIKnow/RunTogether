@@ -39,7 +39,7 @@ namespace RunTogether.Pages.AdminPages
                         .ThenInclude(s => s.ThroughPoints)
                 .FirstOrDefault();
 
-            System.Diagnostics.Debug.WriteLine(run.Route.Stages[0].StageId);
+            
         }
     }
 }

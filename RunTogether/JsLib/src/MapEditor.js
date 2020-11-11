@@ -22,10 +22,14 @@ export class mapEditorClass {
         this.initializeMap = this.initializeMap.bind(this);
         this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
         this.loadRoute = this.loadRoute.bind(this); 
+
+        this.dotnetHelper = null;
     }
 
     /* A Method that initializes the map */
-    initializeMap() {
+    initializeMap(objRef) {
+
+        this.dotnetHelper = objRef;
 
         /*Pointing myeditmap to leaflet map and setting the viewpoint and start zoom point*/
         myeditmap = L.map('mapid', { doubleClickZoom: false}).setView([55.964, 9.992], 6.5);
@@ -51,18 +55,27 @@ export class mapEditorClass {
     }
 
     loadRoute(serialData) {
+        pointArray = [];
         let json = JSON.parse(serialData);
-        //console.log(json);
+        console.log('Here: '); 
+        console.log(json);
         let stages = [];
-        stages = json.Stages; 
+        stages = json.Stages;
 
-        stages.forEach(element => {
-            console.log(element);
-            pointArray.push({ lat: element.StartPoint.X, lng: element.StartPoint.Y });
-            pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
+        stages.forEach((element, index) => {
+            if (index == 0) {
+                console.log("index was one");
+                pointArray.push({ lat: element.StartPoint.X, lng: element.StartPoint.Y });
+                pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
+            }
+            else {
+                pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
+            }
         });
 
         this.drawRoute();
+
+        console.log(pointArray); 
     }
 
     /* A Method to remove markers and lines*/
@@ -109,6 +122,14 @@ export class mapEditorClass {
         pointArray.push(e.latlng);
         this.drawRoute();
         console.log(pointArray);
+        if (pointArray.length > 1) {
+            this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
+                {
+                    StartPoint: { X: pointArray[pointArray.length - 2].lat, Y: pointArray[pointArray.length - 2].lng },
+                    EndPoint: { X: pointArray[pointArray.length - 1].lat, Y: pointArray[pointArray.length - 1].lng }
+                });
+        }
+
     }
 
         
@@ -139,6 +160,14 @@ export class mapEditorClass {
 
 
     interactableLine(polyline) {
+        //polyline.on("mousedown", () => {
+        //    //disable create point? 
+        //})
+
+        //polyline.on("mouseup", () => {
+        //    //enable create point? 
+        //}) 
+
         polyline.on('mouseover', () => {
             polyline.setStyle({ color: '#ff5c26', weight: 12 });
         })

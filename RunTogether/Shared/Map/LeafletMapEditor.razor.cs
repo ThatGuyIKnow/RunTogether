@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using RunTogether.Data;
-
-
+using RunTogether.Shared.Etc.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace RunTogether.Shared.Map
 {
+
     public partial class LeafletMapEditor
     {
+        private EventHandlerHelper Handler = new EventHandlerHelper();
 
         [Parameter]
+        public Run Run { get; set; }
+
         public RunRoute Route { get; set; }
 
         public string json;
@@ -23,10 +29,23 @@ namespace RunTogether.Shared.Map
         {
             if (firstRender)
             {
-                Route.Stages.Add(new Stage() { StartPoint = new StartPoint(57.0117789F, 9.9907118F), EndPoint = new EndPoint(56.7499F, 9.9921F) }); 
-                await JsRunTime.InvokeVoidAsync("Main.MapEditor.initializeMap");
-                System.Diagnostics.Debug.WriteLine("got here!!");
+                
+
+
+                Handler.AddHandler("AddSegment", (evt) => {
+                   
+                    Stage NewStage = JsonSerializer.Deserialize<Stage>(evt.ToString());
+
+                    Route.Stages.Add(NewStage);
+
+                    dbContext.SaveChanges(); 
+                    
+                });
+                
+                await JsRunTime.InvokeVoidAsync("Main.MapEditor.initializeMap", Handler.ObjRef);
+                
                 StateHasChanged();
+                
             }
 
             await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", json);
@@ -34,9 +53,14 @@ namespace RunTogether.Shared.Map
 
         protected override void OnParametersSet()
         {
+            if (Run.Route == null)
+            {
+                Run.Route = new RunRoute();
+            }
 
-            json = JsonConvert.SerializeObject(Route);
+            Route = Run.Route;
 
+            json = JsonSerializer.Serialize(Route);
         }
 
         //public async void ClickEvent()

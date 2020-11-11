@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
-using Newtonsoft.Json;
+//using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RunTogether.Data
