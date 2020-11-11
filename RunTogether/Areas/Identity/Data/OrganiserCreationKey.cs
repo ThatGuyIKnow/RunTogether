@@ -23,7 +23,7 @@ namespace RunTogether.Areas.Identity.Data
 
         [Key]
         public string Key { get; private set; } = CreateRandomKey(36);
-        public DateTime ExpirationDatetime { get; set; } = DateTime.Today.AddDays(1);
+        public DateTime ExpirationDatetime { get; set; } = DateTime.Now.AddDays(1);
 
         [Required]
         public string GeneratedById { get; private set; }
@@ -60,9 +60,9 @@ namespace RunTogether.Areas.Identity.Data
             do
             {
                 rngProvider.GetBytes(randomNumber);
-            } while (IsFairByte(randomNumber[0], maxSize));
+            } while (!IsFairByte(randomNumber[0], maxSize));
 
-            return (int)randomNumber[0] % maxSize;
+            return randomNumber[0] % maxSize;
         }
 
         protected static bool IsFairByte(byte number, int arraySize)
