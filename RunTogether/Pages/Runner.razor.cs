@@ -22,6 +22,7 @@ namespace RunTogether.Pages
         private string qrCode = "";
         private Run assignedRun = new Run();
         private List<Stage> assignedStages = new List<Stage>();
+        //private List<Stage> allStages = new List<Stage>();
         private string runnerName = "";
 
         private const string HideCss = "display-none";
@@ -39,28 +40,65 @@ namespace RunTogether.Pages
                 if (user.Identity.IsAuthenticated)
                 {
                     var currentUser = await UserManager.GetUserAsync(user);
-                    assignedRun = await dbContext.Runs.Where(r => r.ID == currentUser.RunId).FirstOrDefaultAsync();
-                    assignedStages = await dbContext.Stages.Where(s => s.Runner == currentUser).ToListAsync();
+                    assignedRun = await dbContext.Runs
+                                        .Where(r => r.ID == currentUser.RunId)
+                                        .Include(r => r.Route)
+                                        .ThenInclude(rr => rr.Stages)
+                                        .FirstOrDefaultAsync();
+                    //assignedStages = await dbContext.Stages.Where(s => s.Runner == currentUser).ToListAsync();
+                    //allStages = await dbContext.Stages.Where(s => s.RunRouteId == assignedRun.Route.RunRouteId).ToListAsync();
+
+                    foreach (Stage stage in assignedRun.Route.Stages)
+                    {
+                        foreach (StageAssignment runner in stage.AssignedRunners)
+                        {
+                            if (runner.RunnerId == currentUser.RunnerId)
+                            {
+                                assignedStages.Add(stage);
+                            }
+                        }
+                    }
+
+                    //foreach (Stage stage in allStages)
+                    //{
+                    //    foreach (StageAssignment runner in stage.AssignedRunners)
+                    //    {
+                    //        if (runner.RunnerId == currentUser.RunnerId)
+                    //        {
+                    //            assignedStages.Add(stage);
+                    //        }
+                    //    }
+                    //}
+
                     runnerName = currentUser.FirstName;
                 }
                 StateHasChanged();
             }
         }
 
+        public async void checkstages()
+        {
+            foreach (Stage stage in assignedStages)
+            {
+                Debug.WriteLine(stage.StageId);
+            }
+        }
+
         public async void CheckCode()
         {
-            Stage activeStage = new Stage();
-            activeStage = assignedRun.GetCurrentStage();
+            Stage activeStage = new Stage(); //Runner activeRunner = new Runner();
+            activeStage = assignedRun.GetCurrentStage(); //activeRunner = assignedRun.GetCurrentRunner();
 
             if (assignedRun.QRString.Equals(qrCode))
             {
-                bool hasActiveStage = false;
+                bool hasActiveStage = false; //isActiveRunner = false;
                 foreach (Stage stage in assignedStages)
                 {
                     if (stage.StageId == activeStage.StageId)
                     {
                         //cameraCSS = HideCss;
                         //startRunCSS = "";
+                        hasActiveStage = true;
                     }
                 } 
 
@@ -89,12 +127,6 @@ namespace RunTogether.Pages
             }
         }
 
-        public void DisplayResult()
-        {
-            startRunCSS = HideCss;
-            displayResultCSS = "";
-        }
-
         TimeSpan stopWatchValue = new TimeSpan();
         private bool stopWatchActive = false;
 
@@ -104,6 +136,7 @@ namespace RunTogether.Pages
             while (stopWatchActive)
             {
                 await Task.Delay(1000);
+ 
                 if (stopWatchActive)
                 {
                     //Because of the Task.Delay, chances are that when the “Stop” button is clicked, the cycle has already started.
@@ -112,6 +145,12 @@ namespace RunTogether.Pages
                     StateHasChanged();
                 }
             }
+        }
+
+        public void DisplayResult()
+        {
+            startRunCSS = HideCss;
+            displayResultCSS = "";
         }
     }
 }

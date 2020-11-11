@@ -31,8 +31,7 @@ namespace RunTogether
 
         public Stage GetCurrentStage()
         {
-            return Route.Stages.Find(s => s.Completed == false);
-            //return Stages.Find(s => s.Completed == false);
+            return Route.Stages.Find(s => s.status == RunningStatus.Active);
         }
     }
 }
