@@ -142,7 +142,6 @@ namespace RunTogetherTests
             await dbContext.SaveChangesAsync();
 
             await helper.CreateRunner("Christy", "Lala", "nana@baba.com", updatedRun.Entity);
-            await Task.Delay(20);
             await helper.CreateRunner("Tommy", "Dada", "bobo@baba.com", updatedRun.Entity);
 
             var user1 = await userManager.FindByEmailAsync("nana@baba.com");
