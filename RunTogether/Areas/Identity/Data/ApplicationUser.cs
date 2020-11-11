@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace RunTogether.Areas.Identity
@@ -17,6 +18,8 @@ namespace RunTogether.Areas.Identity
 
         public int? RunId { get; set; }
         public Run? Run { get; set; }
+
+        public List<StageAssignment> StageAssignments { get; set; } = new List<StageAssignment>();
 
         public ApplicationUser() : base() { }
         public ApplicationUser(string userName) : base(userName) { }
