@@ -46,6 +46,20 @@ namespace RunTogether
             return PointList;
         }
 
+        public Dictionary<string, object> ViewerSerializer()
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>();
+
+            if (Run?.Name != null) data["Name"] = Run.Name;
+            List<Dictionary<string, object>> serializedStages = new List<Dictionary<string, object>>();
+
+            Stages.ForEach(stage =>
+                serializedStages.Add(stage.ViewerSerializer())
+            );
+            data["Stages"] = serializedStages;
+            return data;
+        }
+
         //public RunRoute(List<Stage> Stages)
         //{
         //    this.Stages = Stages;
