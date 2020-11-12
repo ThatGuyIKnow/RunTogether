@@ -18,7 +18,8 @@ export class mapEditorClass {
     constructor() {
         this.initializeMap = this.initializeMap.bind(this);
         this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
-        this.loadRoute = this.loadRoute.bind(this); 
+        this.loadRoute = this.loadRoute.bind(this);
+        this.drawRoute = this.drawRoute.bind(this);
 
         this.dotnetHelper = null;
     }
@@ -52,6 +53,7 @@ export class mapEditorClass {
     }
 
     loadRoute(serialData) {
+        console.log("loadRoute was called");
         //clear point array. 
         pointArray = [];
         
@@ -82,6 +84,7 @@ export class mapEditorClass {
 
 
     drawRoute() {
+        console.log("draw function was called");
         this.removeMarkersAndLines();
         pointIds = {};
         lineIds = {};
@@ -102,9 +105,6 @@ export class mapEditorClass {
             //Add functionallity to lines
             this.interactableLine(polyline);
         }
-
-        
-        
 
         //Create markers
         for (i = 0; i < pointArray.length; i++) {
@@ -127,10 +127,11 @@ export class mapEditorClass {
         //send a segment back to blazor, for saving to DB
         if (pointArray.length > 1) {
             this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
+                JSON.stringify(
                 {
                     StartPoint: { X: pointArray[pointArray.length - 2].lat, Y: pointArray[pointArray.length - 2].lng },
                     EndPoint: { X: pointArray[pointArray.length - 1].lat, Y: pointArray[pointArray.length - 1].lng }
-                });
+                }));
         }
 
     }

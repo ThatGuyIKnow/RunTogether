@@ -21,8 +21,6 @@ namespace RunTogether.Shared.Map
         [Parameter]
         public Run Run { get; set; }
 
-        public RunRoute Route { get; set; }
-
         public string json;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -31,15 +29,16 @@ namespace RunTogether.Shared.Map
             {
                 
 
-
+                //event called from JS
                 Handler.AddHandler("AddSegment", (evt) => {
-                   
-                    Stage NewStage = JsonSerializer.Deserialize<Stage>(evt.ToString());
+                    //Deserialize and cast to a Stage object. 
+                    Stage NewStage = JsonSerializer.Deserialize<Stage>(evt);
 
-                    Route.Stages.Add(NewStage);
+                    Run.Route.Stages.Add(NewStage);
 
-                    dbContext.SaveChanges(); 
-                    
+                    dbContext.SaveChanges();
+                    //StateHasChanged();
+                    //JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", json);
                 });
                 
                 await JsRunTime.InvokeVoidAsync("Main.MapEditor.initializeMap", Handler.ObjRef);
@@ -53,23 +52,13 @@ namespace RunTogether.Shared.Map
 
         protected override void OnParametersSet()
         {
+            //if run has no route, add one
             if (Run.Route == null)
             {
                 Run.Route = new RunRoute();
             }
 
-            Route = Run.Route;
-
-            json = JsonSerializer.Serialize(Route);
+            json = JsonSerializer.Serialize(Run.Route);
         }
-
-        //public async void ClickEvent()
-        //{
-        //    //await JsRunTime.InvokeVoidAsync("Main.tester");
-        //    //await JsRunTime.InvokeVoidAsync("Main.MapEditor.onMapClick");
-
-        //}
-
     }
-
 }
