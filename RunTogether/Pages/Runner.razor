@@ -20,7 +20,7 @@
     </div>
 </div>
 
-<RadzenButton Click="@checkstages" Text="Tjek stage" Style="margin-bottom: 20px;" />
+<RadzenButton Click="@CheckCode" Text="Tjek kode" Style="margin-bottom: 20px;" />
 
 
 <div class="row @startRunCSS">
@@ -29,7 +29,7 @@
         <RadzenButton Click="@(async () => { StartRun(); })" Text="Start Løb" ButtonStyle="ButtonStyle.Success" Style="margin-bottom: 20px; margin-right: 10px;" Disabled="@buttonDisabled" />
         <RadzenButton Click="@(() => { stopWatchActive = false; })" Text="Pause" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
         <RadzenButton Click="@(() => { StopWatch(); })" Text="Fortsæt" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
-        <RadzenButton Click="@(() => { stopWatchActive = false; DisplayResult(); })" Text="Stop Løb" ButtonStyle="ButtonStyle.Danger" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
+        <RadzenButton Click="@(() => { stopWatchActive = false; DisplayResult(); activeRunner.RunningTime = stopWatchValue; UpdateDatabase(RunningStatus.Completed); })" Text="Stop Løb" ButtonStyle="ButtonStyle.Danger" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
         <p>Løbetid: @stopWatchValue</p>
     </div>
 </div>

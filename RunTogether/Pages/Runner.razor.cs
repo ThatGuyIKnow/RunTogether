@@ -22,12 +22,14 @@ namespace RunTogether.Pages
         private string qrCode = "";
         private Run assignedRun = new Run();
         private List<Stage> assignedStages = new List<Stage>();
-        //private List<Stage> allStages = new List<Stage>();
         private string runnerName = "";
+        private int runnerID;
+        private Stage activeStage = new Stage();
+        private StageAssignment activeRunner = new StageAssignment();
 
         private const string HideCss = "display-none";
         private string cameraCSS = "";
-        private string startRunCSS = ""; //kom ihåg att ändra detta til hidecss
+        private string startRunCSS = HideCss; 
         private string displayResultCSS = HideCss;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -44,9 +46,9 @@ namespace RunTogether.Pages
                                         .Where(r => r.ID == currentUser.RunId)
                                         .Include(r => r.Route)
                                         .ThenInclude(rr => rr.Stages)
+                                        .ThenInclude(s => s.AssignedRunners)
+                                        .ThenInclude(a => a.Runner)
                                         .FirstOrDefaultAsync();
-                    //assignedStages = await dbContext.Stages.Where(s => s.Runner == currentUser).ToListAsync();
-                    //allStages = await dbContext.Stages.Where(s => s.RunRouteId == assignedRun.Route.RunRouteId).ToListAsync();
 
                     foreach (Stage stage in assignedRun.Route.Stages)
                     {
@@ -59,67 +61,62 @@ namespace RunTogether.Pages
                         }
                     }
 
-                    //foreach (Stage stage in allStages)
-                    //{
-                    //    foreach (StageAssignment runner in stage.AssignedRunners)
-                    //    {
-                    //        if (runner.RunnerId == currentUser.RunnerId)
-                    //        {
-                    //            assignedStages.Add(stage);
-                    //        }
-                    //    }
-                    //}
-
                     runnerName = currentUser.FirstName;
+                    runnerID = currentUser.RunnerId;
                 }
                 StateHasChanged();
             }
         }
 
-        public async void checkstages()
-        {
-            foreach (Stage stage in assignedStages)
-            {
-                Debug.WriteLine(stage.StageId);
-            }
-        }
+        //public void CheckStages()
+        //{             
+        //    foreach (Stage stage in assignedStages)
+        //    {
+        //        Debug.WriteLine("inside checkstage");
+        //        Debug.WriteLine(stage.StageId);
+        //    }
+        //}
 
         public async void CheckCode()
         {
-            Stage activeStage = new Stage(); //Runner activeRunner = new Runner();
-            activeStage = assignedRun.GetCurrentStage(); //activeRunner = assignedRun.GetCurrentRunner();
+            activeStage = assignedRun.GetCurrentStage();
+            activeRunner = activeStage.GetCurrentRunner();
 
             if (assignedRun.QRString.Equals(qrCode))
             {
-                bool hasActiveStage = false; //isActiveRunner = false;
-                foreach (Stage stage in assignedStages)
+                if (activeRunner.RunnerId == runnerID)
                 {
-                    if (stage.StageId == activeStage.StageId)
-                    {
-                        //cameraCSS = HideCss;
-                        //startRunCSS = "";
-                        hasActiveStage = true;
-                    }
-                } 
-
-                if (!hasActiveStage) await JSRuntime.InvokeVoidAsync("alert", "Dit løbesegment er endnu ikke aktivt. Venligst vent indtil forrige løber er færdig.");
+                    cameraCSS = HideCss;
+                    startRunCSS = "";
+                }
+                else
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", "Dit løbesegment er endnu ikke aktivt. Venligst vent indtil forrige løber er færdig.");
+                }
             }
-            else await JSRuntime.InvokeVoidAsync("alert", "QR-koden er ikke gyldig");
+            else
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "QR-koden er ikke gyldig.");
+            }
         }
 
         private bool buttonVisible = false;
         private bool buttonDisabled = false;
         public async void StartRun()
         {
-            //bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Er du sikker på at du vil starte dit løb?");
+            activeStage = assignedRun.GetCurrentStage();
+            activeRunner = activeStage.GetCurrentRunner();
 
-            var confirmResult = await dialogService.Confirm("Er du sikker?", "Start løb", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nej" });
+            var confirmResult = await dialogService.Confirm("Er du sikker?", "Start løb", new ConfirmOptions() 
+                                                            { OkButtonText = "Ja", CancelButtonText = "Nej" });
 
             if (confirmResult.HasValue && confirmResult.Value)
             {
                 StopWatch();
                 buttonVisible = true;
                 buttonDisabled = true;
+
+                UpdateDatabase(RunningStatus.Active);
             }
             else
             {
@@ -151,6 +148,12 @@ namespace RunTogether.Pages
         {
             startRunCSS = HideCss;
             displayResultCSS = "";
+        }
+
+        public void UpdateDatabase (RunningStatus runningStatus)
+        {
+            activeRunner.Status = runningStatus;
+            dbContext.SaveChanges();
         }
     }
 }

@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using RunTogether.Areas.Identity;
 using RunTogether.Pages;
+using System.Linq;
 
 namespace RunTogether
 {
@@ -30,6 +31,21 @@ namespace RunTogether
         public List<StageAssignment> AssignedRunners { get; set; } = new List<StageAssignment>();
         public RunningStatus status { get; set; } = RunningStatus.NotStarted;
 
+        public StageAssignment GetCurrentRunner()
+        {
+            List<StageAssignment> orderedRunners = new List<StageAssignment>();
+            orderedRunners = AssignedRunners.OrderBy(a => a.Order).ToList();
+
+            if (orderedRunners.Exists(o => o.Status == RunningStatus.Active))
+            {
+                return orderedRunners.Find(o => o.Status == RunningStatus.Active);
+            }
+            else
+            {
+                return orderedRunners.Find(o => o.Status == RunningStatus.NotStarted);
+            }
+        }
+
     }
 
 
@@ -40,6 +56,7 @@ namespace RunTogether
         
         public ApplicationUser Runner { get; set; }
         public int RunnerId { get; set; }
+        public TimeSpan RunningTime { get; set; }
 
         public Stage Stage { get; set; }
         public int StageId { get; set; }
@@ -53,4 +70,6 @@ namespace RunTogether
         Active,
         Completed
     }
+
+    
 }
