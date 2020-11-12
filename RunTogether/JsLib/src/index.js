@@ -24,11 +24,6 @@ export const Sidebar = new SidebarCollapseFunctionality();
 //];
 
 export const Map = new mapClass();
-export const MapEditor = new mapEditorClass();
 
 
 
-//export async function tester() {
-//    console.log("test fra index ");
-//    MapEditor.onMapClick();
-//}

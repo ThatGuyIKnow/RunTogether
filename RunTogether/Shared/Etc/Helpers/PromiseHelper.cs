@@ -5,7 +5,7 @@ namespace RunTogether.Shared.Etc.Helpers
 {
     public class PromiseHelper<T> : IDisposable
     {
-        public readonly DotNetObjectReference<PromiseHelper<T>> objRef;
+        public readonly DotNetObjectReference<PromiseHelper<T>> ObjRef;
 
         // Generic Types isn't available via JS Interop as of current, so the class needs the 
         // expected return type defined at creation
@@ -14,7 +14,7 @@ namespace RunTogether.Shared.Etc.Helpers
 
         public PromiseHelper()
         {
-            this.objRef = DotNetObjectReference.Create<PromiseHelper<T>>(this);
+            this.ObjRef = DotNetObjectReference.Create<PromiseHelper<T>>(this);
         }
 
         public void SetResolve(Action<T> resolve)
@@ -42,7 +42,7 @@ namespace RunTogether.Shared.Etc.Helpers
 
         public void Dispose()
         {
-            this.objRef?.Dispose();
+            ObjRef.Dispose();
         }
     }
 }

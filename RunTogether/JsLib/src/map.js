@@ -1,20 +1,18 @@
 ﻿
 /*Global variable for the map class*/
-let mymap, layerGroup, polyline;
+let mymap, layerGroup;
 let maxBounds1 = [51.649, 0.49]; 
 let maxBounds2 = [59.799, 18.68];  
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 
-
-
-
 /*Class for the map*/
 export class mapClass {
 
-    constructor() {
+    constructor(obj) {
 
-        console.log("from constructor!");
+        /*console.log("from constructor!");*/
 
+        this.obj = obj; 
         this.initializeMap = this.initializeMap.bind(this);
         this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
         this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
@@ -47,35 +45,46 @@ export class mapClass {
     /* A Method to add markers and lines*/
     addMarkersAndLines(obj) {
 
-        this.removeMarkersAndLines(); 
-/*        mymap.removeLayer(layerGroup); 
-*/
-        let latlngs = JSON.parse(obj).Coordinates
+        this.removeMarkersAndLines();
 
-        console.log(latlngs)
+        /*let latlngs = JSON.parse(obj).Coordinates; */
 
-        let i = 0;
-        let segNum = 0;
-        let marker;
+        let i = 0, j = 0, curvedLine, lineArray = [];
 
         /*Creating layer group and adding to map*/
         layerGroup = L.layerGroup().addTo(mymap);
 
-        /*Creating markers*/
-        for (i = 0; i < latlngs.length; i++) {
-            segNum = i + 1;
-            marker = L.marker(latlngs[i]).bindPopup('Start for segment ' + segNum +
-                '<br />Dette segment er sponseret af [SPONSOR].</p>').openPopup();
-            layerGroup.addLayer(marker);
+        /*Creates curvedlies from object with stages*/
+        for (i = 0; i < this.obj.Stages.length; i++) {
+
+            let startpoint = this.obj.Stages[i].StartPoint;
+            let endpoint = this.obj.Stages[i].EndPoint
+            let throughpoint, guidepoint;
+
+            lineArray.push('M', startpoint,);
+
+            for (j = 0; j < this.obj.Stages[i].GuidePoint.length; j++) {
+                console.log("J: " + j + " " + this.obj.Stages[i].Throughpoint[j]);
+
+                if (j < this.obj.Stages[i].Throughpoint.length) {
+                    throughpoint = this.obj.Stages[i].Throughpoint[j];
+                    guidepoint = this.obj.Stages[i].GuidePoint[j];
+                    lineArray.push('Q', guidepoint, throughpoint,);
+                } else {
+                    guidepoint = this.obj.Stages[i].GuidePoint[j];
+                    lineArray.push('Q', guidepoint, endpoint);
+                }
+
+                console.log(lineArray);
+            }
+
+            curvedLine = L.curve(lineArray, { color: 'red' }).bindPopup('Dette er noget tekst').openPopup();
+
+            layerGroup.addLayer(curvedLine).addTo(mymap); 
+
+            mymap.fitBounds(curvedLine.getBounds());
         }
-
-        /*Creating polyline and fiting the polyline and markers to the map view*/
-        polyline = L.polyline(latlngs, { color: '#db5d57' });
-        layerGroup.addLayer(polyline);
-        mymap.fitBounds(polyline.getBounds());
-
-    }   
-
+    }
 
     /* A Method to remove markers and lines*/
     removeMarkersAndLines() {

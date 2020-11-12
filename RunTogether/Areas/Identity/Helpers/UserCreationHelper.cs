@@ -113,19 +113,31 @@ namespace RunTogether.Areas.Identity.Helpers
 
         private string CreateRandomPassword(int length)
         {
-            string[] allowed_characters = new[]{"a","b","c","d","e","f","g","h",
+            string result;
+            int randOffset = 0;
+            do
+            {
+                result = CreateRandomString(length, randOffset);
+                randOffset++;
+            } while (_userManager.Users.Any(u => u.PasswordHash == result));
+            return result;
+        }
+
+        private string CreateRandomString(int length, int offset)
+        {
+            string[] allowedCharacters = new[]{"a","b","c","d","e","f","g","h",
                 "i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
                 "A","B","C","D","E","F","G", "H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y",
                 "Z","1","2","3","4","5","6","7","8","9","0", ".", ","};
             string result = "";
 
             // Not cryptographically secure, but good enough for this
-            Random rand = new Random(Environment.TickCount);
+            Random rand = new Random(Environment.TickCount + offset);
 
             for (int i = 0; i < length; i++)
             {
                 int r = rand.Next(62);
-                result += allowed_characters[r];
+                result += allowedCharacters[r];
             }
 
             return result;
