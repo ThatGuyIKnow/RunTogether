@@ -18,15 +18,16 @@ namespace RunTogether.Pages
 {
     public partial class Runner
     {
+        //Variables for storing information about the current run and runner.
         private int currentCount = 0;
         private string qrCode = "";
         private Run assignedRun = new Run();
-        private List<Stage> assignedStages = new List<Stage>();
         private string runnerName = "";
         private int runnerID;
         private Stage activeStage = new Stage();
         private StageAssignment activeRunner = new StageAssignment();
 
+        //Variables for hiding and displaying CSS.
         private const string HideCss = "display-none";
         private string cameraCSS = "";
         private string startRunCSS = HideCss; 
@@ -50,32 +51,12 @@ namespace RunTogether.Pages
                                         .ThenInclude(a => a.Runner)
                                         .FirstOrDefaultAsync();
 
-                    foreach (Stage stage in assignedRun.Route.Stages)
-                    {
-                        foreach (StageAssignment runner in stage.AssignedRunners)
-                        {
-                            if (runner.RunnerId == currentUser.RunnerId)
-                            {
-                                assignedStages.Add(stage);
-                            }
-                        }
-                    }
-
                     runnerName = currentUser.FirstName;
                     runnerID = currentUser.RunnerId;
                 }
                 StateHasChanged();
             }
         }
-
-        //public void CheckStages()
-        //{             
-        //    foreach (Stage stage in assignedStages)
-        //    {
-        //        Debug.WriteLine("inside checkstage");
-        //        Debug.WriteLine(stage.StageId);
-        //    }
-        //}
 
         public async void CheckCode()
         {

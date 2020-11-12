@@ -17,11 +17,15 @@
         <h3>Tryk på knappen for at scanne QR-koden på Børnetelefonen.</h3>
         <p>Efter koden er scannet kan du starte dit løb.</p>
         <QRScanner OnCodeScanned="((v) => { qrCode = v; CheckCode(); })" />
+        <br />
+        <p>Hvis du ikke kan scanne QR-koden, kan du indtaste den her.</p>
+        <RadzenTemplateForm TItem="string">
+            <RadzenTextBox Placeholder="Indtast QR-kode" Style="margin-bottom: 20px; width: 200px" @bind-Value="qrCode" />
+            <RadzenButton Text="Næste" Click="() => CheckCode()"></RadzenButton>
+        </RadzenTemplateForm>
+        
     </div>
 </div>
-
-@*<RadzenButton Click="@CheckCode" Text="Tjek kode" Style="margin-bottom: 20px;" />*@
-
 
 <div class="row @startRunCSS">
     <div class="col">
