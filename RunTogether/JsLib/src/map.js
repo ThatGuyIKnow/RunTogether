@@ -47,32 +47,21 @@ export class mapClass {
 
         this.removeMarkersAndLines();
 
-        /*      let latlngs = JSON.parse(obj).Coordinates; */
-        /*      console.log(latlngs);                       */
+        /*let latlngs = JSON.parse(obj).Coordinates; */
 
-        let i = 0, marker;
+        let i = 0, j = 0, curvedLine, lineArray = [];
 
         /*Creating layer group and adding to map*/
         layerGroup = L.layerGroup().addTo(mymap);
 
-        /*Creating startpoint and endpoint*//*
-        for (i = 0; i < latlngs.length; i++) {
-            segNum = i + 1;
-            marker = L.marker(latlngs[i]).bindPopup('Start for segment ' + segNum +
-                '<br />Dette segment er sponseret af [SPONSOR].</p>').openPopup();
-            layerGroup.addLayer(marker);
-        }
-*/
-
-        let j =0, k=0, curvedLine, linesArray = [];
-
+        /*Creates curvedlies from object with stages*/
         for (i = 0; i < this.obj.Stages.length; i++) {
 
             let startpoint = this.obj.Stages[i].StartPoint;
             let endpoint = this.obj.Stages[i].EndPoint
             let throughpoint, guidepoint;
 
-            linesArray.push('M', startpoint,);
+            lineArray.push('M', startpoint,);
 
             for (j = 0; j < this.obj.Stages[i].GuidePoint.length; j++) {
                 console.log("J: " + j + " " + this.obj.Stages[i].Throughpoint[j]);
@@ -80,18 +69,20 @@ export class mapClass {
                 if (j < this.obj.Stages[i].Throughpoint.length) {
                     throughpoint = this.obj.Stages[i].Throughpoint[j];
                     guidepoint = this.obj.Stages[i].GuidePoint[j];
-                    linesArray.push('Q', guidepoint, throughpoint,);
+                    lineArray.push('Q', guidepoint, throughpoint,);
                 } else {
                     guidepoint = this.obj.Stages[i].GuidePoint[j];
-                    linesArray.push('Q', guidepoint, endpoint);
+                    lineArray.push('Q', guidepoint, endpoint);
                 }
 
-                console.log(linesArray);
+                console.log(lineArray);
             }
 
-            curvedLine = L.curve(linesArray, { color: 'red' }).bindPopup('Dette er noget tekst').openPopup().addTo(mymap);
+            curvedLine = L.curve(lineArray, { color: 'red' }).bindPopup('Dette er noget tekst').openPopup();
 
+            layerGroup.addLayer(curvedLine).addTo(mymap); 
 
+            mymap.fitBounds(curvedLine.getBounds());
         }
     }
 
