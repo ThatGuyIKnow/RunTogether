@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
@@ -21,7 +22,7 @@ namespace RunTogether.Areas.Identity.Helpers
         private UserManager<ApplicationUser> _userManager { get; }
         private ApplicationDbContext _dbContext { get; }
         private IServiceScope _scope { get; }
-        
+
 
         public UserCreationHelper(IServiceScopeFactory scopeFactory)
         {
@@ -49,8 +50,8 @@ namespace RunTogether.Areas.Identity.Helpers
                 RunnerId = newRunnerId
             };
             IdentityResult result = await _userManager.CreateAsync(user, CreateRandomPassword(32));
-            
-            if(result.Succeeded)
+
+            if (result.Succeeded)
             {
                 try
                 {
@@ -59,7 +60,8 @@ namespace RunTogether.Areas.Identity.Helpers
                     selectedRun.IncrementRunnerId();
                     await _dbContext.SaveChangesAsync();
                     await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Runner);
-                } catch (Exception e) { return IdentityResult.Failed();}
+                }
+                catch (Exception e) { return IdentityResult.Failed(); }
             }
 
             _userManager.PasswordHasher = new PasswordHasher<ApplicationUser>();
@@ -70,11 +72,21 @@ namespace RunTogether.Areas.Identity.Helpers
 
         private IdentityResult ValidateUserInformation(string email, Run run)
         {
+            const string pattern = @"^[a-z][a-z|0-9|]*([_][a-z|0-9]+)*([.][a-z|0-9]+([_][a-z|0-9]+)*)?@[a-z][a-z|0-9|]*\.([a-z][a-z|0-9]*(\.[a-z][a-z|0-9]*)?)$";
             string newNormEmail = _userManager.NormalizeEmail(email);
-            bool isUsedEmail = run.Runners.Any(runner => 
+            bool isValidEmail = Regex.IsMatch(newNormEmail, pattern, RegexOptions.IgnoreCase);
+            bool isUsedEmail = run.Runners.Any(runner =>
                     runner.NormalizedEmail == newNormEmail);
+            bool runExists = _dbContext.Runs.Any(r => r.ID == run.ID);
             List<IdentityError> errors = new List<IdentityError>();
 
+
+            if (!isValidEmail)
+            {
+                IdentityError error = new IdentityError();
+                error.Description = "Error creating runner: Email is invalid!";
+                errors.Add(error);
+            }
 
             if (isUsedEmail)
             {
@@ -83,7 +95,7 @@ namespace RunTogether.Areas.Identity.Helpers
                 errors.Add(error);
             }
 
-            if (run == null)
+            if (!runExists)
             {
                 IdentityError error = new IdentityError();
                 error.Description = "Error creating runner: Could not find run by ID!";
@@ -101,19 +113,31 @@ namespace RunTogether.Areas.Identity.Helpers
 
         private string CreateRandomPassword(int length)
         {
-            string[] allowed_characters = new[]{"a","b","c","d","e","f","g","h",
+            string result;
+            int randOffset = 0;
+            do
+            {
+                result = CreateRandomString(length, randOffset);
+                randOffset++;
+            } while (_userManager.Users.Any(u => u.PasswordHash == result));
+            return result;
+        }
+
+        private string CreateRandomString(int length, int offset)
+        {
+            string[] allowedCharacters = new[]{"a","b","c","d","e","f","g","h",
                 "i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z",
                 "A","B","C","D","E","F","G", "H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y",
                 "Z","1","2","3","4","5","6","7","8","9","0", ".", ","};
             string result = "";
 
             // Not cryptographically secure, but good enough for this
-            Random rand = new Random(Environment.TickCount);
+            Random rand = new Random(Environment.TickCount + offset);
 
             for (int i = 0; i < length; i++)
             {
                 int r = rand.Next(62);
-                result += allowed_characters[r];
+                result += allowedCharacters[r];
             }
 
             return result;

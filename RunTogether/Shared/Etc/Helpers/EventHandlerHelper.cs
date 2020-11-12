@@ -9,7 +9,8 @@ namespace RunTogether.Shared.Etc.Helpers
         public readonly DotNetObjectReference<EventHandlerHelper> ObjRef;
 
         private readonly Dictionary<string, Action<object>> _eventHandlers = new Dictionary<string, Action<object>>();
-        
+        public Dictionary<string, Action<object>> EventHandlers => _eventHandlers;
+
         public EventHandlerHelper()
         {
             ObjRef = DotNetObjectReference.Create(this);
@@ -28,7 +29,7 @@ namespace RunTogether.Shared.Etc.Helpers
         }
 
         [JSInvokable]
-        public void Trigger(string eventTrigger, object data)
+        public void Trigger(string eventTrigger, object? data = null)
         {
             string eventTriggerNorm = eventTrigger.ToUpper();
             try
