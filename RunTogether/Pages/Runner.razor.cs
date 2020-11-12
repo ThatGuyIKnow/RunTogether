@@ -79,8 +79,7 @@ namespace RunTogether.Pages
 
         public async void CheckCode()
         {
-            activeStage = assignedRun.GetCurrentStage();
-            activeRunner = activeStage.GetCurrentRunner();
+            SetActiveStageRunner();
 
             if (assignedRun.QRString.Equals(qrCode))
             {
@@ -104,8 +103,7 @@ namespace RunTogether.Pages
         private bool buttonDisabled = false;
         public async void StartRun()
         {
-            activeStage = assignedRun.GetCurrentStage();
-            activeRunner = activeStage.GetCurrentRunner();
+            SetActiveStageRunner();
 
             var confirmResult = await dialogService.Confirm("Er du sikker?", "Start løb", new ConfirmOptions() 
                                                             { OkButtonText = "Ja", CancelButtonText = "Nej" });
@@ -154,6 +152,12 @@ namespace RunTogether.Pages
         {
             activeRunner.Status = runningStatus;
             dbContext.SaveChanges();
+        }
+
+        public void SetActiveStageRunner()
+        {
+            activeStage = assignedRun.GetCurrentStage();
+            activeRunner = activeStage.GetCurrentRunner();
         }
     }
 }
