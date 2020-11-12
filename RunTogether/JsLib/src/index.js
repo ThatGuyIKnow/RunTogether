@@ -23,17 +23,15 @@ let Route = {
 	Stages: [
 		{
 			StartPoint: [57.0405, 9.9101],
-			GuidePoint: [[57.0383, 9.9057], [57.0289, 9.9122]],
+			/*			GuidePoint: [[57.0383, 9.9057], [57.0289, 9.9122]], */
 			Throughpoint: [[57.0342, 9.9089]],
 			EndPoint: [57.0257, 9.9062],
-			StageNotStarted: false,
-			Stageactive: true,
-			Stagecompleted: false,
-			Runner: [{ Status: "completed", Name: "Casper", RunnerID: 14 },
-					   { Status: "active", Name: "Puma", RunnerID: 15 }],
+			Status: "Active",
+			Runner: [{ Status: "completed", Name: "Casper", Order: 0 },
+				     { Status: "active", Name: "Puma", Order: 1 }],
 			Sponsor: {
 				Name: "Lejenregnskabschef.dk",
-				PictureURL: "https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png",
+				/*PictureURL: "https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png",*/
 				Message: "Vi er stolte sponsorer"
 			}
 		}
