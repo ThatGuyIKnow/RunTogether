@@ -59,6 +59,7 @@ namespace RunTogether.Pages.AdminPages
             rows = selectedStage.AssignedRunners.Count;
 
             //Hvis nul løbere på valgte stage lav ny tom løber og tæl rows op
+            
             if(rows == 0)
             {
                 selectedStage.AssignedRunners.Add(new StageAssignment());
@@ -105,6 +106,12 @@ namespace RunTogether.Pages.AdminPages
         {
             selectedStage.AssignedRunners.Add(new StageAssignment());
             rows++;
+        }
+
+        void reciveFromChild(int stageId)
+        {
+            selectedStageId = stageId;
+            StateHasChanged();
         }
 
     }

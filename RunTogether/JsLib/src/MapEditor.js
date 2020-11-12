@@ -185,6 +185,13 @@ export class mapEditorClass {
 
         polyline.on('click', () => {
             console.log("from line");
+
+            this.dotnetHelper.invokeMethodAsync('Trigger', 'SendStageId',
+                JSON.stringify(
+                    {
+                        StageId: 4
+                    }));
+
         })
     }
 

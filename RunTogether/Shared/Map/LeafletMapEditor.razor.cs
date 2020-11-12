@@ -21,6 +21,8 @@ namespace RunTogether.Shared.Map
         [Parameter]
         public Run Run { get; set; }
 
+        [Parameter] public EventCallback<int> sendToParent { get; set; }
+
         public string json;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -40,7 +42,16 @@ namespace RunTogether.Shared.Map
                     //StateHasChanged();
                     //JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", json);
                 });
-                
+
+                //event called from JS
+                Handler.AddHandler("SendStageId", (evt) => {
+                    //Deserialize and cast to a Stage object. 
+                    Stage NewStage = JsonSerializer.Deserialize<Stage>(evt);
+
+                    Console.WriteLine(NewStage.StageId);
+                    sendToParent.InvokeAsync(NewStage.StageId);
+                });
+
                 await JsRunTime.InvokeVoidAsync("Main.MapEditor.initializeMap", Handler.ObjRef);
                 
                 StateHasChanged();
