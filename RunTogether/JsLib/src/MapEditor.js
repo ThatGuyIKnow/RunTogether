@@ -16,9 +16,6 @@ let lineIds = {};
 export class mapEditorClass {
 
     constructor() {
-
-        console.log("from constructor!");
-
         this.initializeMap = this.initializeMap.bind(this);
         this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
         this.loadRoute = this.loadRoute.bind(this); 
@@ -29,14 +26,14 @@ export class mapEditorClass {
     /* A Method that initializes the map */
     initializeMap(objRef) {
 
+        //Bind to event trigger from C#
         this.dotnetHelper = objRef;
 
         /*Pointing myeditmap to leaflet map and setting the viewpoint and start zoom point*/
         myeditmap = L.map('mapid', { doubleClickZoom: false}).setView([55.964, 9.992], 6.5);
-
         myeditmap.setMaxBounds(bounds);
 
-        myeditmap.addEventListener('dblclick', e => this.onMapClick(e));
+        myeditmap.on('dblclick', e => this.addNewMarker(e));
 
         /* Appling tile layer to the map*/
         L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
@@ -55,16 +52,18 @@ export class mapEditorClass {
     }
 
     loadRoute(serialData) {
+        //clear point array. 
         pointArray = [];
+        
+        //Load stages into an array        
         let json = JSON.parse(serialData);
-        console.log('Here: '); 
-        console.log(json);
         let stages = [];
         stages = json.Stages;
 
+        //Convert stages to point array. 
+        //Only include start point in first stage, since start and endpoint overlap
         stages.forEach((element, index) => {
             if (index == 0) {
-                console.log("index was one");
                 pointArray.push({ lat: element.StartPoint.X, lng: element.StartPoint.Y });
                 pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
             }
@@ -74,8 +73,6 @@ export class mapEditorClass {
         });
 
         this.drawRoute();
-
-        console.log(pointArray); 
     }
 
     /* A Method to remove markers and lines*/
@@ -99,8 +96,10 @@ export class mapEditorClass {
         for (i = 0; i < pointArray.length - 1; i++) {
             polyline = L.polyline(pointArray.slice(i, i + 2), { color: '#db5d57', weight: 6 });
             layerGroup.addLayer(polyline);
-            lineIds[layerGroup.getLayerId(polyline)] = i;
+            //Assigning markers an ID by "exploiting" layergroups. Not in use yet.
+            //lineIds[layerGroup.getLayerId(polyline)] = i;
 
+            //Add functionallity to lines
             this.interactableLine(polyline);
         }
 
@@ -111,17 +110,21 @@ export class mapEditorClass {
         for (i = 0; i < pointArray.length; i++) {
             marker = L.circleMarker(pointArray[i], { bubblingMouseEvents: false, fillOpacity: 1 });
             layerGroup.addLayer(marker);
+            //Assigning markers an ID by "exploiting" layergroups 
             pointIds[layerGroup.getLayerId(marker)] = i;
 
+            //Add functionallity to markers
             this.moveableMarker(myeditmap, marker);
         }
     }
         
 
-    onMapClick(e) {
+    addNewMarker(e) {
         pointArray.push(e.latlng);
         this.drawRoute();
-        console.log(pointArray);
+
+        //if there are more than 1 point (wich means at least one start- and endpoint), 
+        //send a segment back to blazor, for saving to DB
         if (pointArray.length > 1) {
             this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
                 {
@@ -134,15 +137,18 @@ export class mapEditorClass {
 
         
     moveableMarker(map, marker) {
+        //constantly sets the markers pos to the curser pos
         function trackCursor(evt) {
             marker.setLatLng(evt.latlng);
         }
 
+        //Drag marker 
         marker.on("mousedown", () => {
             map.dragging.disable();
             map.on("mousemove", trackCursor);
         })
 
+        //Stop dragging marker 
         marker.on("mouseup", () => {
             map.dragging.enable();
             map.off("mousemove", trackCursor);
@@ -153,7 +159,7 @@ export class mapEditorClass {
     }
 
     markerDragEnd(marker) {
-        console.log("dragEnd")
+        //push new coordinates to array and redraw route. 
         pointArray[pointIds[layerGroup.getLayerId(marker)]] = marker.getLatLng();
         this.drawRoute();
         }
@@ -176,7 +182,9 @@ export class mapEditorClass {
             polyline.setStyle({ color: '#db5d57', weight: 6  });
         })
 
-        polyline.on('click', () => console.log("from line"))
+        polyline.on('click', () => {
+            console.log("from line");
+        })
     }
 
  }
