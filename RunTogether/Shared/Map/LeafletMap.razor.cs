@@ -40,8 +40,7 @@ namespace RunTogether.Shared.Map
         protected override void OnParametersSet()
         {
             
-            json = JsonConvert.SerializeObject(new { Coordinates = Route.ViewerSerializer() });
-
+            json = JsonConvert.SerializeObject(new { Coordinates = Route.ToJsonSerializableViewer() });
         }
 
 

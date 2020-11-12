@@ -31,9 +31,10 @@ namespace RunTogether
 
 
 
-        public Dictionary<string, object> ViewerSerializer()
+        public Dictionary<string, object> ToJsonSerializableViewer()
         {
-            Dictionary<string, object> data = new Dictionary<string, object> {["Status"] = Status};
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data["Status"] = Enum.GetName(typeof(RunningStatus), Status) ?? string.Empty;
 
             if (StartPoint != null)
                 data["StartPoint"] = new List<float>(2) { StartPoint.X, StartPoint.Y };
@@ -49,7 +50,7 @@ namespace RunTogether
             List<Dictionary<string, object>> serializedRunners = new List<Dictionary<string, object>>();
             AssignedRunners.ForEach(runner =>
             {
-                serializedRunners.Add(runner.ViewerSerializer());
+                serializedRunners.Add(runner.ToJsonSerializableViewer());
             });
 
             return data;
@@ -70,11 +71,11 @@ namespace RunTogether
 
         public RunningStatus Status { get; set; } = RunningStatus.NotStarted;
 
-        public Dictionary<string, object> ViewerSerializer()
+        public Dictionary<string, object> ToJsonSerializableViewer()
         {
             return new Dictionary<string, object>()
             {
-                {"Status", Status},
+                {"Status", Enum.GetName(typeof(RunningStatus), Status) ?? string.Empty},
                 {"Name", Runner.FirstName},
                 {"Order", Order}
             };
