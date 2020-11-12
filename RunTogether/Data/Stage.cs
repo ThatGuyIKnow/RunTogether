@@ -42,7 +42,7 @@ namespace RunTogether
         
         public ApplicationUser Runner { get; set; }
         public int RunnerId { get; set; }
-
+        [JsonIgnore]
         public Stage Stage { get; set; }
         public int StageId { get; set; }
 
