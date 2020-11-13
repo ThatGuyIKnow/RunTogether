@@ -5,7 +5,7 @@ let maxBounds1 = [51.649, 0.49];
 let maxBounds2 = [59.799, 18.68];
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 let pointArray = [];
-let pointIds = {}; 
+let pointIds = {};
 let lineIds = {};
 
 
@@ -65,15 +65,20 @@ export class mapEditorClass {
         //Convert stages to point array. 
         //Only include start point in first stage, since start and endpoint overlap
         stages.forEach((element, index) => {
-            if (index == 0) {
-                pointArray.push({ lat: element.StartPoint.X, lng: element.StartPoint.Y });
-                pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
-            }
-            else {
-                pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
-            }
-        });
+            //if (index == 0) {
+                pointArray.push('M', [element.StartPoint.X, element.StartPoint.Y ]);
+                pointArray.push('L', [element.EndPoint.X, element.EndPoint.Y ]);
 
+                //pointArray.push({ lat: element.StartPoint.X, lng: element.StartPoint.Y });
+                //pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
+            //}
+            //else {
+                //pointArray.push('L', [element.EndPoint.X, element.EndPoint.Y ]);
+
+                //pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
+            //}
+        });
+        console.log(pointArray); 
         this.drawRoute();
     }
 
@@ -96,8 +101,10 @@ export class mapEditorClass {
         let marker;
 
         //Create polyline
-        for (i = 0; i < pointArray.length - 1; i++) {
-            polyline = L.polyline(pointArray.slice(i, i + 2), { color: '#db5d57', weight: 6 });
+        for (i = 0; i < pointArray.length - 1; i+=4) {
+            //polyline = L.polyline(pointArray.slice(i, i + 2), { color: '#db5d57', weight: 6 });
+            console.log(pointArray.slice(i, i + 4)); 
+            polyline = L.curve(pointArray.slice(i, i + 4), { color: '#db5d57', weight: 6 });
             layerGroup.addLayer(polyline);
             //Assigning markers an ID by "exploiting" layergroups. Not in use yet.
             //lineIds[layerGroup.getLayerId(polyline)] = i;
@@ -106,8 +113,9 @@ export class mapEditorClass {
             this.interactableLine(polyline);
         }
 
-        //Create markers
-        for (i = 0; i < pointArray.length; i++) {
+        ////Create markers
+        for (i = 1; i < pointArray.length; i += 4) {
+            console.log(pointArray[i]);  
             marker = L.circleMarker(pointArray[i], { bubblingMouseEvents: false, fillOpacity: 1 });
             layerGroup.addLayer(marker);
             //Assigning markers an ID by "exploiting" layergroups 
