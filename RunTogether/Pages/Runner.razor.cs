@@ -60,19 +60,21 @@ namespace RunTogether.Pages
 
         public async void CheckCode()
         {
-            SetActiveStageRunner();
+            //Finds the active stage and runner.
+            SetActiveStageAndRunner();
 
+            //Checks that the QR-code is correct.
             if (assignedRun.QRString.Equals(qrCode))
             {
-                if (activeRunner.RunnerId == runnerID)
+                //Sets the previous runner's status to Completed, if they still have a status of Active.
+                if (activeRunner.RunnerId != runnerID)
                 {
-                    cameraCSS = HideCss;
-                    startRunCSS = "";
+                    UpdateDatabase(RunningStatus.Completed);
                 }
-                else
-                {
-                    await JSRuntime.InvokeVoidAsync("alert", "Dit løbesegment er endnu ikke aktivt. Venligst vent indtil forrige løber er færdig.");
-                }
+
+                //Hides the camera CSS and displays the start run CSS.
+                cameraCSS = HideCss;
+                startRunCSS = "";
             }
             else
             {
@@ -84,7 +86,7 @@ namespace RunTogether.Pages
         private bool buttonDisabled = false;
         public async void StartRun()
         {
-            SetActiveStageRunner();
+            SetActiveStageAndRunner();
 
             var confirmResult = await dialogService.Confirm("Er du sikker?", "Start løb", new ConfirmOptions() 
                                                             { OkButtonText = "Ja", CancelButtonText = "Nej" });
@@ -129,13 +131,13 @@ namespace RunTogether.Pages
             displayResultCSS = "";
         }
 
-        public void UpdateDatabase (RunningStatus runningStatus)
+        public async void UpdateDatabase (RunningStatus runningStatus)
         {
             activeRunner.Status = runningStatus;
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
         }
 
-        public void SetActiveStageRunner()
+        public void SetActiveStageAndRunner()
         {
             activeStage = assignedRun.GetCurrentStage();
             activeRunner = activeStage.GetCurrentRunner();
