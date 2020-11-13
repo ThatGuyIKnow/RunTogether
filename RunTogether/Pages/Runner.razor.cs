@@ -66,10 +66,18 @@ namespace RunTogether.Pages
             //Checks that the QR-code is correct.
             if (assignedRun.QRString.Equals(qrCode))
             {
-                //Sets the previous runner's status to Completed, if they still have a status of Active.
-                if (activeRunner.RunnerId != runnerID)
+                if (activeRunner == null || activeRunner.RunnerId != runnerID)
                 {
-                    UpdateDatabase(RunningStatus.Completed);
+                    //Checks if the runner has already completed the run.
+                    if (activeStage.AssignedRunners.Find(a => a.RunnerId == runnerID).Status == RunningStatus.Completed)
+                    { 
+                        await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
+                    }
+                    else
+                    {
+                        //Sets the previous runner's status to Completed, if they still have a status of Active.
+                        UpdateDatabase(RunningStatus.Completed);
+                    }
                 }
 
                 //Hides the camera CSS and displays the start run CSS.
