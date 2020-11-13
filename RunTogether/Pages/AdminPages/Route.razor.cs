@@ -19,7 +19,7 @@ namespace RunTogether.Pages.AdminPages
         //Id for the selected run
         [Parameter] public int id { get; set; }
         //Id for det valgte stage på ruten
-        [Parameter] public int selectedStageId { get; set; } = 4;
+        [Parameter] public int selectedStageId { get; set; } = -1;
 
         //variable til overførte stage
         Stage selectedStage = new Stage();
@@ -47,24 +47,10 @@ namespace RunTogether.Pages.AdminPages
                     .ThenInclude(r => r.Stages)
                         .ThenInclude(s => s.AssignedRunners)
                 .FirstOrDefault();
-            
-            selectedStage = run.Route.Stages
-                .Where(s => s.StageId == selectedStageId)
-                .FirstOrDefault();
 
-            //sortere listen af assignedRunners på Order nr. lille til stor
-            selectedStage.AssignedRunners.OrderBy(o => o.Order).ToList();
+            //indlæser listen af løbere til det valgte løb
+            loadRunnerList();
 
-            //tæler mængden af løbere på vlagte stage
-            rows = selectedStage.AssignedRunners.Count;
-
-            //Hvis nul løbere på valgte stage lav ny tom løber og tæl rows op
-            
-            if(rows == 0)
-            {
-                selectedStage.AssignedRunners.Add(new StageAssignment());
-                rows++;
-            }
         }
 
         //Bliver kørt ved ændring af værdi i dropdown box
@@ -111,7 +97,32 @@ namespace RunTogether.Pages.AdminPages
         void reciveFromChild(int stageId)
         {
             selectedStageId = stageId;
+            loadRunnerList();
             StateHasChanged();
+        }
+
+        void loadRunnerList()
+        {
+            if (selectedStageId != -1)
+            {
+
+                selectedStage = run.Route.Stages
+                    .Where(s => s.StageId == selectedStageId)
+                    .FirstOrDefault();
+
+                //sortere listen af assignedRunners på Order nr. lille til stor
+                selectedStage.AssignedRunners.OrderBy(o => o.Order).ToList();
+
+                //tæler mængden af løbere på vlagte stage
+                rows = selectedStage.AssignedRunners.Count;
+
+                //Hvis nul løbere på valgte stage lav ny tom løber og tæl rows op
+                if (rows == 0)
+                {
+                    selectedStage.AssignedRunners.Add(new StageAssignment());
+                    rows++;
+                }
+            }
         }
 
     }
