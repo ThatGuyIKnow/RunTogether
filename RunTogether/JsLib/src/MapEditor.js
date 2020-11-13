@@ -62,22 +62,12 @@ export class mapEditorClass {
         let stages = [];
         stages = json.Stages;
 
-        //Convert stages to point array. 
-        //Only include start point in first stage, since start and endpoint overlap
+        //Convert stages to line array
         stages.forEach((element, index) => {
-            //if (index == 0) {
-                pointArray.push('M', [element.StartPoint.X, element.StartPoint.Y ]);
-                pointArray.push('L', [element.EndPoint.X, element.EndPoint.Y ]);
-
-                //pointArray.push({ lat: element.StartPoint.X, lng: element.StartPoint.Y });
-                //pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
-            //}
-            //else {
-                //pointArray.push('L', [element.EndPoint.X, element.EndPoint.Y ]);
-
-                //pointArray.push({ lat: element.EndPoint.X, lng: element.EndPoint.Y });
-            //}
+            pointArray.push(['M', [element.StartPoint.X, element.StartPoint.Y], 'L', [element.EndPoint.X, element.EndPoint.Y]]);
         });
+        console.log(stages);
+        console.log("diff");
         console.log(pointArray); 
         this.drawRoute();
     }
@@ -101,10 +91,10 @@ export class mapEditorClass {
         let marker;
 
         //Create polyline
-        for (i = 0; i < pointArray.length - 1; i+=4) {
+        for (i = 0; i < pointArray.length; i++) {
             //polyline = L.polyline(pointArray.slice(i, i + 2), { color: '#db5d57', weight: 6 });
-            console.log(pointArray.slice(i, i + 4)); 
-            polyline = L.curve(pointArray.slice(i, i + 4), { color: '#db5d57', weight: 6 });
+            //console.log(pointArray[i]); 
+            polyline = L.curve(pointArray[i], { color: '#db5d57', weight: 6 });
             layerGroup.addLayer(polyline);
             //Assigning markers an ID by "exploiting" layergroups. Not in use yet.
             //lineIds[layerGroup.getLayerId(polyline)] = i;
@@ -114,9 +104,19 @@ export class mapEditorClass {
         }
 
         ////Create markers
-        for (i = 1; i < pointArray.length; i += 4) {
-            console.log(pointArray[i]);  
-            marker = L.circleMarker(pointArray[i], { bubblingMouseEvents: false, fillOpacity: 1 });
+        for (i = 0; i < pointArray.length; i++) {
+            //console.log(i);  
+            //console.log(pointArray[i]);  
+            if (i == 0) {
+                marker = L.circleMarker(pointArray[i][1], { bubblingMouseEvents: false, fillOpacity: 0.1 });
+                layerGroup.addLayer(marker);
+                //Assigning markers an ID by "exploiting" layergroups 
+                pointIds[layerGroup.getLayerId(marker)] = i;
+
+                //Add functionallity to markers
+                this.moveableMarker(myeditmap, marker);
+            }
+            marker = L.circleMarker(pointArray[i][3], { bubblingMouseEvents: false, fillOpacity: 1 });
             layerGroup.addLayer(marker);
             //Assigning markers an ID by "exploiting" layergroups 
             pointIds[layerGroup.getLayerId(marker)] = i;
@@ -124,11 +124,14 @@ export class mapEditorClass {
             //Add functionallity to markers
             this.moveableMarker(myeditmap, marker);
         }
+
+
     }
         
 
     addNewMarker(e) {
-        pointArray.push(e.latlng);
+        let lastLine = pointArray.length - 1;
+        pointArray.push(['M', [pointArray[lastLine][3][0], pointArray[lastLine][3][1]], 'L', [e.latlng.lat, e.latlng.lng]]);
         this.drawRoute();
 
         //if there are more than 1 point (wich means at least one start- and endpoint), 
@@ -136,9 +139,9 @@ export class mapEditorClass {
         if (pointArray.length > 1) {
             this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
                 JSON.stringify(
-                {
-                    StartPoint: { X: pointArray[pointArray.length - 2].lat, Y: pointArray[pointArray.length - 2].lng },
-                    EndPoint: { X: pointArray[pointArray.length - 1].lat, Y: pointArray[pointArray.length - 1].lng }
+                    {
+                        StartPoint: { X: pointArray[lastLine][1][0], Y: pointArray[lastLine][1][0] },
+                        EndPoint: { X: pointArray[lastLine][3][0], Y: pointArray[lastLine][3][0] }
                 }));
         }
 
