@@ -36,7 +36,7 @@ let Route = {
 			}
 		}
 	]
-}
+}	
 /*let i, stagenumber = 0;
 for (i = 0; i < Route.Stages.length; i++) {
 	stagenumber++;

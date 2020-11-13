@@ -9,10 +9,6 @@ let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 export class mapClass {
 
     constructor() {
-
-        /*console.log("from constructor!");*/
-
-        /*        this.obj = obj; */
         this.initializeMap = this.initializeMap.bind(this);
         this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
         this.calulateControlPoints = this.calulateControlPoints.bind(this); 
@@ -59,7 +55,6 @@ export class mapClass {
         layerGroup = L.layerGroup().addTo(mymap);
 
        /*Creates curvedlies from object with stages*/
-
         /* for (i = 0; i < this.obj.Stages.length; i++) {
 
             let startpoint = this.obj.Stages[i].StartPoint;
@@ -68,9 +63,9 @@ export class mapClass {
 
             lineArray.push('M', startpoint,);
 
-            for (j = 0; j < this.obj.Stages[i].GuidePoint.length; j++) {
+             for (j = 0; j < this.obj.Stages[i].Throughpoint.length; j++) {
 
-                if (j < this.obj.Stages[i].Throughpoint.length) {
+                if (j == this.obj.Stages[i].Throughpoint.length) {
                     throughpoint = this.obj.Stages[i].Throughpoint[j];
                     guidepoint = this.obj.Stages[i].GuidePoint[j];
                     lineArray.push('Q', guidepoint, throughpoint,);
@@ -80,7 +75,7 @@ export class mapClass {
                 }
 
                 console.log(lineArray);
-            }
+             }
 
             for (n = 0; n > this.obj.Stages[i].GuidePoint[j]) {
 
@@ -98,16 +93,16 @@ export class mapClass {
 
             calulateControlPoints(latlng1, latlng2); 
 
-        }*/
-
+        }
+*/
         let latlng1 = [57.0405, 9.9101];
         let latlng2 = [57.0257, 9.9062]; 
 
         let latlng3 = [57.0257, 9.9062]; 
         let latlng4 = [57.0039, 9.9027];
 
-        let midtpunkt1 = this.calulateControlPoints(latlng1, latlng2); 
-        let midtpunkt2 = this.calulateControlPoints(latlng3, latlng4); 
+        let midtpunkt1 = this.calulateControlPoints(latlng1, latlng2, "right"); 
+        let midtpunkt2 = this.calulateControlPoints(latlng3, latlng4, "left"); 
 
         let curvedPath = L.curve(
             [
@@ -118,17 +113,22 @@ export class mapClass {
 
     }
 
-    calulateControlPoints(latlng1, latlng2) {
+    calulateControlPoints(latlng1, latlng2, direction) {
         let offsetX = latlng2[1] - latlng1[1],
             offsetY = latlng2[0] - latlng1[0];
 
         let r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)),
             theta = Math.atan2(offsetY, offsetX);
 
-        let thetaOffset = (10 / 10);
+        let thetaOffset = (11 / 10);
 
-        let r2 = (r / 2) / (Math.cos(thetaOffset)),
+        let r2 = (r / 2) / (Math.cos(thetaOffset)), theta2; 
+
+        if (direction == "right") {
             theta2 = theta + thetaOffset;
+        } else if (direction == "left") {
+            theta2 = theta - thetaOffset;
+        }
 
         let  midpointX = (r2 * Math.cos(theta2)) + latlng1[1],
              midpointY = (r2 * Math.sin(theta2)) + latlng1[0];
