@@ -108,7 +108,7 @@ export class mapEditorClass {
             //console.log(i);  
             //console.log(pointArray[i]);  
             if (i == 0) {
-                marker = L.circleMarker(pointArray[i][1], { bubblingMouseEvents: false, fillOpacity: 0.1 });
+                marker = L.circleMarker(pointArray[i][1], { bubblingMouseEvents: false, fillOpacity: 1 });
                 layerGroup.addLayer(marker);
                 //Assigning markers an ID by "exploiting" layergroups 
                 pointIds[layerGroup.getLayerId(marker)] = i;
@@ -134,16 +134,14 @@ export class mapEditorClass {
         pointArray.push(['M', [pointArray[lastLine][3][0], pointArray[lastLine][3][1]], 'L', [e.latlng.lat, e.latlng.lng]]);
         this.drawRoute();
 
-        //if there are more than 1 point (wich means at least one start- and endpoint), 
+        
         //send a segment back to blazor, for saving to DB
-        if (pointArray.length > 1) {
-            this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
-                JSON.stringify(
-                    {
-                        StartPoint: { X: pointArray[lastLine][1][0], Y: pointArray[lastLine][1][0] },
-                        EndPoint: { X: pointArray[lastLine][3][0], Y: pointArray[lastLine][3][0] }
+        this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
+            JSON.stringify(
+                {
+                    StartPoint: { X: pointArray[lastLine + 1][1][0], Y: pointArray[lastLine + 1][1][1] },
+                    EndPoint: { X: pointArray[lastLine + 1][3][0], Y: pointArray[lastLine + 1][3][1] }
                 }));
-        }
 
     }
 
