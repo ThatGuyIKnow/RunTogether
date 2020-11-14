@@ -5,6 +5,7 @@ let maxBounds1 = [51.649, 0.49];
 let maxBounds2 = [59.799, 18.68];
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 let pointArray = [];
+let stages = [];
 let pointIds = {};
 let lineIds = {};
 
@@ -59,16 +60,14 @@ export class mapEditorClass {
         
         //Load stages into an array        
         let json = JSON.parse(serialData);
-        let stages = [];
+
         stages = json.Stages;
 
         //Convert stages to line array
-        stages.forEach((element, index) => {
+        stages.forEach((element) => {
             pointArray.push(['M', [element.StartPoint.X, element.StartPoint.Y], 'L', [element.EndPoint.X, element.EndPoint.Y]]);
         });
-        console.log(stages);
-        console.log("diff");
-        console.log(pointArray); 
+
         this.drawRoute();
     }
 
@@ -92,12 +91,12 @@ export class mapEditorClass {
 
         //Create polyline
         for (i = 0; i < pointArray.length; i++) {
-            //polyline = L.polyline(pointArray.slice(i, i + 2), { color: '#db5d57', weight: 6 });
-            //console.log(pointArray[i]); 
+
             polyline = L.curve(pointArray[i], { color: '#db5d57', weight: 6 });
             layerGroup.addLayer(polyline);
-            //Assigning markers an ID by "exploiting" layergroups. Not in use yet.
-            //lineIds[layerGroup.getLayerId(polyline)] = i;
+            //Assigning lines an ID by "exploiting" layergroups 
+            lineIds[layerGroup.getLayerId(polyline)] = i;
+
 
             //Add functionallity to lines
             this.interactableLine(polyline);
@@ -195,10 +194,20 @@ export class mapEditorClass {
         polyline.on('click', () => {
             console.log("from line");
 
+            let lineIndex = lineIds[layerGroup.getLayerId(polyline)];
+
+            console.log(lineIndex); 
+
+            console.log(stages);
+
+            let stageId = stages[lineIndex].StageId;
+
+            console.log(stageId);
+
             this.dotnetHelper.invokeMethodAsync('Trigger', 'SendStageId',
                 JSON.stringify(
                     {
-                        StageId: 4
+                        StageId: stageId
                     }));
 
         })
