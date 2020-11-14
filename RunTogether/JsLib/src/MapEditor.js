@@ -4,7 +4,7 @@ let myeditmap, layerGroup, polyline;
 let maxBounds1 = [51.649, 0.49];
 let maxBounds2 = [59.799, 18.68];
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
-let pointArray = [];
+let lineArray = [];
 let stages = [];
 let pointIds = {};
 let lineIds = {};
@@ -56,7 +56,7 @@ export class mapEditorClass {
     loadRoute(serialData) {
         console.log("loadRoute was called");
         //clear point array. 
-        pointArray = [];
+        lineArray = [];
         
         //Load stages into an array        
         let json = JSON.parse(serialData);
@@ -65,7 +65,7 @@ export class mapEditorClass {
 
         //Convert stages to line array
         stages.forEach((element) => {
-            pointArray.push(['M', [element.StartPoint.X, element.StartPoint.Y], 'L', [element.EndPoint.X, element.EndPoint.Y]]);
+            lineArray.push(['M', [element.StartPoint.X, element.StartPoint.Y], 'L', [element.EndPoint.X, element.EndPoint.Y]]);
         });
 
         this.drawRoute();
@@ -79,6 +79,7 @@ export class mapEditorClass {
 
     drawRoute() {
         console.log("draw function was called");
+        console.log(lineArray);
         this.removeMarkersAndLines();
         pointIds = {};
         lineIds = {};
@@ -90,9 +91,9 @@ export class mapEditorClass {
         let marker;
 
         //Create polyline
-        for (i = 0; i < pointArray.length; i++) {
+        for (i = 0; i < lineArray.length; i++) {
 
-            polyline = L.curve(pointArray[i], { color: '#db5d57', weight: 6 });
+            polyline = L.curve(lineArray[i], { color: '#db5d57', weight: 6 });
             layerGroup.addLayer(polyline);
             //Assigning lines an ID by "exploiting" layergroups 
             lineIds[layerGroup.getLayerId(polyline)] = i;
@@ -103,11 +104,11 @@ export class mapEditorClass {
         }
 
         ////Create markers
-        for (i = 0; i < pointArray.length; i++) {
+        for (i = 0; i < lineArray.length; i++) {
             //console.log(i);  
-            //console.log(pointArray[i]);  
+            //console.log(lineArray[i]);
             if (i == 0) {
-                marker = L.circleMarker(pointArray[i][1], { bubblingMouseEvents: false, fillOpacity: 1 });
+                marker = L.circleMarker(lineArray[i][1], { bubblingMouseEvents: false, fillOpacity: 1 });
                 layerGroup.addLayer(marker);
                 //Assigning markers an ID by "exploiting" layergroups 
                 pointIds[layerGroup.getLayerId(marker)] = i;
@@ -115,7 +116,7 @@ export class mapEditorClass {
                 //Add functionallity to markers
                 this.moveableMarker(myeditmap, marker);
             }
-            marker = L.circleMarker(pointArray[i][3], { bubblingMouseEvents: false, fillOpacity: 1 });
+            marker = L.circleMarker(lineArray[i][3], { bubblingMouseEvents: false, fillOpacity: 1 });
             layerGroup.addLayer(marker);
             //Assigning markers an ID by "exploiting" layergroups 
             pointIds[layerGroup.getLayerId(marker)] = i;
@@ -129,18 +130,31 @@ export class mapEditorClass {
         
 
     addNewMarker(e) {
-        let lastLine = pointArray.length - 1;
-        pointArray.push(['M', [pointArray[lastLine][3][0], pointArray[lastLine][3][1]], 'L', [e.latlng.lat, e.latlng.lng]]);
+
+        let lastLine = lineArray.length - 1;
+
+        if (lineArray.length < 1) {
+            //special case for first line segment should go here... 
+
+            //nasty hack for making first point work....
+            lineArray.push(['M', [e.latlng.lat, e.latlng.lng], 'L', [e.latlng.lat, e.latlng.lng]]);
+        }
+        else {
+            lineArray.push(['M', [lineArray[lastLine][3][0], lineArray[lastLine][3][1]], 'L', [e.latlng.lat, e.latlng.lng]]);
+
+            //send a segment back to blazor, for saving to DB
+            this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
+                JSON.stringify(
+                    {
+                        StartPoint: { X: lineArray[lastLine + 1][1][0], Y: lineArray[lastLine + 1][1][1] },
+                        EndPoint: { X: lineArray[lastLine + 1][3][0], Y: lineArray[lastLine + 1][3][1] }
+                    }));
+        }
+
         this.drawRoute();
 
         
-        //send a segment back to blazor, for saving to DB
-        this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
-            JSON.stringify(
-                {
-                    StartPoint: { X: pointArray[lastLine + 1][1][0], Y: pointArray[lastLine + 1][1][1] },
-                    EndPoint: { X: pointArray[lastLine + 1][3][0], Y: pointArray[lastLine + 1][3][1] }
-                }));
+
 
     }
 
@@ -169,7 +183,7 @@ export class mapEditorClass {
 
     markerDragEnd(marker) {
         //push new coordinates to array and redraw route. 
-        pointArray[pointIds[layerGroup.getLayerId(marker)]] = marker.getLatLng();
+        lineArray[pointIds[layerGroup.getLayerId(marker)]] = marker.getLatLng();
         this.drawRoute();
         }
 
@@ -192,17 +206,10 @@ export class mapEditorClass {
         })
 
         polyline.on('click', () => {
-            console.log("from line");
 
             let lineIndex = lineIds[layerGroup.getLayerId(polyline)];
 
-            console.log(lineIndex); 
-
-            console.log(stages);
-
             let stageId = stages[lineIndex].StageId;
-
-            console.log(stageId);
 
             this.dotnetHelper.invokeMethodAsync('Trigger', 'SendStageId',
                 JSON.stringify(
