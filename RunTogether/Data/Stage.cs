@@ -52,6 +52,7 @@ namespace RunTogether
             {
                 serializedRunners.Add(runner.ToJsonSerializableViewer());
             });
+            data["StageId"] = StageId;
 
             return data;
         }
