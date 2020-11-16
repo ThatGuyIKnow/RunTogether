@@ -85,6 +85,7 @@ export class AbstractStage {
     }
 
     EvenNumberOfCurves() {
+        console.log(this.throughPoints);
         return this.throughPoints.length % 2 === 1;
     }
 }
@@ -180,4 +181,50 @@ export class ActiveStage extends AbstractStage {
         this.overlayPath._path.style.strokeDashoffset = (1 - this._overlayPercentage) * length;
         this.overlayPath._path.style.strokeDasharray = length;
     }
+}
+
+export class EditStage extends AbstractStage {
+
+    _map = null;
+    _overlayPercentage = 0.0;
+    runners = [];
+    className = "editStage";
+    //overlayClassName = "activeStageOverlay";
+    path = null;
+    overlayPath = null;
+    flipped = false;
+
+    constructor(startPoint, endPoint, throughPoints = [], flipped = false) {
+        super(startPoint, endPoint, throughPoints, flipped);
+
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.throughPoints = throughPoints;
+        //this.flipped = flipped;
+    }
+
+    AddToMap(map) {
+        super.AddToMap(map);
+        //this.path._path.classList.add(this.className); ?? 
+        this.InteractablePath(this.path);
+    }
+
+    InteractablePath(path) {
+        path.on('mouseover', () => {
+            path.setStyle({ color: '#ff5c26', weight: 12 });
+        })
+
+        path.on('mouseout', () => {
+            path.setStyle({ color: '#db5d57', weight: 6 });
+        })
+
+        path.on('click', () => {;
+            this.dotnetHelper.invokeMethodAsync('Trigger', 'SendStageId',
+                JSON.stringify(
+                    {
+                        StageId: this.stageId
+                    }));
+        })
+    }
+
 }

@@ -1,5 +1,5 @@
 ﻿import { isClassOrSubclass } from '../utils/ClassTypeUtils';
-import {ActiveStage, InactiveStage} from './Stage';
+import { ActiveStage, InactiveStage, EditStage } from './Stage';
 import {Point} from './Point';
 import {Runner} from './Runner';
 import {Sponsor} from './Sponsor';
@@ -7,11 +7,12 @@ import {Sponsor} from './Sponsor';
 export class StageFactory {
     constructor() { }
 
-    CreateStage(stageData, flipped = false) {
+    CreateStage(stageData, flipped = false, editStage = false) {
         const startPoint = new Point(...stageData.StartPoint);
         const endPoint = new Point(...stageData.EndPoint);
+        console.log(stageData.ThroughPoints);
         const throughPoints = this.ConstructThroughPoints(stageData.ThroughPoints);
-
+        console.log(throughPoints)
         let runners = null;
         if(Array.isArray(stageData.Runners) && stageData.Runners.length > 0) 
             runners = this.ConstructRunners(stageData.Runners);
@@ -24,10 +25,17 @@ export class StageFactory {
                 stageData.Sponsor.PictureUrl === undefined ? null : stageData.Sponsor.PictureUrl);
 
         let stage;
-        if (stageData.Status === 'Active')
-            stage = new ActiveStage(startPoint, endPoint, throughPoints, flipped);
-        else
-            stage = new InactiveStage(startPoint, endPoint, throughPoints, flipped, stageData.Status === 'Completed');
+
+        if (editStage == true) {
+            stage = new EditStage(startPoint, endPoint, throughPoints, flipped); 
+        }
+        else {
+            if (stageData.Status === 'Active')
+                stage = new ActiveStage(startPoint, endPoint, throughPoints, flipped);
+            else
+                stage = new InactiveStage(startPoint, endPoint, throughPoints, flipped, stageData.Status === 'Completed');
+        }
+
 
         stage.runners = runners;
         stage.sponsor = sponsor;

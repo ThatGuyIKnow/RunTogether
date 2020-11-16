@@ -23,8 +23,6 @@ namespace RunTogether.Shared.Map
 
         [Parameter] public EventCallback<int> sendToParent { get; set; }
 
-        public string json;
-
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
@@ -58,7 +56,7 @@ namespace RunTogether.Shared.Map
                 
             }
 
-            await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", json);
+            await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
         }
 
         protected override void OnParametersSet()
@@ -68,8 +66,6 @@ namespace RunTogether.Shared.Map
             {
                 Run.Route = new RunRoute();
             }
-
-            json = JsonSerializer.Serialize(Run.Route);
         }
     }
 }

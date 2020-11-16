@@ -1,6 +1,7 @@
 ﻿
 import L from 'leaflet';
 import '@elfalem/leaflet-curve';
+import { StageFactory, RunRouteFactory } from "./map/index";
 
 /*Global variable for the map class*/
 let myeditmap, layerGroup, polyline;
@@ -58,20 +59,26 @@ export class mapEditorClass {
 
     loadRoute(serialData) {
         console.log("loadRoute was called");
+        console.log(serialData); 
         //clear point array. 
-        lineArray = [];
+        //lineArray = [];
         
         //Load stages into an array        
-        let json = JSON.parse(serialData);
+        //let json = JSON.parse(serialData);
 
-        stages = json.Stages;
+        let routeFactory = new RunRouteFactory();
+
+        let run = routeFactory.CreateRunRoute(serialData, true);
+        console.log("got here!");
+        run.AddToMap(myeditmap);
+        //stages = json.Stages;
 
         //Convert stages to line array
-        stages.forEach((element) => {
-            lineArray.push(['M', [element.StartPoint.X, element.StartPoint.Y], 'L', [element.EndPoint.X, element.EndPoint.Y]]);
-        });
+        //stages.forEach((element) => {
+        //    lineArray.push(['M', [element.StartPoint.X, element.StartPoint.Y], 'L', [element.EndPoint.X, element.EndPoint.Y]]);
+        //});
 
-        this.drawRoute();
+        //this.drawRoute();
     }
 
     /* A Method to remove markers and lines*/
@@ -184,14 +191,6 @@ export class mapEditorClass {
 
 
     interactableLine(polyline) {
-        //polyline.on("mousedown", () => {
-        //    //disable create point? 
-        //})
-
-        //polyline.on("mouseup", () => {
-        //    //enable create point? 
-        //}) 
-
         polyline.on('mouseover', () => {
             polyline.setStyle({ color: '#ff5c26', weight: 12 });
         })

@@ -4,7 +4,7 @@ import { RunRoute } from './RunRoute';
 export class RunRouteFactory {
     constructor() { }
 
-    CreateRunRoute(runRouteData) {
+    CreateRunRoute(runRouteData, editer = false) {
         const { Name, Stages } = runRouteData;
 
         const stageFactory = new StageFactory();
@@ -13,7 +13,7 @@ export class RunRouteFactory {
         let flipped = false;
         if (Array.isArray(Stages)) {
             Stages.forEach(stage => {
-                currStage = stageFactory.CreateStage(stage, flipped);
+                currStage = stageFactory.CreateStage(stage, flipped, editer);
                 stages.push(currStage);
                 flipped = currStage.EvenNumberOfCurves() === flipped;
             });
