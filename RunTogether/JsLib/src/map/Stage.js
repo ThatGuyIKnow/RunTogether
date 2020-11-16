@@ -1,6 +1,9 @@
 ﻿import Leaflet from 'leaflet';
 import '@elfalem/leaflet-curve';
 import { Point } from './Point';
+import { Popup } from './Marker';
+import { Sponsor } from './Sponsor';
+import { Runner } from './Runner';  
 import {isClassOrSubclass} from '../utils/ClassTypeUtils';
 
 /*
@@ -29,18 +32,27 @@ export class AbstractStage {
             throw new TypeError("Class extending abstract class 'Stage' requires 'Flipped' boolean parameter");
     }
 
-    AddToMap(map) {
-        if (!isClassOrSubclass(map, Leaflet.Map))
-            throw new TypeError("Parameter 'map' should be or extend from Map class");
-
-        this._map = map;
+    AddToLayer(layer) {
+        if (!isClassOrSubclass(layer, Leaflet.Layer))
+            throw new TypeError("Parameter 'layer' should be or extend from Layer class");
+        
+        this._layer = layer;
         this.path = this.CreatePath();
-        this.path.addTo(this._map);
+        this.path.addTo(this._layer);
+        this.AddHoverFocus(this.path);
+        this.AddPopup(this, this.path);
     }
 
-    RemoveFromMap() {
-        this.path.removeFrom(this._map);
-        this._map = null;
+    AddHoverFocus(target, trigger = null) {
+        if (trigger === null) trigger = target;
+        trigger.on('mouseover', () => target.setStyle({ weight: 12 }));
+        trigger.on('mouseout', () => target.setStyle({ weight: 6 }));
+    }
+
+
+    RemoveFromLayer() {
+        this.path.removeFrom(this._layer);
+        this._layer = null;
     }
 
     CreatePath() {
@@ -84,6 +96,13 @@ export class AbstractStage {
         return new Point(midpointY, midpointX);
     }
 
+    AddPopup(stage, path) {
+        let popup = new Popup(stage, path);
+        popup.AddToLayer();
+        this._popup = popup;
+        return popup;
+    } 
+
     EvenNumberOfCurves() {
         return this.throughPoints.length % 2 === 1;
     }
@@ -91,7 +110,7 @@ export class AbstractStage {
 
 export class InactiveStage extends AbstractStage {
 
-    _map = null;
+    _layer = null;
     _className = "";
     notCompletedClass = "notStartedStage";
     completedClass = "completedStage";
@@ -111,16 +130,17 @@ export class InactiveStage extends AbstractStage {
         this._className = this.completed ? this.completedClass : this.notCompletedClass;
     }
 
-    AddToMap(map) {
-        super.AddToMap(map);
+    AddToLayer(layer) {
+        super.AddToLayer(layer);
         this.path._path.classList.add(this._className);
     }
 }
 
 export class ActiveStage extends AbstractStage {
 
-    _map = null;
+    _layer = null;
     _overlayPercentage = 0.0;
+    _activePopup;
     runners = [];
     className = "activeStage";
     overlayClassName = "activeStageOverlay";
@@ -137,12 +157,12 @@ export class ActiveStage extends AbstractStage {
         this.flipped = flipped;
     }
 
-    AddToMap(map) {
-        super.AddToMap(map);
+    AddToLayer(layer) {
+        super.AddToLayer(layer);
         this.path._path.classList.add(this.className);
 
         this.overlayPath = this.CreatePath();
-        this.overlayPath.addTo(this._map);
+        this.overlayPath.addTo(this._layer);
         this.overlayPath._path.classList.add(this.overlayClassName);
 
         this.SetOverlayPercentage(this.CalculateOverlayPercentage());
@@ -150,6 +170,10 @@ export class ActiveStage extends AbstractStage {
         this.overlayPath._renderer.on('update', () => {
             this.UpdateOverlay();
         });
+        this.AddHoverFocus(this.overlayPath, this.path);
+        this.AddHoverFocus(this.path);
+        this.AddHoverFocus(this.overlayPath);
+        this._activePopup = this.AddPopup(this, this.overlayPath);
     }
 
     CalculateOverlayPercentage() {
@@ -170,7 +194,7 @@ export class ActiveStage extends AbstractStage {
             throw new TypeError("Method 'SetOverlayPercentage' use parameters '<pct : Number>'");
         this._overlayPercentage = pct;
 
-        if (this._map !== null) {
+        if (this._layer !== null) {
             this.UpdateOverlay();
         }
     }
