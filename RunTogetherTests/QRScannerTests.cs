@@ -20,8 +20,7 @@ namespace RunTogetherTests
             mockJS.SetupVoid("Main.QrScanner.CreateQrScanner");
             mockJS.Setup<bool>("Main.QrScanner.HasCamera").SetResult(true);
             var cut = ctx.RenderComponent<QRScanner>();
-            
-            
+
             cut.WaitForState(() =>
                 mockJS.Invocations.Values.SelectMany(x => x).Select(x => x.Identifier).Contains("Main.QrScanner.HasCamera")
                 );

@@ -11,7 +11,6 @@ namespace RunTogether.Shared.QR
     {
         private string qrCodeImageAsBase64;
 
-
         [Parameter] public string code { get; set; } = null;
         [Parameter] public int size { get; set; } = 30;
         [Parameter] public string color { get; set; } = "#000000";

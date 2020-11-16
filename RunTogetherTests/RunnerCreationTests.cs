@@ -20,7 +20,6 @@ using Xunit.Sdk;
 
 namespace RunTogetherTests
 {
-  
     public class RunnerCreationTests : TestContext, IDisposable
     {
         private TestContext ctx;
@@ -101,7 +100,7 @@ namespace RunTogetherTests
             var user = await userManager.FindByEmailAsync("bobobaba.com");
             Assert.Null(user);
         }
-        
+
         [Fact]
         public async void CreateRunner_RunDoesNOTExistsInDatabase_NotCreated()
         {

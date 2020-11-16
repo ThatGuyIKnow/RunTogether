@@ -2,12 +2,13 @@
 using Bunit;
 using RunTogether.Shared.Etc;
 using RunTogether.Shared.Layouts;
+using Bunit.TestDoubles;
 
 namespace RunTogetherTests
 {
     public class LayoutTests : TestContext
     {
-        #region Checks if things render correctly
+        #region Checks if components render correctly
         // Check if sponsor bar renders correctly
         [Fact]
         public void SponsorBarRendersCorrectly()

@@ -17,7 +17,7 @@ namespace RunTogetherTests
             OrganiserCreationKey key;
 
             key = new OrganiserCreationKey("TestOrganiserId");
-            
+
             Assert.NotEmpty(key.Key);
         }
 

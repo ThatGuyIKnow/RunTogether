@@ -21,7 +21,7 @@ namespace RunTogetherTests
                     {
                         StartPoint = new StartPoint(1.1F, 1.2F),
                         ThroughPoints =  new List<ThroughPoint> { new ThroughPoint(2.1F,2.2F), new ThroughPoint(3.1F, 3.2F) },
-                        EndPoint = new EndPoint(4.1F, 4.2F) 
+                        EndPoint = new EndPoint(4.1F, 4.2F)
                     },
                     new Stage()
                     {
@@ -44,8 +44,8 @@ namespace RunTogetherTests
 
 
             // Expected
-            List<List<float>> expected = new List<List<float>> 
-            { 
+            List<List<float>> expected = new List<List<float>>
+            {
                 new List<float> {1.1F, 1.2F },
                 new List<float> {2.1F, 2.2F },
                 new List<float> {3.1F, 3.2F },
