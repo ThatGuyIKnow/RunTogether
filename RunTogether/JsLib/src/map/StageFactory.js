@@ -32,7 +32,9 @@ export class StageFactory {
         stage.runners = runners;
         stage.sponsor = sponsor;
         stage.status = stageData.Status;
-
+        // Class 'RunRoute' constructor has parameters '<name : string, stages : Stage[]>'
+        // ok
+        // Det er en custom TypeError fra RunRoute. Det er en af vores egne tests
         return stage;
     }
 
