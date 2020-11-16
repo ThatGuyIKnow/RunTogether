@@ -49,6 +49,20 @@ namespace RunTogether
             return PointList;
         }
 
+        public Dictionary<string, object> ToJsonSerializableViewer()
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>();
+
+            if (this.Run?.Name != null) data["Name"] = this.Run.Name;
+            List<Dictionary<string, object>> serializedStages = new List<Dictionary<string, object>>();
+
+            Stages.ForEach(stage =>
+                serializedStages.Add(stage.ToJsonSerializableViewer())
+            );
+            data["Stages"] = serializedStages;
+            return data;
+        }
+
         //public RunRoute(List<Stage> Stages)
         //{
         //    this.Stages = Stages;
