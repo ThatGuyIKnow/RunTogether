@@ -23,32 +23,34 @@
     <div class="col-md-2">
         <h3></h3>
         <RadzenCard>
-            
-            @for (int i = 0 ; i < rows; i++)
-            {
-                int i2 = i;
-                <div class="row">
-                    <div class="col-md-8">
-                        <RadzenLabel text=@($"{i+1}. Løber") />
-                        <RadzenDropDown AllowClear="true" TValue="ApplicationUser" Data="@run.Runners" @bind-Value="@selectedStage.AssignedRunners[i2].Runner" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" 
-                         AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Style="margin-bottom: 10px" Change="args => Change((ApplicationUser)args, i2)">
-                            <Template>
-                                @((context as ApplicationUser).FirstName)  @((context as ApplicationUser).LastName)
-                                <br>
-                                (@((context as ApplicationUser).Email))
-                            </Template>
-                        </RadzenDropDown>
+            <RadzenTemplateForm TItem="StageAssignment" Data="@test" Submit="()=> Save()">
+                @for (int i = 0; i < rows; i++)
+                {
+                    int i2 = i;
+                    <div class="row" Style="margin-bottom: 10px">
+                        <div class="col-md-8">
+                            <RadzenLabel text=@($"{i+1}. Løber") />
+                            <RadzenDropDown Name="DropDown" AllowClear="true" TValue="ApplicationUser" Data="@run.Runners" @bind-Value="@selectedStage.AssignedRunners[i2].Runner" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                            AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Change((ApplicationUser)args, i2)" Style="width:100%">
+                                <Template Context="data">
+                                    @((data as ApplicationUser).FirstName)  @((data as ApplicationUser).LastName)
+                                    <br>
+                                    (@((data as ApplicationUser).Email))
+                                </Template>
+                            </RadzenDropDown>
+                            <RadzenRequiredValidator Component="DropDown" Text="Skal udfyldes eller slettes" Style="position: relative" />
+                        </div>
+                        <div class="col-md-4">
+                            <br>
+                            <RadzenButton Icon="delete" Size="ButtonSize.Small" Click="@(args => Delete(i2))" />
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <br>
-                        <RadzenButton Icon="delete" Size="ButtonSize.Small" Style="margin-top:10px" Click="@(args => Delete(i2))"/>
-                    </div>                
+                }
+                <div class="row">
+                    <RadzenButton Icon="add_box" Size="ButtonSize.Small" Click="Add" /><br>
+                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Gem"/>
                 </div>
-            }
-            <div class="row">
-                <RadzenButton Icon="add_box" Size="ButtonSize.Small" Click="Add"/><br>
-                <RadzenButton Icon="save" Text="Gem" Click="Save" />
-            </div>
+            </RadzenTemplateForm>
         </RadzenCard>
     </div>
 </div>
