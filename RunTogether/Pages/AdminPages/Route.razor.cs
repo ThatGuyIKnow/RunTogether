@@ -28,6 +28,7 @@ namespace RunTogether.Pages.AdminPages
         public int rows { get; set; }
 
         Run run = new Run();
+        StageAssignment AssignmentPlaceholder = new StageAssignment();
 
         protected override async Task OnInitializedAsync()
         {
