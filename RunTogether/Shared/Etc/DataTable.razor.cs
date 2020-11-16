@@ -32,7 +32,7 @@ namespace RunTogether.Shared.Etc
         string color = "#000000";
         int size = 30;
 
-        //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
+        //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run
         RadzenGrid<Run> runTable;
         RadzenGrid<ApplicationUser> runnerTable;
 
@@ -79,7 +79,7 @@ namespace RunTogether.Shared.Etc
 
                     Runners = new List<ApplicationUser>
                     {
-                        
+
                     },
 
                     Route = new RunRoute
@@ -91,7 +91,7 @@ namespace RunTogether.Shared.Etc
                     }
                 };
 
-                
+
 
                 dbContext.Runs.Add(testRun);
                 await dbContext.SaveChangesAsync();
