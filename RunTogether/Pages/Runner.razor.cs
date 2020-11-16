@@ -23,7 +23,7 @@ namespace RunTogether.Pages
         private string qrCode = "";
         private Run assignedRun = new Run();
         private string runnerName = "";
-        private int runnerID;
+        private string? runnerID;
         private Stage activeStage = new Stage();
         private StageAssignment activeRunner = new StageAssignment();
 
@@ -52,7 +52,7 @@ namespace RunTogether.Pages
                                         .FirstOrDefaultAsync();
 
                     runnerName = currentUser.FirstName;
-                    runnerID = currentUser.RunnerId;
+                    runnerID = currentUser.Id;
                 }
                 StateHasChanged();
             }
@@ -66,18 +66,15 @@ namespace RunTogether.Pages
             //Checks that the QR-code is correct.
             if (assignedRun.QRString.Equals(qrCode))
             {
-                if (activeRunner == null || activeRunner.RunnerId != runnerID)
+                //Checks if there is an active runner, or if the current user's status is Completed.
+                if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(runnerID)).Status == RunningStatus.Completed)
                 {
-                    //Checks if the runner has already completed the run.
-                    if (activeStage.AssignedRunners.Find(a => a.RunnerId == runnerID).Status == RunningStatus.Completed)
-                    { 
-                        await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
-                    }
-                    else
-                    {
-                        //Sets the previous runner's status to Completed, if they still have a status of Active.
-                        UpdateDatabase(RunningStatus.Completed);
-                    }
+                    await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
+                }
+                //Sets the previous runner's status to Completed, if they still have a status of Active.
+                else if (!activeRunner.Runner.Id.Equals(runnerID))
+                {
+                    UpdateDatabase(RunningStatus.Completed);
                 }
 
                 //Hides the camera CSS and displays the start run CSS.
