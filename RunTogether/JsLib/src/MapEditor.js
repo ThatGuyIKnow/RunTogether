@@ -124,8 +124,6 @@ export class mapEditorClass {
             //Add functionallity to markers
             this.moveableMarker(myeditmap, marker);
         }
-
-
     }
         
 
@@ -134,8 +132,6 @@ export class mapEditorClass {
         let lastLine = lineArray.length - 1;
 
         if (lineArray.length < 1) {
-            //special case for first line segment should go here... 
-
             //nasty hack for making first point work....
             lineArray.push(['M', [e.latlng.lat, e.latlng.lng], 'L', [e.latlng.lat, e.latlng.lng]]);
         }
@@ -152,10 +148,6 @@ export class mapEditorClass {
         }
 
         this.drawRoute();
-
-        
-
-
     }
 
         
