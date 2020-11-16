@@ -1,7 +1,7 @@
 ﻿import Leaflet from 'leaflet';
 import '@elfalem/leaflet-curve';
 import { Point } from './Point';
-import { Popup } from './Marker';
+import { Popup, EditorMarker } from './Marker';
 import { Sponsor } from './Sponsor';
 import { Runner } from './Runner';  
 import {isClassOrSubclass} from '../utils/ClassTypeUtils';
@@ -208,7 +208,7 @@ export class ActiveStage extends AbstractStage {
 
 export class EditStage extends AbstractStage {
 
-    _map = null;
+    _layer = null;
     _overlayPercentage = 0.0;
     runners = [];
     className = "editStage";
@@ -217,19 +217,27 @@ export class EditStage extends AbstractStage {
     overlayPath = null;
     flipped = false;
 
-    constructor(startPoint, endPoint, throughPoints = [], flipped = false) {
+
+    constructor(startPoint, endPoint, throughPoints = [], flipped = false, stageId, map, objRef) {
         super(startPoint, endPoint, throughPoints, flipped);
 
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.throughPoints = throughPoints;
         this.flipped = flipped;
+        this.stageId = stageId;
+
+        this._map = map; 
+        this._dotnetHelper = objRef;
     }
 
-    AddToMap(map) {
-        super.AddToMap(map);
+    AddToLayer(layer) {
+        super.AddToLayer(layer, this.startPoint);
         //this.path._path.classList.add(this.className); ?? 
         this.InteractablePath(this.path);
+
+        this._marker = new EditorMarker(this._layer, this.startPoint, this._map, this, this._prevStage);
+        this._marker.AddToLayer(this._layer);
     }
 
     InteractablePath(path) {
@@ -242,12 +250,16 @@ export class EditStage extends AbstractStage {
         })
 
         path.on('click', () => {;
-            this.dotnetHelper.invokeMethodAsync('Trigger', 'SendStageId',
+            this._dotnetHelper.invokeMethodAsync('Trigger', 'SendStageId',
                 JSON.stringify(
                     {
                         StageId: this.stageId
                     }));
         })
     }
+
+    AddPopup() {
+        //empty for now
+    } 
 
 }

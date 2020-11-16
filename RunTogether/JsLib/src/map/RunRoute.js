@@ -16,7 +16,7 @@ export class RunRoute {
         this.stages = stages;
     }
 
-    AddToLayer(layer) {
+    AddToLayer(layer, map = null) {
         this._layer = layer;
         if (this.stages !== null) {
             this.stages.forEach(stage => {

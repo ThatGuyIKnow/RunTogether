@@ -4,14 +4,10 @@ import '@elfalem/leaflet-curve';
 import { StageFactory, RunRouteFactory } from "./map/index";
 
 /*Global variable for the map class*/
-let myeditmap, layerGroup, polyline;
+let editMap, layerGroup;
 let maxBounds1 = [51.649, 0.49];
 let maxBounds2 = [59.799, 18.68];
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
-let lineArray = [];
-let stages = [];
-let pointIds = {};
-let lineIds = {};
 let run
 
 
@@ -35,10 +31,10 @@ export class mapEditorClass {
         this.dotnetHelper = objRef;
 
         /*Pointing myeditmap to leaflet map and setting the viewpoint and start zoom point*/
-        myeditmap = L.map('mapid', { doubleClickZoom: false}).setView([55.964, 9.992], 6.5);
-        myeditmap.setMaxBounds(bounds);
+        editMap = L.map('mapid', { doubleClickZoom: false}).setView([55.964, 9.992], 6.5);
+        editMap.setMaxBounds(bounds);
 
-        myeditmap.on('dblclick', e => this.addNewMarker(e));
+        editMap.on('dblclick', e => this.addNewStage(e));
 
         /* Appling tile layer to the map*/
         L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
@@ -49,23 +45,24 @@ export class mapEditorClass {
             maxBounds: bounds,
             maxBoundsViscosity: 1,
             ext: 'jpg'
-        }).addTo(myeditmap);
+        }).addTo(editMap);
 
         /*Creating layer group and adding to map*/
-        layerGroup = L.layerGroup().addTo(myeditmap);
+        layerGroup = L.layerGroup().addTo(editMap);
 
     }
 
     loadRoute(serialData) {
-
+        console.log('loaded route');
+     
         let routeFactory = new RunRouteFactory();
 
-        run = routeFactory.CreateRunRoute(serialData, true);
-
-        run.AddToMap(myeditmap);
+        run = routeFactory.CreateRunRoute(serialData, true, editMap, this.dotnetHelper);
+        console.log(run);
+        run.AddToLayer(layerGroup);
     }
 
-    addNewMarker(e) {
+    addNewStage(e) {
         if (run.stages.length < 1) {
 
             let stageFactory = new StageFactory();

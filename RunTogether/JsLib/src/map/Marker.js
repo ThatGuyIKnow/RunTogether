@@ -76,47 +76,59 @@ export class Popup extends AbstractMarker {
 
 
 export class EditorMarker extends AbstractMarker {
-    constructor(map, point) {
-        super(map, point);
+    constructor(layer, point, map, path) {
+        super(layer, point);
 
-        this._map = map;
+        this._layer = layer;
         this.point = point;
-    }
-
-    AddToMap(map) {
         this._map = map;
-        this._mapMarker = Leaflet.circleMarker({ bubblingMouseEvents: false, fillOpacity: 1 });
-        this._mapMarker.setLanLng(this.point.toArray())
-            .addTo(this._map);
 
-        this.InteractableMarker();
+        this._path = path;
+    }
+
+    AddToLayer(layer) {
+        this._layer = layer;
+        this._mapMarker = Leaflet.circleMarker(this.point.toArray(), { bubblingMouseEvents: false, fillOpacity: 1 });
+        this._mapMarker.addTo(this._layer);
+
+        this.InteractableMarker(this._mapMarker); 
 
     }
 
-    InteractableMarker() {
+    InteractableMarker(marker) {
         //constantly sets the markers pos to the curser pos
         function trackCursor(evt) {
-            this._mapMarker.setLatLng(evt.latlng);
+            marker.setLatLng(evt.latlng);
         }
 
         //Drag marker 
-        this._mapMarker.on("mousedown", () => {
+            marker.on("mousedown", () => {
             this._map.dragging.disable();
             this._map.on("mousemove", trackCursor);
         })
 
         //Stop dragging marker 
-        this._mapMarker.on("mouseup", () => {
-            this._map.dragging.enable();
-            this._map.off("mousemove", trackCursor);
-            this.markerDragEnd();
-        })
+            marker.on("mouseup", () => {
+                this._map.dragging.enable();
+                this._map.off("mousemove", trackCursor);
+                this.markerDragEnd(marker);
+         })
+
+        return marker;
     }
 
-    markerDragEnd() {
-        //push new coordinates to array and redraw route. 
-        //lineArray[pointIds[layerGroup.getLayerId(this._mapMarker)]] = this._mapMarker.getLatLng();
-        //this.drawRoute();
+    markerDragEnd(marker) {
+        //this.point.x = marker.getLatLng().lat;
+        //this.point.y = marker.getLatLng().lng;
+
+        //this._path.startPoint.x = marker.getLatLng().lat;
+        //this._path.startPoint.y = marker.getLatLng().lng;
+
+        //this._prevPath.endPoint.x = marker.getLatLng().lat;
+        //this._prevpath.endPoint.y = marker.getLatLng().lng;
+
+        //send new coordinates back to  blazor and update DB....
+
     }
 
 }

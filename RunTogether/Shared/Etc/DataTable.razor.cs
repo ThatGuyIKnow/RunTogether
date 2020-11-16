@@ -65,7 +65,7 @@ namespace RunTogether.Shared.Etc
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
-            await GenerateTestData();
+            //await GenerateTestData();
         }
 
         public async Task GenerateTestData()
