@@ -2,6 +2,7 @@ import { SidebarCollapseFunctionality } from './SidebarHide';
 import { QrScannerClass } from './qrScanner';
 import "../styles/qrScanner.css";
 
+import { mapEditorClass } from './MapEditor';
 import { mapClass } from './map';
 import "../styles/map_style.css";
 
@@ -47,3 +48,4 @@ for (i = 0; i < Route.Stages.length; i++) {
 }
 */
 export const Map = new mapClass(Route);
+export const MapEditor = new mapEditorClass();

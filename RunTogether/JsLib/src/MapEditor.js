@@ -1,4 +1,7 @@
 ﻿
+import L from 'leaflet';
+import '@elfalem/leaflet-curve';
+
 /*Global variable for the map class*/
 let myeditmap, layerGroup, polyline;
 let maxBounds1 = [51.649, 0.49];
