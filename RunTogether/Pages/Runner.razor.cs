@@ -162,11 +162,5 @@ namespace RunTogether.Pages
             activeStage = assignedRun.GetCurrentStage();
             activeRunner = activeStage.GetCurrentRunner();
         }
-
-        //public async Task WriteCookieAsync(string name, string value, int days)
-        //{
-        //    //var test = await JSRuntime.InvokeAsync<string>("blazorExtensions.WriteCookie", name, value, days);
-        //    var test = await JSRuntime.InvokeAsync<string>("Main.CommonJS.WriteCookie", name, value, days);
-        //}
     }
 }
