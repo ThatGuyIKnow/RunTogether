@@ -22,9 +22,8 @@ export class mapEditorClass {
 
     constructor() {
         this.initializeMap = this.initializeMap.bind(this);
-        this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
         this.loadRoute = this.loadRoute.bind(this);
-        this.drawRoute = this.drawRoute.bind(this);
+
 
         this.dotnetHelper = null;
     }
