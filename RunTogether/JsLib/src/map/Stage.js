@@ -85,7 +85,6 @@ export class AbstractStage {
     }
 
     EvenNumberOfCurves() {
-        console.log(this.throughPoints);
         return this.throughPoints.length % 2 === 1;
     }
 }

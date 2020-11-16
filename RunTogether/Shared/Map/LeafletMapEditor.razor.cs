@@ -39,6 +39,8 @@ namespace RunTogether.Shared.Map
                     dbContext.SaveChanges();
                     //StateHasChanged();
                     //JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", json);
+
+                    JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
                 });
 
                 //event called from JS
@@ -55,17 +57,23 @@ namespace RunTogether.Shared.Map
                 StateHasChanged();
                 
             }
+            //if run has no route, add one
+            if (Run.Route == null)
+            {
+                Run.Route = new RunRoute() { Stages = new List<Stage>() };
+                //db save is needed for ToJsonSerializableViewer to find the new route's run
+                await dbContext.SaveChangesAsync();
+            }
 
+
+            var test = Run.Route.ToJsonSerializableViewer(); 
             await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
         }
 
         protected override void OnParametersSet()
         {
-            //if run has no route, add one
-            if (Run.Route == null)
-            {
-                Run.Route = new RunRoute();
-            }
+            
+
         }
     }
 }
