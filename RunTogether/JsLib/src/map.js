@@ -16,7 +16,6 @@ export class mapClass {
     constructor() {
         this.initializeMap = this.initializeMap.bind(this);
         this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
-        //this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
     }
 
     /* A Method that initializes the map */
@@ -51,12 +50,45 @@ export class mapClass {
         layerGroup = L.layerGroup().addTo(mymap);
 
 /*      mymap.fitBounds(curvedLine.getBounds());
-*/
+*/      let testRoute = {
+            Name: "RunTogetherTest",
+            Stages: [
+                {
+                    StartPoint: [57.0405, 9.9101],
+                    ThroughPoints: [],
+                    EndPoint: [57.0257, 9.9062],
+                    Status: "Completed",
+                    Runners: [{ Status: "Completed", Name: "Casper", Order: 0 },
+                        { Status: "Completed", Name: "Puma", Order: 1 }],
+                    Sponsor: {
+                        Name: "Lejenregnskabschef.dk",
+                        PictureURL: "https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png",
+                        Message: "Vi er stolte sponsorer"
+                    }
+                },
+                {
+                    StartPoint: [57.0257, 9.9062],
+                    ThroughPoints: [],
+                    EndPoint: [57.0107, 9.9020],
+                    Status: "Active",
+                    Runners: [
+                        { Status: "Completed", Name: "Lasper", Order: 0 },
+                        { Status: "Active", Name: "Kuma", Order: 1 }
+                    ],
+                    Sponsor: {
+                        Name: "State Energy Gunk",
+                        PictureURL: "https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png",
+                        Message: "Eat our Gunkz"
+                    }
+                }
+            ]
+        }	
 
-        let routeFactory = new RunRouteFactory();
-        let obj = JSON.parse(object);
-        let routeRun = routeFactory.CreateRunRoute(obj);
-        routeRun.AddToMap(mymap);
+        let routeFactory = new RunRouteFactory();   
+/*      let obj = JSON.parse(object);*/
+        let routeRun = routeFactory.CreateRunRoute(testRoute);
+        routeRun.AddToLayer(layerGroup);
+        console.log(layerGroup);
     }
 
 

@@ -2,7 +2,7 @@
 import { AbstractStage } from './Stage';
 
 export class RunRoute {
-    _map = null;
+    _layer = null;
     stages = null;
     name = "";
 
@@ -16,21 +16,21 @@ export class RunRoute {
         this.stages = stages;
     }
 
-    AddToMap(map) {
-        this._map = map;
+    AddToLayer(layer) {
+        this._layer = layer;
         if (this.stages !== null) {
             this.stages.forEach(stage => {
-                stage.AddToMap(map);
+                stage.AddToLayer(layer);
             });
         }
     }
 
-    RemoveFromMap() {
+    RemoveFromLayer() {
         if (this.stages !== null) {
             this.stages.forEach(stage => {
-                stage.RemoveFromMap();
+                stage.RemoveFromLayer();
             });
         }
-        this._map = null;
+        this._layer = null;
     }
 }

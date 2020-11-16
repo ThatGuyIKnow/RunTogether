@@ -1,4 +1,5 @@
 ﻿using Radzen.Blazor;
+using RunTogether.Areas.Identity;
 using RunTogether.Data;
 using System;
 using System.Collections.Generic;
@@ -7,8 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using RunTogether.Areas.Identity;
 using RunTogether.Pages;
-//using Newtonsoft.Json;
-using System.Text.Json.Serialization;
+using System.Linq;
 
 namespace RunTogether
 {
@@ -24,9 +24,8 @@ namespace RunTogether
 
         public List<ThroughPoint> ThroughPoints { get; set; } = new List<ThroughPoint>();
 
-        public int RunRouteId { get; set; }
+        public int RunRouteId { get; set; } 
 
-        [JsonIgnore]
         public RunRoute RunRoute { get; set; }
 
         public List<StageAssignment> AssignedRunners { get; set; } = new List<StageAssignment>();
@@ -55,9 +54,25 @@ namespace RunTogether
             {
                 serializedRunners.Add(runner.ToJsonSerializableViewer());
             });
+            data["StageId"] = StageId;
 
             return data;
         }
+        public StageAssignment GetCurrentRunner()
+        {
+            List<StageAssignment> orderedRunners = new List<StageAssignment>();
+            orderedRunners = AssignedRunners.OrderBy(a => a.Order).ToList();
+
+            if (orderedRunners.Exists(o => o.Status == RunningStatus.Active))
+            {
+                return orderedRunners.Find(o => o.Status == RunningStatus.Active);
+            }
+            else
+            {
+                return orderedRunners.Find(o => o.Status == RunningStatus.NotStarted);
+            }
+        }
+
     }
 
 
@@ -68,7 +83,8 @@ namespace RunTogether
         
         public ApplicationUser Runner { get; set; }
         public int RunnerId { get; set; }
-        [JsonIgnore]
+        public TimeSpan RunningTime { get; set; }
+
         public Stage Stage { get; set; }
         public int StageId { get; set; }
 
@@ -91,4 +107,6 @@ namespace RunTogether
         Active,
         Completed
     }
+
+    
 }
