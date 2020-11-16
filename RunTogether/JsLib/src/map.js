@@ -16,7 +16,7 @@ export class mapClass {
     constructor() {
         this.initializeMap = this.initializeMap.bind(this);
         this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
-        this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
+        //this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
     }
 
     /* A Method that initializes the map */

@@ -49,8 +49,8 @@ export class AbstractStage {
 
         path.push('M', this.startPoint.toArray());
 
-        let direction = this.flipped ? -1 : 1;
-        for (let i = 0; i < points.length - 1; i++) {
+        let direction = this.flipped ? -0.2 : 0.2;
+        for (let i = 0; i < points.length - 1; i++) { 
             let controlPoint = this.CalculateControlPoint(points[i], points[i + 1], direction);
             path.push('Q', controlPoint.toArray(), points[i + 1].toArray());
             direction *= -1;
@@ -200,7 +200,7 @@ export class EditStage extends AbstractStage {
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.throughPoints = throughPoints;
-        //this.flipped = flipped;
+        this.flipped = flipped;
     }
 
     AddToMap(map) {

@@ -10,9 +10,7 @@ export class StageFactory {
     CreateStage(stageData, flipped = false, editStage = false) {
         const startPoint = new Point(...stageData.StartPoint);
         const endPoint = new Point(...stageData.EndPoint);
-        console.log(stageData.ThroughPoints);
         const throughPoints = this.ConstructThroughPoints(stageData.ThroughPoints);
-        console.log(throughPoints)
         let runners = null;
         if(Array.isArray(stageData.Runners) && stageData.Runners.length > 0) 
             runners = this.ConstructRunners(stageData.Runners);

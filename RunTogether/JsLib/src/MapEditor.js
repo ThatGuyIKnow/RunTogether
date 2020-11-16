@@ -12,7 +12,7 @@ let lineArray = [];
 let stages = [];
 let pointIds = {};
 let lineIds = {};
-
+let run
 
 
 
@@ -58,27 +58,12 @@ export class mapEditorClass {
     }
 
     loadRoute(serialData) {
-        console.log("loadRoute was called");
-        console.log(serialData); 
-        //clear point array. 
-        //lineArray = [];
-        
-        //Load stages into an array        
-        //let json = JSON.parse(serialData);
 
         let routeFactory = new RunRouteFactory();
 
-        let run = routeFactory.CreateRunRoute(serialData, true);
-        console.log("got here!");
+        run = routeFactory.CreateRunRoute(serialData, true);
+
         run.AddToMap(myeditmap);
-        //stages = json.Stages;
-
-        //Convert stages to line array
-        //stages.forEach((element) => {
-        //    lineArray.push(['M', [element.StartPoint.X, element.StartPoint.Y], 'L', [element.EndPoint.X, element.EndPoint.Y]]);
-        //});
-
-        //this.drawRoute();
     }
 
     /* A Method to remove markers and lines*/
@@ -105,12 +90,10 @@ export class mapEditorClass {
 
             polyline = L.curve(lineArray[i], { color: '#db5d57', weight: 6 });
             layerGroup.addLayer(polyline);
+
             //Assigning lines an ID by "exploiting" layergroups 
             lineIds[layerGroup.getLayerId(polyline)] = i;
 
-
-            //Add functionallity to lines
-            this.interactableLine(polyline);
         }
 
         ////Create markers
@@ -142,22 +125,31 @@ export class mapEditorClass {
         let lastLine = lineArray.length - 1;
 
         if (lineArray.length < 1) {
-            //nasty hack for making first point work....
-            lineArray.push(['M', [e.latlng.lat, e.latlng.lng], 'L', [e.latlng.lat, e.latlng.lng]]);
+            //nasty hack for making first point work.... 
+            let stageFactory = new StageFactory();
+            let currStage = stageFactory.CreateStage({ StartPoint: [e.latlng.lat, e.latlng.lng], ThroughPoints: [], EndPoint: [e.latlng.lat, e.latlng.lng] }, true, true);
+            run.stages.push(currStage);
+
+            //run.stages.push(['M', [e.latlng.lat, e.latlng.lng], 'L', [e.latlng.lat, e.latlng.lng]]);
         }
         else {
             lineArray.push(['M', [lineArray[lastLine][3][0], lineArray[lastLine][3][1]], 'L', [e.latlng.lat, e.latlng.lng]]);
+
+            console.log(run.stages[run.stages.length-1].endPoint.x)
+
+            let lastX = run.stages[run.stages.length - 1].endPoint.x; 
+            let lastY = run.stages[run.stages.length - 1].endPoint.y;
 
             //send a segment back to blazor, for saving to DB
             this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
                 JSON.stringify(
                     {
-                        StartPoint: { X: lineArray[lastLine + 1][1][0], Y: lineArray[lastLine + 1][1][1] },
-                        EndPoint: { X: lineArray[lastLine + 1][3][0], Y: lineArray[lastLine + 1][3][1] }
+                        StartPoint: { X: lastX, Y: lastY },
+                        EndPoint: { X: e.latlng.lat, Y: e.latlng.lng }
                     }));
         }
 
-        this.drawRoute();
+        run.AddToMap(myeditmap); 
     }
 
         
@@ -188,30 +180,4 @@ export class mapEditorClass {
         lineArray[pointIds[layerGroup.getLayerId(marker)]] = marker.getLatLng();
         this.drawRoute();
         }
-
-
-    interactableLine(polyline) {
-        polyline.on('mouseover', () => {
-            polyline.setStyle({ color: '#ff5c26', weight: 12 });
-        })
-
-        polyline.on('mouseout', () => {
-            polyline.setStyle({ color: '#db5d57', weight: 6  });
-        })
-
-        polyline.on('click', () => {
-
-            let lineIndex = lineIds[layerGroup.getLayerId(polyline)];
-
-            let stageId = stages[lineIndex].StageId;
-
-            this.dotnetHelper.invokeMethodAsync('Trigger', 'SendStageId',
-                JSON.stringify(
-                    {
-                        StageId: stageId
-                    }));
-
-        })
-    }
-
  }
