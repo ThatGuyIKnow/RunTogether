@@ -1,8 +1,13 @@
 ﻿
+import L from 'leaflet';
+import '@elfalem/leaflet-curve';
+import { settings } from './mapSettings.json';
+import {StageFactory, RunRouteFactory} from "./map/index";
+
 /*Global variable for the map class*/
 let mymap, layerGroup;
 let maxBounds1 = [51.649, 0.49]; 
-let maxBounds2 = [59.799, 18.68];  
+let maxBounds2 = [59.799, 18.68]; 
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
 
 /*Class for the map*/
@@ -11,7 +16,7 @@ export class mapClass {
     constructor() {
         this.initializeMap = this.initializeMap.bind(this);
         this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
-        this.calulateControlPoints = this.calulateControlPoints.bind(this); 
+        //this.calulateControlPoints = this.calulateControlPoints.bind(this); 
         this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
     }
 
@@ -44,17 +49,17 @@ export class mapClass {
 
         this.removeMarkersAndLines();
 
-        let obj = JSON.parse(object);  
+        let obj = JSON.parse(object);
 
-        console.log(object); 
-        console.log(obj); 
+        console.log(object);
+        console.log(obj);
 
-        let i = 0, j = 0, n=0, curvedLine, lineArray = [], runnerName = [];
+        let i = 0, j = 0, n = 0, curvedLine, lineArray = [], runnerName = [];
 
         /*Creating layer group and adding to map*/
         layerGroup = L.layerGroup().addTo(mymap);
 
-       /*Creates curvedlies from object with stages*/
+        /*Creates curvedlies from object with stages*/
         /* for (i = 0; i < this.obj.Stages.length; i++) {
 
             let startpoint = this.obj.Stages[i].StartPoint;
@@ -95,25 +100,78 @@ export class mapClass {
 
         }
 */
-        let latlng1 = [57.0405, 9.9101];
-        let latlng2 = [57.0257, 9.9062]; 
+        //let latlng1 = [57.0405, 9.9101];
+        //let latlng2 = [57.0257, 9.9062];
+        //let latlng3 = [57.0039, 9.9027];
 
-        let latlng3 = [57.0257, 9.9062]; 
-        let latlng4 = [57.0039, 9.9027];
+        //let midtpunkt1 = this.calulateControlPoints(latlng1, latlng2, "right"); 
+        //let midtpunkt2 = this.calulateControlPoints(latlng3, latlng4, "left"); 
 
-        let midtpunkt1 = this.calulateControlPoints(latlng1, latlng2, "right"); 
-        let midtpunkt2 = this.calulateControlPoints(latlng3, latlng4, "left"); 
+        //let curvedPath = L.curve(
+        //    [
+        //        'M', latlng1,
+        //        'Q', midtpunkt1, latlng2,
+        //        'Q', midtpunkt2, latlng3
+        //    ], { color: 'red' }).addTo(mymap);
+        //// curvedPath._path = DOMElement
 
-        let curvedPath = L.curve(
-            [
-                'M', latlng1,
-                'Q', midtpunkt1, latlng2,
-                'Q', midtpunkt2, latlng4
-            ], {color: 'red'}).addTo(mymap);
 
+        //curvedPath._path.classList.add("activeStage");
+        //curvedPath._renderer.on('update',
+        //    (e) => {
+        //        let length = curvedPath._path.getTotalLength();
+        //        curvedPath._path.style.strokeDasharray = length;
+        //        curvedPath._path.style.strokeDashoffset = (length) / 4;
+        //        console.log(curvedPath);
+        //        console.log(e);
+        //        console.log(length);
+        //    });
+        //console.log(Point);
+        //console.log(ActiveStage);
+        let routeFactory = new RunRouteFactory();
+        let stageTemp1 = {
+            StartPoint: [57.0405, 9.9101],
+            EndPoint: [57.0039, 9.9000],
+            ThroughPoints: [[57.0257, 9.9062], [57.0107, 9.9027]],
+            Status: 'Completed',
+            Sponsor: { Name: "Hoho", Message: "Haha", PictureUrl: "eee.com" },
+            Runners: [
+                { Name: "Julemand", Order: 0, Status: "Completed" },
+                { Name: "Hulemand", Order: 1, Status: "Completed" },
+                { Name: "Kuglemand", Order: 2, Status: "Completed" }
+            ]
+        };
+        let stageTemp2 = {
+            StartPoint: [57.0039, 9.9000],
+            EndPoint: [56.9639, 9.8890],
+            ThroughPoints: [[56.9857, 9.8960], [56.9757, 9.8920]],
+            Status: 'Active',
+            Sponsor: { Name: "Hoho", Message: "Haha", PictureUrl: "eee.com" },
+            Runners: [
+                { Name: "Julemand", Order: 0, Status: "Completed" },
+                { Name: "Hulemand", Order: 1, Status: "Active" },
+                { Name: "Kuglemand", Order: 2, Status: "NotStarted" }
+            ]
+        };
+        let stageTemp3 = {
+            StartPoint: [56.9639, 9.8890],
+            EndPoint: [56.9239, 9.8700],
+            ThroughPoints: [[56.9507, 9.8830], [56.9307, 9.8770]],
+            Status: 'NotFinished',
+            Sponsor: { Name: "Hoho", Message: "Haha", PictureUrl: "eee.com" },
+            Runners: [
+                { Name: "Julemand", Order: 0, Status: "NotStarted" },
+                { Name: "Hulemand", Order: 1, Status: "NotStarted" },
+                { Name: "Kuglemand", Order: 2, Status: "NotStarted" }
+            ]
+        };
+        let data = { Name: "RunTogetherRunTest", Stages: [stageTemp1, stageTemp2, stageTemp3] };
+
+        let routeRun = routeFactory.CreateRunRoute(data);
+        routeRun.AddToMap(mymap);
     }
 
-    calulateControlPoints(latlng1, latlng2, direction) {
+    calculateControlPoints(latlng1, latlng2, direction) {
         let offsetX = latlng2[1] - latlng1[1],
             offsetY = latlng2[0] - latlng1[0];
 
@@ -185,4 +243,3 @@ export class mapClass {
 
 //    mymap.on('click', onMapClick);
 //}
-

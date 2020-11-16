@@ -8,3 +8,22 @@ body {
     height: 100vh;
     width: 100%;
 }
+
+.completedStage {
+    stroke: green;
+}
+
+.notStartedStage {
+    stroke: red;
+}
+
+.activeStageOverlay {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    stroke: yellow;
+}
+.activeStage {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    stroke: gray;
+}
