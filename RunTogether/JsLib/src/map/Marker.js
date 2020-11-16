@@ -74,6 +74,54 @@ export class Popup extends AbstractMarker {
     //}
 }
 
+
+export class EditorMarker extends AbstractMarker {
+    constructor(map, point) {
+        super(map, point);
+
+        this._map = map;
+        this.point = point;
+    }
+
+    AddToMap(map) {
+        this._map = map;
+        this._mapMarker = Leaflet.circleMarker({ bubblingMouseEvents: false, fillOpacity: 1 });
+        this._mapMarker.setLanLng(this.point.toArray())
+            .addTo(this._map);
+
+        this.InteractableMarker();
+
+    }
+
+    InteractableMarker() {
+        //constantly sets the markers pos to the curser pos
+        function trackCursor(evt) {
+            this._mapMarker.setLatLng(evt.latlng);
+        }
+
+        //Drag marker 
+        this._mapMarker.on("mousedown", () => {
+            this._map.dragging.disable();
+            this._map.on("mousemove", trackCursor);
+        })
+
+        //Stop dragging marker 
+        this._mapMarker.on("mouseup", () => {
+            this._map.dragging.enable();
+            this._map.off("mousemove", trackCursor);
+            this.markerDragEnd();
+        })
+    }
+
+    markerDragEnd() {
+        //push new coordinates to array and redraw route. 
+        //lineArray[pointIds[layerGroup.getLayerId(this._mapMarker)]] = this._mapMarker.getLatLng();
+        //this.drawRoute();
+    }
+
+}
+
+
 /*
  * MouseDown / MouseUp
  * MapDragging Off / On
