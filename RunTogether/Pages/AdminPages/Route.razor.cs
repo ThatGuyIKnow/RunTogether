@@ -29,6 +29,7 @@ namespace RunTogether.Pages.AdminPages
 
         Run run = new Run();
         StageAssignment AssignmentPlaceholder = new StageAssignment();
+        ApplicationUser RunnerToAdd = default;
 
         protected override async Task OnInitializedAsync()
         {
@@ -49,6 +50,8 @@ namespace RunTogether.Pages.AdminPages
                         .ThenInclude(s => s.AssignedRunners)
                 .FirstOrDefault();
 
+
+
             //indlæser listen af løbere til det valgte løb
             loadRunnerList();
 
@@ -58,12 +61,12 @@ namespace RunTogether.Pages.AdminPages
         //Ændre stageAssignment på index til vlagte værdi
         public async Task Change(ApplicationUser value, int index)
         {
-
             selectedStage.AssignedRunners[index].Order = index;
             selectedStage.AssignedRunners[index].Runner = value;
             selectedStage.AssignedRunners[index].RunnerId = value.RunnerId;
             selectedStage.AssignedRunners[index].Stage = selectedStage;
             selectedStage.AssignedRunners[index].StageId = selectedStage.StageId;
+          
         }
 
         //gemmer ændringer i databasen ved klik på gem knap
@@ -82,16 +85,20 @@ namespace RunTogether.Pages.AdminPages
             {
                 selectedStage.AssignedRunners[i].Order = i;
             }
-
-            StateHasChanged();
             
             rows--;
         }
 
-        //tilføjer nu stageAssignment tom til AssignedRunners 
-        public void Add()
+        public void Add(ApplicationUser runner)
         {
-            selectedStage.AssignedRunners.Add(new StageAssignment());
+            selectedStage.AssignedRunners.Add(new StageAssignment() { 
+                Order       = selectedStage.AssignedRunners.Count, 
+                Runner      = runner,
+                RunnerId    = runner.RunnerId,
+                Stage       = selectedStage,
+                StageId     = selectedStage.StageId,
+            });
+            RunnerToAdd = default;
             rows++;
         }
 
@@ -99,7 +106,6 @@ namespace RunTogether.Pages.AdminPages
         {
             selectedStageId = stageId;
             loadRunnerList();
-            StateHasChanged();
         }
 
         void loadRunnerList()
@@ -116,13 +122,6 @@ namespace RunTogether.Pages.AdminPages
 
                 //tæler mængden af løbere på vlagte stage
                 rows = selectedStage.AssignedRunners.Count;
-
-                //Hvis nul løbere på valgte stage lav ny tom løber og tæl rows op
-                if (rows == 0)
-                {
-                    selectedStage.AssignedRunners.Add(new StageAssignment());
-                    rows++;
-                }
             }
         }
 

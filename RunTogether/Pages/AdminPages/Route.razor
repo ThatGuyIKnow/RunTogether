@@ -7,7 +7,7 @@
 @using System.Collections.Generic
 @using RunTogether.Data
 @using Microsoft.EntityFrameworkCore;
-@using RunTogether.Shared.Map
+@using RunTogether.Shared.Map 
 
 @inject DialogService dialogService
 @inject UserManager<ApplicationUser> userManager
@@ -28,10 +28,9 @@
                 {
                     int i2 = i;
                     <div class="row" Style="margin-bottom: 10px">
-                        <div class="col-md-8">
                             <RadzenLabel text=@($"{i+1}. Løber") />
-                            <RadzenDropDown Name="DropDown" AllowClear="true" TValue="ApplicationUser" Data="@run.Runners" @bind-Value="@selectedStage.AssignedRunners[i2].Runner" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                            AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Change((ApplicationUser)args, i2)" Style="width:100%">
+                            <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" @bind-Value="@selectedStage.AssignedRunners[i2].Runner" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                            AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Change((ApplicationUser)args, i2)" Style="flex-grow: 1;">
                                 <Template Context="data">
                                     @((data as ApplicationUser).FirstName)  @((data as ApplicationUser).LastName)
                                     <br>
@@ -39,17 +38,32 @@
                                 </Template>
                             </RadzenDropDown>
                             <RadzenRequiredValidator Component="DropDown" Text="Skal udfyldes eller slettes" Style="position: relative" />
-                        </div>
-                        <div class="col-md-4">
-                            <br>
-                            <RadzenButton Icon="delete" Size="ButtonSize.Small" Click="@(args => Delete(i2))" />
+                        <div>
+                            <RadzenButton Icon="delete" Size="ButtonSize.Small" Click="@(args => Delete(i2))"/>
                         </div>
                     </div>
                 }
-                <div class="row">
-                    <RadzenButton Icon="add_box" Size="ButtonSize.Small" Click="Add" /><br>
-                    <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Gem"/>
-                </div>
+                @if (selectedStageId != -1)
+                {
+            <div class="row">
+                <RadzenLabel text=@($"Tilføj løber") />
+                <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Add((ApplicationUser)args)" Style="width:100%" @bind-Value="@RunnerToAdd">
+                    <Template Context="data">
+                        @((data as ApplicationUser).FirstName)  @((data as ApplicationUser).LastName)
+                        <br>
+                        (@((data as ApplicationUser).Email))
+                    </Template>
+                </RadzenDropDown>
+                <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Gem" Style="width: 100%" />
+            </div>
+                }
+                else
+                {
+                    <div class="row">
+                        <p>Vælg en rute for at tilføje løbere</p>
+                    </div>
+                }
             </RadzenTemplateForm>
         </RadzenCard>
     </div>
