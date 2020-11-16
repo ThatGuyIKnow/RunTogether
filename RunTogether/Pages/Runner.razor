@@ -1,9 +1,47 @@
 ﻿@page "/runner"
 
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject Microsoft.AspNetCore.Identity.UserManager<RunTogether.Areas.Identity.ApplicationUser> UserManager
+@inject RunTogether.Data.ApplicationDbContext dbContext
+@inject IJSRuntime JSRuntime
+@inject DialogService dialogService
+
 @using RunTogether.Shared.QR.QRScanner
 
 @layout RunTogether.Shared.Layouts.RunnerLayout
+<RadzenDialog />
 
-<h3>Runner</h3>
+<div class="row @cameraCSS">
+    <div class="col">
+        <h2>Velkommen, @runnerName!</h2>
+        <h3>Tryk på knappen for at scanne QR-koden på Børnetelefonen.</h3>
+        <p>Efter koden er scannet kan du starte dit løb.</p>
+        <QRScanner OnCodeScanned="((v) => { qrCode = v; CheckCode(); })" />
+        <br />
+        <p>Hvis du ikke kan scanne QR-koden, kan du indtaste den her.</p>
+        <RadzenTemplateForm TItem="string">
+            <RadzenTextBox Placeholder="Indtast QR-kode" Style="margin-bottom: 20px; width: 200px" @bind-Value="qrCode" />
+            <RadzenButton Text="Næste" Click="() => CheckCode()"></RadzenButton>
+        </RadzenTemplateForm>
+        
+    </div>
+</div>
 
-<QRScanner OnCodeScanned="((v) => { qrCode = v; })" />
+<div class="row @startRunCSS">
+    <div class="col">
+        <h3>Når du er klar til at løbe, tryk på Start Løb.</h3>
+        <RadzenButton Click="@(async () => { StartRun(); })" Text="Start Løb" ButtonStyle="ButtonStyle.Success" Style="margin-bottom: 20px; margin-right: 10px;" Disabled="@buttonDisabled" />
+        <RadzenButton Click="@(() => { stopWatchActive = false; })" Text="Pause" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
+        <RadzenButton Click="@(() => { StopWatch(); })" Text="Fortsæt" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
+        <RadzenButton Click="@(() => { stopWatchActive = false; DisplayResult(); activeRunner.RunningTime = stopWatchValue; UpdateDatabase(RunningStatus.Completed); })" Text="Stop Løb" ButtonStyle="ButtonStyle.Danger" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
+        <p>Løbetid: @stopWatchValue</p>
+    </div>
+</div>
+
+<div class="row @displayResultCSS">
+    <div class="col">
+        <h3>Du er nu færdig med dit løb!</h3>
+        <h3>Din løbetid er @stopWatchValue</h3>
+    </div>
+</div>
+

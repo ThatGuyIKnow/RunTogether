@@ -65,7 +65,7 @@ namespace RunTogether.Shared.Etc
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
-            //await GenerateTestData();
+            await GenerateTestData();
         }
 
         public async Task GenerateTestData()
@@ -79,9 +79,7 @@ namespace RunTogether.Shared.Etc
 
                     Runners = new List<ApplicationUser>
                     {
-                        new ApplicationUser { FirstName = "Oliver", LastName = "Hansen", Email = "Coolguy@gmail.com" },
-                        new ApplicationUser { FirstName = "Kurt", LastName = "C.Kode", Email = "CisGod@gmail.com" },
-                        new ApplicationUser { FirstName = "Mads", LastName = "Madsen", Email = "SejtNavnGod@gmail.com" }
+                        
                     },
 
                     Route = new RunRoute
@@ -93,8 +91,12 @@ namespace RunTogether.Shared.Etc
                     }
                 };
 
+                
+
                 dbContext.Runs.Add(testRun);
                 await dbContext.SaveChangesAsync();
+
+                //await userCreation.CreateRunner("Karin", "Wallsten", "asd@asd.dk", testRun);
         }
 
         public async Task QueryForRunners(Run QueryRun)

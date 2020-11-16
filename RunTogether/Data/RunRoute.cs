@@ -14,11 +14,6 @@ namespace RunTogether
 
         public Run? Run { get; set; }
 
-        //public RunRoute()
-        //{
-        //    Stages = new List<Stage>();
-        //}
-
         public override string ToString()
         {
             return RunRouteId.ToString();

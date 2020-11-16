@@ -28,5 +28,10 @@ namespace RunTogether
 
         public int GetNextRunnerId() { return NextRunnerId; }
         public void IncrementRunnerId() { NextRunnerId++; }
+
+        public Stage GetCurrentStage()
+        {
+            return Route.Stages.Find(s => s.status == RunningStatus.Active);
+        }
     }
 }
