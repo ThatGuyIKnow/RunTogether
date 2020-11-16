@@ -7,11 +7,12 @@ namespace RunTogetherTests
 {
     public class LayoutTests : TestContext
     {
+        #region Checks if things render correctly
         // Check if sponsor bar renders correctly
         [Fact]
         public void SponsorBarRendersCorrectly()
         {
-            // Arrange
+            // Act
             var cut = RenderComponent<SponsorBar>(); // cut = Component Under Test
 
             var expectedMarkup = @"<div class=""top-row pl-4 navbar navbar-dark"">
@@ -31,7 +32,7 @@ namespace RunTogetherTests
         [Fact]
         public void MainLayoutRendersCorrectly()
         {
-            // Arrange
+            // Act
             var cut = RenderComponent<MainLayout>(); // cut = Component Under Test
 
             var expectedMarkup = @"<div class=""sidebar"" id=""navBarId"">
@@ -60,5 +61,6 @@ namespace RunTogetherTests
             // Assert
             cut.MarkupMatches(expectedMarkup);
         }
+        #endregion
     }
 }
