@@ -26,10 +26,11 @@ namespace RunTogether.Pages
         private string? runnerID;
         private Stage activeStage = new Stage();
         private StageAssignment activeRunner = new StageAssignment();
+        private string? cookie;
 
         //Variables for hiding and displaying CSS.
         private const string HideCss = "display-none";
-        private string cameraCSS = "";
+        private string cameraCSS = HideCss;
         private string startRunCSS = HideCss; 
         private string displayResultCSS = HideCss;
 
@@ -53,6 +54,17 @@ namespace RunTogether.Pages
 
                     runnerName = currentUser.FirstName;
                     runnerID = currentUser.Id;
+
+                    //Get the codeScanned cookie, and display the relevant CSS elements.
+                    cookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "CodeScanned");
+                    if (cookie == null || !cookie.Equals("Yes"))
+                    {
+                        cameraCSS = "";
+                    }
+                    else
+                    {
+                        startRunCSS = "";
+                    }
                 }
                 StateHasChanged();
             }
@@ -66,6 +78,9 @@ namespace RunTogether.Pages
             //Checks that the QR-code is correct.
             if (assignedRun.QRString.Equals(qrCode))
             {
+                //Sets a cookie that remembers that the code has been scanned.
+                await JSRuntime.InvokeAsync<string>("Main.Common.WriteCookie", "CodeScanned", "Yes", 2);
+
                 //Checks if there is an active runner, or if the current user's status is Completed.
                 if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(runnerID)).Status == RunningStatus.Completed)
                 {
@@ -147,5 +162,11 @@ namespace RunTogether.Pages
             activeStage = assignedRun.GetCurrentStage();
             activeRunner = activeStage.GetCurrentRunner();
         }
+
+        //public async Task WriteCookieAsync(string name, string value, int days)
+        //{
+        //    //var test = await JSRuntime.InvokeAsync<string>("blazorExtensions.WriteCookie", name, value, days);
+        //    var test = await JSRuntime.InvokeAsync<string>("Main.CommonJS.WriteCookie", name, value, days);
+        //}
     }
 }
