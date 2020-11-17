@@ -13,7 +13,7 @@
 
 <div class="row @cameraCSS">
     <div class="col">
-        <h2>Velkommen, @runnerName!</h2>
+        <h2>Velkommen, @currentUser.FirstName!</h2>
         <h3>Tryk på knappen for at scanne QR-koden på Børnetelefonen.</h3>
         <p>Efter koden er scannet kan du starte dit løb.</p>
         <QRScanner OnCodeScanned="((v) => { qrCode = v; CheckCode(); })" />
