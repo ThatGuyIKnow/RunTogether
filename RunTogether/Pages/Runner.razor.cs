@@ -19,17 +19,17 @@ namespace RunTogether.Pages
     public partial class Runner
     {
         //Variables for storing information about the current run and runner.
-        private int currentCount = 0;
         private string qrCode = "";
+        private string? cookie;
         private Run assignedRun = new Run();
-        private string runnerName = "";
-        private int runnerID;
         private Stage activeStage = new Stage();
         private StageAssignment activeRunner = new StageAssignment();
+        private ApplicationUser currentUser = new ApplicationUser();
+        
 
         //Variables for hiding and displaying CSS.
         private const string HideCss = "display-none";
-        private string cameraCSS = "";
+        private string cameraCSS = HideCss;
         private string startRunCSS = HideCss; 
         private string displayResultCSS = HideCss;
 
@@ -42,7 +42,7 @@ namespace RunTogether.Pages
 
                 if (user.Identity.IsAuthenticated)
                 {
-                    var currentUser = await UserManager.GetUserAsync(user);
+                    currentUser = await UserManager.GetUserAsync(user);
                     assignedRun = await dbContext.Runs
                                         .Where(r => r.ID == currentUser.RunId)
                                         .Include(r => r.Route)
@@ -51,8 +51,16 @@ namespace RunTogether.Pages
                                         .ThenInclude(a => a.Runner)
                                         .FirstOrDefaultAsync();
 
-                    runnerName = currentUser.FirstName;
-                    runnerID = currentUser.RunnerId;
+                    //Get the codeScanned cookie, and display the relevant CSS elements.
+                    cookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "CodeScanned");
+                    if (cookie == null || !cookie.Equals("Yes"))
+                    {
+                        cameraCSS = "";
+                    }
+                    else
+                    {
+                        startRunCSS = "";
+                    }
                 }
                 StateHasChanged();
             }
@@ -66,18 +74,18 @@ namespace RunTogether.Pages
             //Checks that the QR-code is correct.
             if (assignedRun.QRString.Equals(qrCode))
             {
-                if (activeRunner == null || activeRunner.RunnerId != runnerID)
+                //Sets a cookie that remembers that the code has been scanned.
+                await JSRuntime.InvokeAsync<string>("Main.Common.WriteCookie", "CodeScanned", "Yes", 2);
+
+                //Checks if there is an active runner, or if the current user's status is Completed.
+                if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(currentUser.Id)).Status == RunningStatus.Completed)
                 {
-                    //Checks if the runner has already completed the run.
-                    if (activeStage.AssignedRunners.Find(a => a.RunnerId == runnerID).Status == RunningStatus.Completed)
-                    { 
-                        await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
-                    }
-                    else
-                    {
-                        //Sets the previous runner's status to Completed, if they still have a status of Active.
-                        UpdateDatabase(RunningStatus.Completed);
-                    }
+                    await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
+                }
+                //Sets the previous runner's status to Completed, if they still have a status of Active.
+                else if (!activeRunner.Runner.Id.Equals(currentUser.Id))
+                {
+                    UpdateDatabase(RunningStatus.Completed);
                 }
 
                 //Hides the camera CSS and displays the start run CSS.
