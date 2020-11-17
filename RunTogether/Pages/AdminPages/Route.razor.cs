@@ -61,6 +61,7 @@ namespace RunTogether.Pages.AdminPages
         //Ændre stageAssignment på index til vlagte værdi
         public async Task Change(ApplicationUser value, int index)
         {
+            Console.WriteLine(value.FirstName + " er sat til løber nr. " + index+1);
             selectedStage.AssignedRunners[index].Order = index;
             selectedStage.AssignedRunners[index].Runner = value;
             selectedStage.AssignedRunners[index].RunnerId = value.RunnerId;
@@ -72,6 +73,7 @@ namespace RunTogether.Pages.AdminPages
         //gemmer ændringer i databasen ved klik på gem knap
         public async void Save() 
         {
+            Console.WriteLine("Route saved");
             await dbContext.SaveChangesAsync();
         }
 
@@ -98,6 +100,7 @@ namespace RunTogether.Pages.AdminPages
                 Stage       = selectedStage,
                 StageId     = selectedStage.StageId,
             });
+            Console.WriteLine(runner.FirstName + " er sat til løber nr. " + selectedStage.AssignedRunners.Count);
             RunnerToAdd = default;
             rows++;
         }
