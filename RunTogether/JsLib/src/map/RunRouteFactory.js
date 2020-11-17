@@ -9,6 +9,7 @@ export class RunRouteFactory {
 
         const stageFactory = new StageFactory();
         let stages = [];
+
         let currStage;
         let flipped = false;
         if (Array.isArray(Stages)) {

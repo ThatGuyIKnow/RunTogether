@@ -4,7 +4,7 @@ import { Point } from './Point';
 import { Popup } from './Marker';
 import { Sponsor } from './Sponsor';
 import { Runner } from './Runner';  
-import {isClassOrSubclass} from '../utils/ClassTypeUtils';
+import { isClassOrSubclass } from '../utils/ClassTypeUtils';
 
 /*
  * Abstract Stage class
@@ -37,16 +37,17 @@ export class AbstractStage {
             throw new TypeError("Parameter 'layer' should be or extend from Layer class");
         
         this._layer = layer;
-        this.path = this.CreatePath();
+        this.path = this.CreatePath().setStyle({'weight': 10});
         this.path.addTo(this._layer);
         this.AddHoverFocus(this.path);
         this.AddPopup(this, this.path);
+        this.path._path.setAttribute('filter', 'url(#pathFilter)');
     }
 
     AddHoverFocus(target, trigger = null) {
         if (trigger === null) trigger = target;
-        trigger.on('mouseover', () => target.setStyle({ weight: 12 }));
-        trigger.on('mouseout', () => target.setStyle({ weight: 6 }));
+        trigger.on('mouseover', () => target.setStyle({ weight: 15 }));
+        trigger.on('mouseout', () => target.setStyle({ weight: 10 }));
     }
 
 
@@ -59,16 +60,27 @@ export class AbstractStage {
         const path = [];
         const points = [this.startPoint, ...this.throughPoints, this.endPoint];
 
-        path.push('M', this.startPoint.toArray());
-
-        let direction = this.flipped ? -1 : 1;
-        for (let i = 0; i < points.length - 1; i++) {
-            let controlPoint = this.CalculateControlPoint(points[i], points[i + 1], direction);
-            path.push('Q', controlPoint.toArray(), points[i + 1].toArray());
-            direction *= -1;
-        }
-        return Leaflet.curve(path);
+        points.forEach(p => {
+            path.push(p.toArray());
+        });
+        return Leaflet.polyline(path);
     }
+
+
+    //CreatePath() {
+    //    const path = [];
+    //    const points = [this.startPoint, ...this.throughPoints, this.endPoint];
+
+    //    path.push('M', this.startPoint.toArray());
+
+    //    let direction = this.flipped ? -1 : 1;
+    //    for (let i = 0; i < points.length - 1; i++) {
+    //        let controlPoint = this.CalculateControlPoint(points[i], points[i + 1], direction);
+    //        path.push('Q', controlPoint.toArray(), points[i + 1].toArray());
+    //        direction *= -1;
+    //    }
+    //    return Leaflet.curve(path);
+    //}
 
     CalculateControlPoint(point1, point2, amplitude) {
         if (!isClassOrSubclass(point1, Point) ||
@@ -150,7 +162,6 @@ export class ActiveStage extends AbstractStage {
 
     constructor(startPoint, endPoint, throughPoints = [], flipped = false) {
         super(startPoint, endPoint, throughPoints, flipped);
-
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.throughPoints = throughPoints;
@@ -163,13 +174,14 @@ export class ActiveStage extends AbstractStage {
 
         this.overlayPath = this.CreatePath();
         this.overlayPath.addTo(this._layer);
+        this.overlayPath.setStyle({ 'weight': 10 });
         this.overlayPath._path.classList.add(this.overlayClassName);
+        this.overlayPath._path.setAttribute('filter', 'url(#pathFilter)');
 
-        this.SetOverlayPercentage(this.CalculateOverlayPercentage());
-        this.UpdateOverlay();
         this.overlayPath._renderer.on('update', () => {
             this.UpdateOverlay();
         });
+        this.SetOverlayPercentage(this.CalculateOverlayPercentage());
         this.AddHoverFocus(this.overlayPath, this.path);
         this.AddHoverFocus(this.path);
         this.AddHoverFocus(this.overlayPath);
@@ -200,8 +212,9 @@ export class ActiveStage extends AbstractStage {
     }
 
     UpdateOverlay() {
-        let length = this.overlayPath._path.getTotalLength();
-        this.overlayPath._path.style.strokeDashoffset = (1 - this._overlayPercentage) * length;
-        this.overlayPath._path.style.strokeDasharray = length;
+        let start = this.startPoint.toArray();
+        let end = this.endPoint.toArray();
+        let delta = [end[0] - start[0], end[1] - start[1]];
+        this.overlayPath._latlngs[1] = [start[0] + delta[0] * this._overlayPercentage, start[1] + delta[1] * this._overlayPercentage];
     }
 }

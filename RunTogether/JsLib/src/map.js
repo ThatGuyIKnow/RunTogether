@@ -54,31 +54,30 @@ export class mapClass {
             Name: "RunTogetherTest",
             Stages: [
                 {
-                    StartPoint: [57.0405, 9.9101],
-                    ThroughPoints: [],
-                    EndPoint: [57.0257, 9.9062],
-                    Status: "Completed",
-                    Runners: [{ Status: "Completed", Name: "Casper", Order: 0 },
-                        { Status: "Completed", Name: "Puma", Order: 1 }],
-                    Sponsor: {
-                        Name: "Lejenregnskabschef.dk",
-                        PictureURL: "https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png",
-                        Message: "Vi er stolte sponsorer"
-                    }
-                },
-                {
                     StartPoint: [57.0257, 9.9062],
-                    ThroughPoints: [],
-                    EndPoint: [57.0107, 9.9020],
-                    Status: "Active",
+                    ThroughPoints: [[57.0257, 9.9962]],
+                    EndPoint: [54.0107, 9.9020],
+                    Status: "Completed",
                     Runners: [
                         { Status: "Completed", Name: "Lasper", Order: 0 },
-                        { Status: "Active", Name: "Kuma", Order: 1 }
+                        { Status: "Completed", Name: "Kuma", Order: 1 }
                     ],
                     Sponsor: {
                         Name: "State Energy Gunk",
                         PictureURL: "https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png",
                         Message: "Eat our Gunkz"
+                    }
+                }, {
+                    StartPoint: [54.0107, 9.9020],
+                    ThroughPoints: [],
+                    EndPoint: [55.0257, 9.6062],
+                    Status: "Active",
+                    Runners: [{ Status: "Completed", Name: "Casper", Order: 0 },
+                        { Status: "Active", Name: "Puma", Order: 1 }],
+                    Sponsor: {
+                        Name: "Lejenregnskabschef.dk",
+                        PictureURL: "https://www.runtogether.dk/wp-content/uploads/2020/03/jhuih.png",
+                        Message: "Vi er stolte sponsorer"
                     }
                 }
             ]
@@ -88,7 +87,32 @@ export class mapClass {
 /*      let obj = JSON.parse(object);*/
         let routeRun = routeFactory.CreateRunRoute(testRoute);
         routeRun.AddToLayer(layerGroup);
-        console.log(layerGroup);
+
+        this.AddFilter();
+    }
+
+    AddFilter() {
+        var svg = mymap.getPanes().overlayPane.firstChild,
+            svgFilter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+
+        svgFilter.setAttribute('id', 'pathFilter');
+        svgFilter.setAttribute('x', '-100%');
+        svgFilter.setAttribute('y', '-100%');
+        svgFilter.setAttribute('width', '500%');
+        svgFilter.setAttribute('height', '500%');
+
+
+        let s1 = '<feGaussianBlur in="SourceAlpha" stdDeviation = "2" result = "BLUR" ></feGaussianBlur >' +
+            '<feSpecularLighting in="BLUR" surfaceScale="6" specularExponent="30" result="SPECULAR" lighting-color="#white">' +
+            '<fePointLight x="40" y="-30" z="200" result="b61119e7-b6a7-4e48-a1e1-1e36ab0c51be"></fePointLight>' +
+            '</feSpecularLighting>' +
+            '<feComposite in="SPECULAR" in2="SourceAlpha" operator="in" result="COMPOSITE"></feComposite>' +
+            '<feMerge result="9ab789a6-a71b-42be-b5de-48a608b4a107">' +
+            '<feMergeNode in="SourceGraphic"></feMergeNode><feMergeNode in="COMPOSITE"></feMergeNode>' +
+            '</feMerge>';
+
+        svgFilter.innerHTML = s1;
+        svg.appendChild(svgFilter);
     }
 
 

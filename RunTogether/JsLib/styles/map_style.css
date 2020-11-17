@@ -10,21 +10,17 @@ body {
 }
 
 .completedStage {
-    stroke: green;
+    stroke: rgba(255, 101, 101);
 }
 
 
 .notStartedStage {
-    stroke: red;
+    stroke: rgb(200, 200, 200);
 }
 
 .activeStageOverlay {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    stroke: yellow;
+    stroke: rgb(255, 101, 101);
 }
 .activeStage {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    stroke: gray;
+    stroke: rgb(200, 200, 200);
 }
