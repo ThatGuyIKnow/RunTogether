@@ -74,26 +74,26 @@ export class AbstractStage {
         if (!isClassOrSubclass(point1, Point) ||
             !isClassOrSubclass(point2, Point) ||
             typeof amplitude !== "number")
-            throw new TypeError("Method 'CalculateControlPoints' use parameters '<latlng1 : Point, latlng2 : Point, amplitude : Number>'");
+            throw new TypeError("Method 'CalculateControlPoints' use parameters '<latlngFrom : Point, latlngTo : Point, amplitude : Number>'");
 
-        const latlng1 = point1.toArray(),
-            latlng2 = point2.toArray();
+        const latlngFrom = point1.toArray(),
+              latlngTo = point2.toArray();
 
-        let offsetX = latlng2[1] - latlng1[1],
-            offsetY = latlng2[0] - latlng1[0];
+        let offsetX = latlngTo[1] - latlngFrom[1],
+            offsetY = latlngTo[0] - latlngFrom[0];
 
-        let r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)),
-            theta = Math.atan2(offsetY, offsetX);
+        let r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2));
+        let theta = Math.atan2(offsetY, offsetX);
 
         let thetaOffset = (11 / 10);
 
         let r2 = (r / 2) / (Math.cos(thetaOffset));
         let theta2 = theta + (amplitude * thetaOffset);
 
-        let midpointX = (r2 * Math.cos(theta2)) + latlng1[1],
-            midpointY = (r2 * Math.sin(theta2)) + latlng1[0];
+        let controlPointX = (r2 * Math.cos(theta2)) + latlngFrom[1];
+        let controlPointY = (r2 * Math.sin(theta2)) + latlngFrom[0];
 
-        return new Point(midpointY, midpointX);
+        return new Point(controlPointY, controlPointX);
     }
 
     AddPopup(stage, path) {
