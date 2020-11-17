@@ -19,14 +19,13 @@ namespace RunTogether.Pages
     public partial class Runner
     {
         //Variables for storing information about the current run and runner.
-        private int currentCount = 0;
         private string qrCode = "";
+        private string? cookie;
         private Run assignedRun = new Run();
-        private string runnerName = "";
-        private string? runnerID;
         private Stage activeStage = new Stage();
         private StageAssignment activeRunner = new StageAssignment();
-        private string? cookie;
+        private ApplicationUser currentUser = new ApplicationUser();
+        
 
         //Variables for hiding and displaying CSS.
         private const string HideCss = "display-none";
@@ -43,7 +42,7 @@ namespace RunTogether.Pages
 
                 if (user.Identity.IsAuthenticated)
                 {
-                    var currentUser = await UserManager.GetUserAsync(user);
+                    currentUser = await UserManager.GetUserAsync(user);
                     assignedRun = await dbContext.Runs
                                         .Where(r => r.ID == currentUser.RunId)
                                         .Include(r => r.Route)
@@ -51,9 +50,6 @@ namespace RunTogether.Pages
                                         .ThenInclude(s => s.AssignedRunners)
                                         .ThenInclude(a => a.Runner)
                                         .FirstOrDefaultAsync();
-
-                    runnerName = currentUser.FirstName;
-                    runnerID = currentUser.Id;
 
                     //Get the codeScanned cookie, and display the relevant CSS elements.
                     cookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "CodeScanned");
@@ -82,12 +78,12 @@ namespace RunTogether.Pages
                 await JSRuntime.InvokeAsync<string>("Main.Common.WriteCookie", "CodeScanned", "Yes", 2);
 
                 //Checks if there is an active runner, or if the current user's status is Completed.
-                if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(runnerID)).Status == RunningStatus.Completed)
+                if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(currentUser.Id)).Status == RunningStatus.Completed)
                 {
                     await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
                 }
                 //Sets the previous runner's status to Completed, if they still have a status of Active.
-                else if (!activeRunner.Runner.Id.Equals(runnerID))
+                else if (!activeRunner.Runner.Id.Equals(currentUser.Id))
                 {
                     UpdateDatabase(RunningStatus.Completed);
                 }
