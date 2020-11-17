@@ -11,9 +11,13 @@ export class RunRouteFactory {
         let stages = [];
         let currStage;
         let flipped = false;
+        let lastStage = false;
         if (Array.isArray(Stages)) {
-            Stages.forEach(stage => {
-                currStage = stageFactory.CreateStage(stage, flipped, editor, map, objRef);
+            Stages.forEach((stage, index) => {
+                if (index == (Stages.length - 1)) {
+                    lastStage = true; 
+                }
+                currStage = stageFactory.CreateStage(stage, flipped, editor, map, objRef, index, lastStage);
                 stages.push(currStage);
                 flipped = currStage.EvenNumberOfCurves() === flipped;
             });

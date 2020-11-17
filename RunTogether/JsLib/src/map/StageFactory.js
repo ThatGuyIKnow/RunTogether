@@ -7,7 +7,7 @@ import {Sponsor} from './Sponsor';
 export class StageFactory {
     constructor() { }
 
-    CreateStage(stageData, flipped = false, editStage = false, map = null, objRef = null) {
+    CreateStage(stageData, flipped = false, editStage = false, map = null, objRef = null, stageIndex, lastStage) {
         const startPoint = new Point(...stageData.StartPoint);
         const endPoint = new Point(...stageData.EndPoint);
         const throughPoints = this.ConstructThroughPoints(stageData.ThroughPoints);
@@ -25,7 +25,7 @@ export class StageFactory {
         let stage;
 
         if (editStage == true) {
-            stage = new EditStage(startPoint, endPoint, throughPoints, flipped, stageData.StageId, map, objRef); 
+            stage = new EditStage(startPoint, endPoint, throughPoints, flipped, stageData.StageId, map, objRef, stageIndex, lastStage); 
         }
         else {
             if (stageData.Status === 'Active')

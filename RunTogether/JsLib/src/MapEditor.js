@@ -70,7 +70,6 @@ export class mapEditorClass {
 
     addNewStage(e) {
         if (run.stages.length < 1) {
-
             let stageFactory = new StageFactory();
             let currStage = stageFactory.CreateStage({ StartPoint: [e.latlng.lat, e.latlng.lng], ThroughPoints: [], EndPoint: [e.latlng.lat, e.latlng.lng] }, true, true);
             run.stages.push(currStage);
@@ -80,7 +79,7 @@ export class mapEditorClass {
             let lastY = run.stages[run.stages.length - 1].endPoint.y;
 
             //send a segment back to blazor, for saving to DB
-            this.dotnetHelper.invokeMethodAsync('Trigger', 'AddSegment',
+            this.dotnetHelper.invokeMethodAsync('Trigger', 'AddStage',
                 JSON.stringify(
                     {
                         StartPoint: { X: lastX, Y: lastY },

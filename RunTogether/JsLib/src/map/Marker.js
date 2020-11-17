@@ -76,14 +76,17 @@ export class Popup extends AbstractMarker {
 
 
 export class EditorMarker extends AbstractMarker {
-    constructor(layer, point, map, path) {
+    constructor(layer, point, map, stage, prevStage, dotnetHelper, lastMarker) {
         super(layer, point);
 
         this._layer = layer;
         this.point = point;
         this._map = map;
 
-        this._path = path;
+        this._dotnetHelper = dotnetHelper; 
+        this._stage = stage;
+        this._prevStage = prevStage;
+        this._lastMarker = lastMarker; 
     }
 
     AddToLayer(layer) {
@@ -127,10 +130,38 @@ export class EditorMarker extends AbstractMarker {
         //this._prevPath.endPoint.x = marker.getLatLng().lat;
         //this._prevpath.endPoint.y = marker.getLatLng().lng;
 
-        //send new coordinates back to  blazor and update DB....
+        //send a stages back to blazor, for saving to DB
+        console.log("stages touched by point");
+        console.log(this._stage);
+        console.log(this._prevStage);
 
+        if (this._lastMarker == true) {
+            this._dotnetHelper.invokeMethodAsync('Trigger', 'EditStage',
+                JSON.stringify(
+                    {
+                        StageId: this._stage.stageId,
+                        StartPoint: { X: this._stage.startPoint.x, Y: this._stage.startPoint.y },
+                        EndPoint: { X: marker.getLatLng().lat, Y: marker.getLatLng().lng }
+                    }));
+        }
+        else {
+            this._dotnetHelper.invokeMethodAsync('Trigger', 'EditStage',
+                JSON.stringify(
+                    {
+                        StageId: this._stage.stageId,
+                        StartPoint: { X: marker.getLatLng().lat, Y: marker.getLatLng().lng },
+                        EndPoint: { X: this._stage.endPoint.x, Y: this._stage.endPoint.y }
+                    }));
+
+            this._dotnetHelper.invokeMethodAsync('Trigger', 'EditStage',
+                JSON.stringify(
+                    {
+                        StageId: this._prevStage.stageId,
+                        StartPoint: { X: this._prevStage.startPoint.x, Y: this._prevStage.startPoint.y },
+                        EndPoint: { X: marker.getLatLng().lat, Y: marker.getLatLng().lng }
+                    }));
+        }
     }
-
 }
 
 

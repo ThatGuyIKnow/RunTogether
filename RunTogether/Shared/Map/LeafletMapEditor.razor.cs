@@ -30,7 +30,7 @@ namespace RunTogether.Shared.Map
                 
 
                 //event called from JS
-                Handler.AddHandler("AddSegment", (evt) => {
+                Handler.AddHandler("AddStage", (evt) => {
                     //Deserialize and cast to a Stage object. 
                     Stage NewStage = JsonSerializer.Deserialize<Stage>(evt);
 
@@ -39,6 +39,22 @@ namespace RunTogether.Shared.Map
                     dbContext.SaveChanges();
                     //StateHasChanged();
                     //JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", json);
+
+                    JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
+                });
+
+
+                //event called from JS
+                Handler.AddHandler("EditStage", (evt) => {
+                    //Deserialize and cast to a Stage object. 
+                    Stage NewStage = JsonSerializer.Deserialize<Stage>(evt);
+
+                    Stage EditStage = dbContext.Stages.Where(s => s.StageId == NewStage.StageId).FirstOrDefault();
+
+                    EditStage.StartPoint = NewStage.StartPoint;
+                    EditStage.EndPoint = NewStage.EndPoint;
+
+                    dbContext.SaveChanges();
 
                     JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
                 });

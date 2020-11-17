@@ -106,6 +106,10 @@ export class AbstractStage {
     EvenNumberOfCurves() {
         return this.throughPoints.length % 2 === 1;
     }
+
+    PassBind(bind) {
+        this.GetPrevLine = bind; 
+    }
 }
 
 export class InactiveStage extends AbstractStage {
@@ -211,14 +215,13 @@ export class EditStage extends AbstractStage {
     _layer = null;
     _overlayPercentage = 0.0;
     runners = [];
-    className = "editStage";
-    //overlayClassName = "activeStageOverlay";
+    className = "notStartedStage";
     path = null;
     overlayPath = null;
     flipped = false;
 
 
-    constructor(startPoint, endPoint, throughPoints = [], flipped = false, stageId, map, objRef) {
+    constructor(startPoint, endPoint, throughPoints = [], flipped = false, stageId, map, objRef, stageIndex, lastStage) {
         super(startPoint, endPoint, throughPoints, flipped);
 
         this.startPoint = startPoint;
@@ -229,15 +232,25 @@ export class EditStage extends AbstractStage {
 
         this._map = map; 
         this._dotnetHelper = objRef;
+        this._stageIndex = stageIndex;
+        this._lastStage = lastStage;
     }
 
     AddToLayer(layer) {
         super.AddToLayer(layer, this.startPoint);
-        //this.path._path.classList.add(this.className); ?? 
+
+        this._prevStage = this.GetPrevLine(this._stageIndex);
+
+        this.path._path.classList.add(this.className);
         this.InteractablePath(this.path);
 
-        this._marker = new EditorMarker(this._layer, this.startPoint, this._map, this, this._prevStage);
+        this._marker = new EditorMarker(this._layer, this.startPoint, this._map, this, this._prevStage, this._dotnetHelper, false);
         this._marker.AddToLayer(this._layer);
+
+        if (this._lastStage == true) {
+            this._marker = new EditorMarker(this._layer, this.endPoint, this._map, this, this._prevStage, this._dotnetHelper, true);
+            this._marker.AddToLayer(this._layer);
+        } 
     }
 
     InteractablePath(path) {
@@ -249,7 +262,7 @@ export class EditStage extends AbstractStage {
             path.setStyle({ color: '#db5d57', weight: 6 });
         })
 
-        path.on('click', () => {;
+        path.on('click', () => {
             this._dotnetHelper.invokeMethodAsync('Trigger', 'SendStageId',
                 JSON.stringify(
                     {
