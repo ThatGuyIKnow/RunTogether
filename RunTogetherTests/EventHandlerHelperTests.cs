@@ -35,9 +35,9 @@ namespace RunTogetherTests
         {
             bool result = false;
             EventHandlerHelper handler = new EventHandlerHelper();
-            handler.AddHandler("click", o => result = (bool)o );
+        //    handler.AddHandler("click", o => result = (bool)o );
 
-            handler.Trigger("click", true);
+          //  handler.Trigger("click", true);
 
             Assert.True(result);
         }
