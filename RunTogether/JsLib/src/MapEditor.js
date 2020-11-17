@@ -54,7 +54,13 @@ export class mapEditorClass {
 
     loadRoute(serialData) {
         console.log('loaded route');
-     
+
+        layerGroup.clearLayers();
+
+        //editMap.eachLayer(function (layer) {
+        //    map.removeLayer(layer);
+        //});
+
         let routeFactory = new RunRouteFactory();
 
         run = routeFactory.CreateRunRoute(serialData, true, editMap, this.dotnetHelper);

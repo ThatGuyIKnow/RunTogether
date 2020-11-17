@@ -53,21 +53,22 @@ namespace RunTogether.Shared.Map
                 });
 
                 await JsRunTime.InvokeVoidAsync("Main.MapEditor.initializeMap", Handler.ObjRef);
-                
-                StateHasChanged();
-                
-            }
-            //if run has no route, add one
-            if (Run.Route == null)
-            {
-                Run.Route = new RunRoute() { Stages = new List<Stage>() };
-                //db save is needed for ToJsonSerializableViewer to find the new route's run
-                await dbContext.SaveChangesAsync();
-            }
 
 
-            var test = Run.Route.ToJsonSerializableViewer(); 
-            await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
+                //if run has no route, add one
+                if (Run.Route == null)
+                {
+                    Run.Route = new RunRoute() { Stages = new List<Stage>() };
+                    //db save is needed for ToJsonSerializableViewer to find the new route's run
+                    await dbContext.SaveChangesAsync();
+                }
+
+                await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
+
+                //StateHasChanged();
+                
+            }
+
         }
 
         protected override void OnParametersSet()
