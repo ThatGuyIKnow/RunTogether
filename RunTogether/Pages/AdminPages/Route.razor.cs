@@ -53,7 +53,7 @@ namespace RunTogether.Pages.AdminPages
 
 
             //indlæser listen af løbere til det valgte løb
-            loadRunnerList();
+            LoadRunnerList();
 
         }
 
@@ -105,13 +105,13 @@ namespace RunTogether.Pages.AdminPages
             rows++;
         }
 
-        void reciveFromChild(int stageId)
+        void ReciveFromChild(int stageId)
         {
             selectedStageId = stageId;
-            loadRunnerList();
+            LoadRunnerList();
         }
 
-        void loadRunnerList()
+        void LoadRunnerList()
         {
             if (selectedStageId != -1)
             {

@@ -11,15 +11,16 @@
 @inject IJSRuntime jsRuntime
 @inject ApplicationDbContext dbContext
 @inject UserManager<ApplicationUser> userManager
-@inject DialogService dialogService
+@inject DialogService createRunDialog
+@inject DialogService deleteRunDialog
 @inject UserCreationHelper userCreation
 
-<RadzenButton Icon="directions_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret nyt løb",
+<RadzenButton Icon="directions_run" Text="Opret nyt løb " Click="@(args => createRunDialog.Open<CreateNewRun>($"Opret nyt løb",
                         new Dictionary<string, object>(),
                         new DialogOptions(){ Width = "700px", Height = "530px" }))" />
 
 <div class="row">
-    <div class="col-md-6" >
+    <div class="col-md-6">
         <RadzenGrid @ref="runTable" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
             <Columns>
                 <RadzenGridColumn TItem="Run" Property="Name" Title="Løb"></RadzenGridColumn>
@@ -30,6 +31,8 @@
                 <RadzenGridColumn TItem="Run" Context="ID" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
                     <Template Context="run">
                         <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => NavigateToPage($"admin/{run.ID}/info"))">
+                        </RadzenButton>
+                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => deleteRunDialog.Confirm("Er du sikker på at du vil slette løb med navnet: " + run.Name + "?", "Slet " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" }))">
                         </RadzenButton>
                     </Template>
                 </RadzenGridColumn>
