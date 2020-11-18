@@ -29,7 +29,7 @@
                     {
                         int i2 = i;
                         <div Style="margin-bottom: 10px">
-                            <RadzenLabel text=@($"{i+1}. Løber") />
+                            <RadzenLabel Text=@($"{i+1}. Løber") />
                             <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" @bind-Value="@selectedStage.AssignedRunners[i2].Runner" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                             AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Change((ApplicationUser)args, i2)" Style="flex-grow: 1;">
                                 <Template Context="data">
@@ -48,7 +48,7 @@
                 {
                     <hr>
                     <div class="row">
-                        <RadzenLabel text=@($"Tilføj løber") />
+                        <RadzenLabel Text=@($"Tilføj løber") />
                         <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                         AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Add((ApplicationUser)args)" Style="width:100%" @bind-Value="@RunnerToAdd">
                             <Template Context="data">
@@ -68,5 +68,30 @@
                 }
             </RadzenTemplateForm>
         </RadzenCard>
+        <RadzenCard>
+            <RadzenTemplateForm TItem="StageAssignment" Data="@AssignmentPlaceholder" Submit="()=> Save()">
+                @if (selectedStageId != -1)
+                {
+                <div class="row">
+                    <RadzenLabel Text=@($"Tilføj sponser") />
+                    <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Style="width:100%">
+                    </RadzenDropDown>
+                </div>
+                <div class="row">
+                    <RadzenLabel Text=@($"Sponser besked") />
+                    <RadzenTextArea Placeholder="Enter here..." Style="width:100%"/>
+                </div>
+                }
+                else
+                {
+                <div class="row">
+                    <p>Vælg en rute for at tilføje løbere</p>
+                </div>
+                }
+            </RadzenTemplateForm>
+        </RadzenCard>
+
+
     </div>
 </div>
