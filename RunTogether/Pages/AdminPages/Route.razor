@@ -24,10 +24,11 @@
         <h3></h3>
         <RadzenCard>
             <RadzenTemplateForm TItem="StageAssignment" Data="@AssignmentPlaceholder" Submit="()=> Save()">
-                @for (int i = 0; i < rows; i++)
-                {
-                    int i2 = i;
-                    <div class="row" Style="margin-bottom: 10px">
+                <div class="scrollableRZCard row" Style="max-height: 30vh; margin-left:0;">
+                    @for (int i = 0; i < rows; i++)
+                    {
+                        int i2 = i;
+                        <div Style="margin-bottom: 10px">
                             <RadzenLabel text=@($"{i+1}. Løber") />
                             <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" @bind-Value="@selectedStage.AssignedRunners[i2].Runner" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                             AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Change((ApplicationUser)args, i2)" Style="flex-grow: 1;">
@@ -37,25 +38,27 @@
                                     (@((data as ApplicationUser).Email))
                                 </Template>
                             </RadzenDropDown>
-                        <div>
-                            <RadzenButton Icon="delete" Size="ButtonSize.Small" Click="@(args => Delete(i2))"/>
+                            <div>
+                                <RadzenButton Icon="delete" Size="ButtonSize.Small" Click="@(args => Delete(i2))" />
+                            </div>
                         </div>
-                    </div>
-                }
+                    }
+                </div>
                 @if (selectedStageId != -1)
                 {
-            <div class="row">
-                <RadzenLabel text=@($"Tilføj løber") />
-                <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Add((ApplicationUser)args)" Style="width:100%" @bind-Value="@RunnerToAdd">
-                    <Template Context="data">
-                        @((data as ApplicationUser).FirstName)  @((data as ApplicationUser).LastName)
-                        <br>
-                        (@((data as ApplicationUser).Email))
-                    </Template>
-                </RadzenDropDown>
-                <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Gem" Style="width: 100%" />
-            </div>
+                    <hr>
+                    <div class="row">
+                        <RadzenLabel text=@($"Tilføj løber") />
+                        <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                        AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Add((ApplicationUser)args)" Style="width:100%" @bind-Value="@RunnerToAdd">
+                            <Template Context="data">
+                                @((data as ApplicationUser).FirstName)  @((data as ApplicationUser).LastName)
+                                <br>
+                                (@((data as ApplicationUser).Email))
+                            </Template>
+                        </RadzenDropDown>
+                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Gem" Style="width: 100%" />
+                    </div>
                 }
                 else
                 {
