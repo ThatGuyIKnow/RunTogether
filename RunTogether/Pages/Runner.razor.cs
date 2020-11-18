@@ -25,7 +25,6 @@ namespace RunTogether.Pages
         private Stage activeStage = new Stage();
         private StageAssignment activeRunner = new StageAssignment();
         private ApplicationUser currentUser = new ApplicationUser();
-        
 
         //Variables for hiding and displaying CSS.
         private const string HideCss = "display-none";
@@ -37,32 +36,37 @@ namespace RunTogether.Pages
         {
             if (firstRender)
             {
-                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                var user = authState.User;
-
-                if (user.Identity.IsAuthenticated)
-                {
-                    currentUser = await UserManager.GetUserAsync(user);
-                    assignedRun = await dbContext.Runs
-                                        .Where(r => r.ID == currentUser.RunId)
-                                        .Include(r => r.Route)
-                                        .ThenInclude(rr => rr.Stages)
-                                        .ThenInclude(s => s.AssignedRunners)
-                                        .ThenInclude(a => a.Runner)
-                                        .FirstOrDefaultAsync();
-
-                    //Get the codeScanned cookie, and display the relevant CSS elements.
-                    cookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "CodeScanned");
-                    if (cookie == null || !cookie.Equals("Yes"))
-                    {
-                        cameraCSS = "";
-                    }
-                    else
-                    {
-                        startRunCSS = "";
-                    }
-                }
+                await RetrieveUser();
                 StateHasChanged();
+            }
+        }
+
+        private async Task RetrieveUser()
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                currentUser = await UserManager.GetUserAsync(user);
+                assignedRun = await dbContext.Runs
+                                    .Where(r => r.ID == currentUser.RunId)
+                                    .Include(r => r.Route)
+                                    .ThenInclude(rr => rr.Stages)
+                                    .ThenInclude(s => s.AssignedRunners)
+                                    .ThenInclude(a => a.Runner)
+                                    .FirstOrDefaultAsync();
+
+                //Get the codeScanned cookie, and display the relevant CSS elements.
+                cookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "CodeScanned");
+                if (cookie == null || !cookie.Equals("Yes"))
+                {
+                    cameraCSS = "";
+                }
+                else
+                {
+                    startRunCSS = "";
+                }
             }
         }
 
@@ -100,6 +104,9 @@ namespace RunTogether.Pages
 
         private bool buttonVisible = false;
         private bool buttonDisabled = false;
+        //public TimeSpan stopWatchValue = new TimeSpan();
+        //public bool stopWatchActive = false;
+        public CustomStopWatch timer = new CustomStopWatch();
         public async void StartRun()
         {
             SetActiveStageAndRunner();
@@ -109,7 +116,7 @@ namespace RunTogether.Pages
 
             if (confirmResult.HasValue && confirmResult.Value)
             {
-                StopWatch();
+                StartTime();
                 buttonVisible = true;
                 buttonDisabled = true;
 
@@ -121,25 +128,31 @@ namespace RunTogether.Pages
             }
         }
 
-        TimeSpan stopWatchValue = new TimeSpan();
-        private bool stopWatchActive = false;
-
-        public async Task StopWatch()
+        public void StopRun()
         {
-            stopWatchActive = true;
-            while (stopWatchActive)
-            {
-                await Task.Delay(1000);
- 
-                if (stopWatchActive)
-                {
-                    //Because of the Task.Delay, chances are that when the “Stop” button is clicked, the cycle has already started.
-                    //This means that if we do not check for the Boolean value it will add another second to the already reset variable.
-                    stopWatchValue = stopWatchValue.Add(new TimeSpan(0, 0, 1));
-                    StateHasChanged();
-                }
-            }
+            //stopWatchActive = false; 
+            PauseTime();
+            DisplayResult();
+            //activeRunner.RunningTime = stopWatchValue;
+            activeRunner.RunningTime = timer.stopWatchValue;
+            UpdateDatabase(RunningStatus.Completed);
         }
+
+        public async Task StartTime()
+        {
+            await timer.StartStopWatch();
+            //myStopWatch.StartStopWatch(stopWatchActive, stopWatchValue);
+        }
+
+        public void PauseTime()
+        {
+            timer.StopStopWatch();
+            //myStopWatch.StopStopWatch(stopWatchActive);
+        }
+
+        
+
+        
 
         public void DisplayResult()
         {
