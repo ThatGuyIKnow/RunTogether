@@ -32,7 +32,6 @@ namespace RunTogether
         public RunningStatus Status { get; set; } = RunningStatus.NotStarted;
 
 
-
         public Dictionary<string, object> ToJsonSerializableViewer()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
@@ -58,6 +57,7 @@ namespace RunTogether
 
             return data;
         }
+
         public StageAssignment GetCurrentRunner()
         {
             List<StageAssignment> orderedRunners = new List<StageAssignment>();

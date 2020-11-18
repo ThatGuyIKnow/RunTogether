@@ -34,27 +34,6 @@ namespace RunTogether
             dbContext.Remove(DeleteStage);
         } 
 
-        public List<List<float>> ToPointList()
-        {
-            List<List<float>> PointList = new List<List<float>>(); 
-            foreach (Stage stage in this.Stages)
-            {
-                PointList.Add(new List<float> { stage.StartPoint.X, stage.StartPoint.Y});
-
-                if (stage.ThroughPoints != null)
-                {
-                    foreach (ThroughPoint point in stage.ThroughPoints)
-                    {
-                        PointList.Add(new List<float> { point.X, point.Y });
-                    }
-                }
-
-                PointList.Add(new List<float> { stage.EndPoint.X, stage.EndPoint.Y });
-
-            }
-            return PointList;
-        }
-
         public Dictionary<string, object> ToJsonSerializableViewer()
         {
             Dictionary<string, object> data = new Dictionary<string, object>();
