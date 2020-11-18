@@ -29,8 +29,35 @@ namespace RunTogether
         public RunRoute RunRoute { get; set; }
 
         public List<StageAssignment> AssignedRunners { get; set; } = new List<StageAssignment>();
-        public RunningStatus status { get; set; } = RunningStatus.NotStarted;
+        public RunningStatus Status { get; set; } = RunningStatus.NotStarted;
 
+
+
+        public Dictionary<string, object> ToJsonSerializableViewer()
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>();
+            data["Status"] = Enum.GetName(typeof(RunningStatus), Status) ?? string.Empty;
+
+            if (StartPoint != null)
+                data["StartPoint"] = new List<float>(2) { StartPoint.X, StartPoint.Y };
+            if (EndPoint != null)
+                data["EndPoint"] = new List<float>(2) { EndPoint.X, EndPoint.Y };
+            
+            List<List<float>> throughPoints = new List<List<float>>();
+            ThroughPoints.ForEach(point => 
+                throughPoints.Add(new List<float>(2){point.X, point.Y})
+                );
+            data["ThroughPoints"] = throughPoints;
+
+            List<Dictionary<string, object>> serializedRunners = new List<Dictionary<string, object>>();
+            AssignedRunners.ForEach(runner =>
+            {
+                serializedRunners.Add(runner.ToJsonSerializableViewer());
+            });
+            data["StageId"] = StageId;
+
+            return data;
+        }
         public StageAssignment GetCurrentRunner()
         {
             List<StageAssignment> orderedRunners = new List<StageAssignment>();
@@ -62,6 +89,16 @@ namespace RunTogether
         public int StageId { get; set; }
 
         public RunningStatus Status { get; set; } = RunningStatus.NotStarted;
+
+        public Dictionary<string, object> ToJsonSerializableViewer()
+        {
+            return new Dictionary<string, object>()
+            {
+                {"Status", Enum.GetName(typeof(RunningStatus), Status) ?? string.Empty},
+                {"Name", Runner.FirstName},
+                {"Order", Order}
+            };
+        }
     }
 
     public enum RunningStatus

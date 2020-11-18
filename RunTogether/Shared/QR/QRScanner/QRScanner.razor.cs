@@ -56,7 +56,7 @@ namespace RunTogether.Shared.QR.QRScanner
             jsRuntime.InvokeVoidAsync(
                 "Main.QrScanner.CreateQrScanner",
                 "qrVideo",
-                promise.objRef);
+                promise.ObjRef);
 
             // Check if camera has flash available
             hasFlash = await jsRuntime.InvokeAsync<bool>("Main.QrScanner.HasFlash");

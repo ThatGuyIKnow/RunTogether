@@ -32,15 +32,16 @@ namespace RunTogether.Shared.Map
                 StateHasChanged();
             }
 
+            /*            await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines");
+            */
             await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
 
         }
 
         protected override void OnParametersSet()
         {
-
-            json = JsonConvert.SerializeObject(new { Coordinates = Route.ToPointList() });
-
+            
+            json = JsonConvert.SerializeObject(new { Coordinates = Route.ToJsonSerializableViewer() });
         }
 
 

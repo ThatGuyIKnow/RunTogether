@@ -1,7 +1,9 @@
-﻿using Radzen.Blazor;
+﻿//using Newtonsoft.Json;
+using Radzen.Blazor;
 using RunTogether.Data;
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace RunTogether
 {
@@ -12,6 +14,7 @@ namespace RunTogether
         
         public int? RunId { get; set; }
 
+        [JsonIgnore]
         public Run? Run { get; set; }
 
         public override string ToString()
@@ -41,10 +44,19 @@ namespace RunTogether
             return PointList;
         }
 
-        //public Stage GetCurrentStage()
-        //{
-        //    return Stages.Find(s => s.Completed == false);
-        //}
+        public Dictionary<string, object> ToJsonSerializableViewer()
+        {
+            Dictionary<string, object> data = new Dictionary<string, object>();
+
+            if (this.Run?.Name != null) data["Name"] = this.Run.Name;
+            List<Dictionary<string, object>> serializedStages = new List<Dictionary<string, object>>();
+
+            Stages.ForEach(stage =>
+                serializedStages.Add(stage.ToJsonSerializableViewer())
+            );
+            data["Stages"] = serializedStages;
+            return data;
+        }
 
         //public RunRoute(List<Stage> Stages)
         //{
