@@ -11,6 +11,7 @@ using Microsoft.JSInterop;
 using Radzen;
 using System;
 using System.Linq;
+using Microsoft.JSInterop;
 
 namespace RunTogether.Pages.AdminPages
 {
@@ -53,7 +54,7 @@ namespace RunTogether.Pages.AdminPages
 
 
             //indlæser listen af løbere til det valgte løb
-            loadRunnerList();
+            LoadRunnerList();
 
         }
 
@@ -105,13 +106,13 @@ namespace RunTogether.Pages.AdminPages
             rows++;
         }
 
-        void reciveFromChild(int stageId)
+        void ReciveFromChild(int stageId)
         {
             selectedStageId = stageId;
-            loadRunnerList();
+            LoadRunnerList();
         }
 
-        void loadRunnerList()
+        void LoadRunnerList()
         {
             if (selectedStageId != -1)
             {
@@ -125,6 +126,24 @@ namespace RunTogether.Pages.AdminPages
 
                 //tæler mængden af løbere på vlagte stage
                 rows = selectedStage.AssignedRunners.Count;
+            }
+        }
+
+        async Task DeleteStage()
+        {
+            if (selectedStageId != -1)
+            {
+
+                selectedStage = run.Route.Stages
+                    .Where(s => s.StageId == selectedStageId) 
+                    .FirstOrDefault();
+
+                run.Route.DeleteStage(dbContext, selectedStage);
+
+                dbContext.SaveChanges();
+
+                await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", run.Route.ToJsonSerializableViewer());
+
             }
         }
 

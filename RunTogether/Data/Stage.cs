@@ -73,6 +73,13 @@ namespace RunTogether
             }
         }
 
+        public Stage GetPreviousStage()
+        {
+            int CurrentIndex = this.RunRoute.Stages.FindIndex(s => s.StageId == this.StageId);
+            int PreviousIndex = CurrentIndex < 1 ? CurrentIndex : CurrentIndex - 1;
+            return this.RunRoute.Stages[PreviousIndex];
+        }
+
     }
 
 

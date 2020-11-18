@@ -23,6 +23,17 @@ namespace RunTogether
             //return $"Route with {Stages.Count} stages";
         }
 
+        public void DeleteStage(ApplicationDbContext dbContext, Stage DeleteStage)
+        {
+            //Check if delete stage is part of route.... 
+            Stage PreviousStage = DeleteStage.GetPreviousStage();
+
+            PreviousStage.EndPoint.X = DeleteStage.EndPoint.X;
+            PreviousStage.EndPoint.Y = DeleteStage.EndPoint.Y;
+
+            dbContext.Remove(DeleteStage);
+        } 
+
         public List<List<float>> ToPointList()
         {
             List<List<float>> PointList = new List<List<float>>(); 
