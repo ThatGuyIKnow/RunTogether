@@ -37,8 +37,12 @@ namespace RunTogether.Pages
             if (firstRender)
             {
                 await RetrieveUser();
-                StateHasChanged();
             }
+        }
+
+        protected override void OnParametersSet()
+        {
+           
         }
 
         private async Task RetrieveUser()
@@ -68,6 +72,8 @@ namespace RunTogether.Pages
                     startRunCSS = "";
                 }
             }
+
+            StateHasChanged();
         }
 
         public async void CheckCode()
@@ -126,6 +132,8 @@ namespace RunTogether.Pages
             {
                 return;
             }
+
+            StateHasChanged(); 
         }
 
         public void StopRun()
@@ -138,9 +146,9 @@ namespace RunTogether.Pages
             UpdateDatabase(RunningStatus.Completed);
         }
 
-        public async Task StartTime()
+        public void StartTime()
         {
-            await timer.StartStopWatch();
+            timer.StartStopWatch(() => { StateHasChanged(); });
             //myStopWatch.StartStopWatch(stopWatchActive, stopWatchValue);
         }
 
