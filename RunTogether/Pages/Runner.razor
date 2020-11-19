@@ -31,17 +31,15 @@
     <div class="col">
         <h3>Når du er klar til at løbe, tryk på Start Løb.</h3>
         <RadzenButton Click="@(async () => { StartRun(); })" Text="Start Løb" ButtonStyle="ButtonStyle.Success" Style="margin-bottom: 20px; margin-right: 10px;" Disabled="@buttonDisabled" />
-        <RadzenButton Click="@(() => { PauseTime(); })" Text="Pause" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
-        <RadzenButton Click="@(() => { StartTime(); })" Text="Fortsæt" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
         <RadzenButton Click="@(() => { StopRun(); })" Text="Stop Løb" ButtonStyle="ButtonStyle.Danger" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
-        <p>Løbetid: @timer.stopWatchValue</p>
+        <p>Løbetid: @timer.stopWatchValue.ToString(@"hh\:mm\:ss")</p>
     </div>
 </div>
 
 <div class="row @displayResultCSS">
     <div class="col">
         <h3>Du er nu færdig med dit løb!</h3>
-        <h3>Din løbetid er @timer.stopWatchValue</h3>
+        <h3>Din løbetid er @timer.stopWatchValue.ToString(@"hh\:mm\:ss")</h3>
     </div>
 </div>
 
