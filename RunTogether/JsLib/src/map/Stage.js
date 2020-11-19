@@ -220,10 +220,42 @@ export class ActiveStage extends AbstractStage {
     }
 
     UpdateOverlay() {
-        let start = this.startPoint.toArray();
-        let end = this.endPoint.toArray();
-        let delta = [end[0] - start[0], end[1] - start[1]];
-        this.overlayPath._latlngs[1] = [start[0] + delta[0] * this._overlayPercentage, start[1] + delta[1] * this._overlayPercentage];
+        if (this.overlayPercentage >= 1) {
+            this.overlayPath._lanlngs = this.path._lanlngs;
+        }
+        let points = [this.startPoint, ...this.throughPoints, this.endPoint];
+        // Measure the lengths between each consecutive point
+        let lengths = [];
+        for (let i = 0; i < points.length - 1; i++) 
+            lengths.push(this.GetLength(points[i], points[i + 1]));
+        // Get the length the runner has run along that strech
+        let overlayLength = lengths.reduce((accum, curr) => accum + curr) * this._overlayPercentage;
+
+        // Get the streches the runners have completed
+        let lanlngs = [this.startPoint.toArray(),];
+        let accumOverlayLength = overlayLength;
+        let i = 0;
+        for(; i < lengths.length; i++){
+            if (lengths[i] > accumOverlayLength) break;
+            lanlngs.push(points[i + 1].toArray());
+            accumOverlayLength -= lengths[i];
+        }
+
+        //Set the final partial strech
+        let finalStrech1 = points[i - 1].toArray(),
+            finalStrech2 = points[i].toArray();
+        let delta = [finalStrech2[0] - finalStrech1[0], finalStrech2[1] - finalStrech1[1]];
+        let finalStrechPct = accumOverlayLength / lengths[i];
+        lanlngs.push([finalStrech1[0] + delta[0] * finalStrechPct, finalStrech1[1] + delta[1] * finalStrechPct]);
+
+
+        this.overlayPath.setLatLngs(lanlngs);
+    }
+
+    GetLength(point1, point2) {
+        const p1 = point1.toArray(),
+            p2 = point2.toArray();
+        return Math.sqrt(Math.pow((p2[0] - p1[0]), 2) + Math.pow((p2[1] - p1[1]), 2));
     }
 }
 
