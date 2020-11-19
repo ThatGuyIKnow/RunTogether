@@ -118,6 +118,8 @@ namespace RunTogether.Pages
                 //Hides the camera CSS and displays the start run CSS.
                 cameraCSS = HideCss;
                 startRunCSS = "";
+
+                StateHasChanged();
             }
             else
             {

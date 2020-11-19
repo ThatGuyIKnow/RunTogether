@@ -15,6 +15,7 @@ namespace RunTogether.Pages
         {
             this.stopWatchActive = true;
             this.startTime = DateTime.Now.TimeOfDay;
+
             while (this.stopWatchActive)
             {
                 await Task.Delay(1000);
