@@ -109,7 +109,7 @@ export class AbstractStage {
     }
 
     AddPopup(stage, path) {
-        let popup = new Popup(stage, path);
+        let popup = new Popup(stage, path, this.stageIndex, this.lastStage);
         popup.AddToLayer();
         this._popup = popup;
         return popup;
@@ -135,7 +135,7 @@ export class InactiveStage extends AbstractStage {
     flipped = false;
     completed = false;
 
-    constructor(startPoint, endPoint, throughPoints = [], flipped = false, completed = false) {
+    constructor(stageIndex, lastStage, startPoint, endPoint, throughPoints = [], flipped = false, completed = false) {
         super(startPoint, endPoint, throughPoints, flipped);
 
         this.startPoint = startPoint;
@@ -144,6 +144,8 @@ export class InactiveStage extends AbstractStage {
         this.flipped = flipped;
         this.completed = completed;
         this._className = this.completed ? this.completedClass : this.notCompletedClass;
+        this.stageIndex = stageIndex;
+        this.lastStage = lastStage;
     }
 
     AddToLayer(layer) {
@@ -164,12 +166,14 @@ export class ActiveStage extends AbstractStage {
     overlayPath = null;
     flipped = false;
 
-    constructor(startPoint, endPoint, throughPoints = [], flipped = false) {
+    constructor(stageIndex, lastStage, startPoint, endPoint, throughPoints = [], flipped = false) {
         super(startPoint, endPoint, throughPoints, flipped);
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.throughPoints = throughPoints;
         this.flipped = flipped;
+        this.stageIndex = stageIndex;
+        this.lastStage = lastStage;
     }
 
     AddToLayer(layer) {

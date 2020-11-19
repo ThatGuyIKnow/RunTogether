@@ -55,8 +55,8 @@ export class mapClass {
             Stages: [
                 {
                     StartPoint: [57.0257, 9.9062],
-                    ThroughPoints: [[57.0257, 9.9962]],
-                    EndPoint: [54.0107, 9.9020],
+                    ThroughPoints: [[56.9658, 9.7532]],
+                    EndPoint: [56.8659, 10.0805],
                     Status: "Completed",
                     Runners: [
                         { Status: "Completed", Name: "Lasper", Order: 0 },
@@ -68,9 +68,9 @@ export class mapClass {
                         Message: "Eat our Gunkz"
                     }
                 }, {
-                    StartPoint: [54.0107, 9.9020],
-                    ThroughPoints: [],
-                    EndPoint: [55.0257, 9.6062],
+                    StartPoint: [56.8659, 10.0805],
+                    ThroughPoints: [[56.7015, 9.511]],
+                    EndPoint: [55.9738, 9.6262],
                     Status: "Active",
                     Runners: [{ Status: "Completed", Name: "Casper", Order: 0 },
                         { Status: "Active", Name: "Puma", Order: 1 }],

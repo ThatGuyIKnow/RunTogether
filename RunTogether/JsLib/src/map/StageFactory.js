@@ -29,9 +29,9 @@ export class StageFactory {
         }
         else {
             if (stageData.Status === 'Active')
-                stage = new ActiveStage(startPoint, endPoint, throughPoints, flipped);
+                stage = new ActiveStage(stageIndex, lastStage, startPoint, endPoint, throughPoints, flipped);
             else
-                stage = new InactiveStage(startPoint, endPoint, throughPoints, flipped, stageData.Status === 'Completed');
+                stage = new InactiveStage(stageIndex, lastStage, startPoint, endPoint, throughPoints, flipped, stageData.Status === 'Completed');
         }
 
 

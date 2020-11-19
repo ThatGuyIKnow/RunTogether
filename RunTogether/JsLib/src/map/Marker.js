@@ -26,7 +26,41 @@ export class Popup extends AbstractMarker {
     _path;
     content = "";
     _popup;
-    constructor(stage, path) {
+
+    
+/*    customMarkerStandard = L.icon({
+        iconUrl: '/markers/RU_CUSTOM_MARKER.png',
+        iconSize: [24, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        tooltipAnchor: [16, -28],
+    });
+*/
+
+    customMarkerStandard = L.icon({
+        iconUrl: '/markers/RU_FLAG_WAYPOINT.png',
+        iconSize: [44, 90],
+        iconAnchor: [12, 90],
+        popupAnchor: [1, -34],
+    });
+
+    customMarkerStart = L.icon({
+        iconUrl: '/markers/RU_FLAG_START.png',
+        iconSize: [44, 105],
+        iconAnchor: [0, 105],
+        popupAnchor: [1, -34],
+        tooltipAnchor: [16, -28],
+    });
+
+    customMarkerEnd = L.icon({
+        iconUrl: '/markers/RU_FLAG_END.png',
+        iconSize: [44, 105],
+        iconAnchor: [0, 105],
+        popupAnchor: [1, -34],
+        tooltipAnchor: [16, -28],
+    }); 
+
+    constructor(stage, path, stageIndex, lastStage) {
         super(stage._layer, stage.startPoint);
 
         if (!isClassOrSubclass(stage, AbstractStage))
@@ -34,6 +68,8 @@ export class Popup extends AbstractMarker {
 
         this._stage = stage;
         this._path = path;
+        this.stageIndex = stageIndex;
+        this.lastStage = lastStage;
         this.content = '<div class="popup">' +
                             `<h3>${stage.sponsor.name}</h3><br>` +
                             `<p>${stage.sponsor.message}</p>` +
@@ -52,26 +88,25 @@ export class Popup extends AbstractMarker {
 
     AddToLayer(layer) {
 
-        let customMarker = L.icon({
-            iconUrl: '/markers/RU_CUSTOM_MARKER.png',
-            iconSize: [24, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            tooltipAnchor: [16, -28],
-        }); 
-
         this._popup = Leaflet.popup();
         this._popup.setContent(this.content);
 
-        this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: customMarker} );
-        this._marker2 = Leaflet.marker(this._stage.endPoint.toArray(), { icon: customMarker } ); 
+        if(this.stageIndex === 0)
+            this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: this.customMarkerStart} );
+        else
+            this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: this.customMarkerStandard });
+
+
+        if (this.lastStage)
+            this._marker2 = Leaflet.marker(this._stage.endPoint.toArray(), { icon: this.customMarkerEnd });
+        else
+            this._marker2 = Leaflet.marker(this._stage.endPoint.toArray(), { icon: this.customMarkerStandard }); 
 
         this._marker.addTo(this._stage._layer);
         this._marker2.addTo(this._stage._layer);
 
         this._path.bindPopup(this._popup);
         this._marker.bindPopup(this._popup);
-
     }
 
     //OpenPopup() {
