@@ -42,7 +42,6 @@ export class Popup extends AbstractMarker {
                        "</div>";
     }
 
-
     ConstructContent(runners) {
         let content = "";
         runners.forEach(runner => {
@@ -52,11 +51,20 @@ export class Popup extends AbstractMarker {
     }
 
     AddToLayer(layer) {
+
+        let customMarker = L.icon({
+            iconUrl: '/markers/RU_CUSTOM_MARKER.png',
+            iconSize: [24, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            tooltipAnchor: [16, -28],
+        }); 
+
         this._popup = Leaflet.popup();
         this._popup.setContent(this.content);
-        
-        this._marker = Leaflet.marker(this._stage.startPoint.toArray());
-        this._marker2 = Leaflet.marker(this._stage.endPoint.toArray()); 
+
+        this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: customMarker} );
+        this._marker2 = Leaflet.marker(this._stage.endPoint.toArray(), { icon: customMarker } ); 
 
         this._marker.addTo(this._stage._layer);
         this._marker2.addTo(this._stage._layer);
@@ -64,15 +72,42 @@ export class Popup extends AbstractMarker {
         this._path.bindPopup(this._popup);
         this._marker.bindPopup(this._popup);
 
-        //Leaflet.marker(point.toArray()).addTo(this._map)
-
-        // layerGroup.addLayer(_marker);
     }
 
     //OpenPopup() {
     //    this._mapMarker.openPopup();
     //}
 }
+
+/*export class ViewerMarker extends AbstractMarker {
+    _stage;
+
+    constructor(stage) {
+        super(stage.startPoint);
+
+        if (!isClassOrSubclass(stage, AbstractStage))
+            throw new TypeError("Class 'ViewerMarker' requires 'stage' Stage parameter");
+        this._stage = stage;
+    }
+
+    AddToLayer(layer) {
+        let customMarker = L.icon({
+            iconUrl: '/markers/RU_CUSTOM_MARKER.png', 
+            iconSize: [24, 41], 
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            tooltipAnchor: [16, -28],
+        }); 
+
+        this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: customMarker });
+        this._marker2 = Leaflet.marker(this._stage.endPoint.toArray(), { icon: customMarker });
+        this._marker.addTo(this._stage._layer);
+        this._marker2.addTo(this._stage._layer);
+        this._marker.bindPopup(this._popup);
+    }
+
+}*/
+
 
 /*
  * MouseDown / MouseUp
