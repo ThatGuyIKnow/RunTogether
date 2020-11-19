@@ -19,6 +19,7 @@ namespace RunTogether.Pages.AdminPages
         List<Tuple<string, int>> SizeList = new List<Tuple<string, int>>();
         string color = "#000000";
         int size = 30;
+        string code;
         
         //variable til at holde løb med id fra url
         Run run = new Run();
@@ -28,6 +29,9 @@ namespace RunTogether.Pages.AdminPages
 
             run = dbContext.Runs
                 .Find(id);
+
+            dialogService.OnOpen += Open;
+            dialogService.OnClose += Close;
 
             ColorList.Add(new Tuple<string, string>("RT rød", "#cc4545"));
             ColorList.Add(new Tuple<string, string>("Sort", "#000000"));
@@ -43,5 +47,29 @@ namespace RunTogether.Pages.AdminPages
         {
             jsRuntime.InvokeVoidAsync("Main.Common.PrintImage", "QRCodeImg", run.QRString);
         }
+
+        void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+        {
+            StateHasChanged();
+        }
+
+        void Close(dynamic result)
+        {
+
+            if (result == true)
+            {
+                run.QRString = code;
+                dbContext.Update(run);
+                dbContext.SaveChanges();
+            }
+            else if (result == false)
+            {
+                code = run.QRString;
+            }
+
+
+            StateHasChanged();
+        }
+
     }
 }

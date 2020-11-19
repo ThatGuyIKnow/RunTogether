@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Identity;
 
 namespace RunTogether.Areas.Identity
@@ -17,8 +18,9 @@ namespace RunTogether.Areas.Identity
         public string LastName { get; set; }
 
         public int? RunId { get; set; }
+        [JsonIgnore]
         public Run? Run { get; set; }
-
+        [JsonIgnore]
         public List<StageAssignment> StageAssignments { get; set; } = new List<StageAssignment>();
 
         public ApplicationUser() : base() { }

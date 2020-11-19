@@ -1,7 +1,7 @@
 ﻿import Leaflet from 'leaflet';
 import '@elfalem/leaflet-curve';
 import { Point } from './Point';
-import { Popup } from './Marker';
+import { Popup, EditorMarker } from './Marker';
 import { Sponsor } from './Sponsor';
 import { Runner } from './Runner';  
 import { isClassOrSubclass } from '../utils/ClassTypeUtils';
@@ -118,6 +118,10 @@ export class AbstractStage {
     EvenNumberOfCurves() {
         return this.throughPoints.length % 2 === 1;
     }
+
+    PassBind(bind) {
+        this.GetPrevLine = bind; 
+    }
 }
 
 export class InactiveStage extends AbstractStage {
@@ -217,4 +221,71 @@ export class ActiveStage extends AbstractStage {
         let delta = [end[0] - start[0], end[1] - start[1]];
         this.overlayPath._latlngs[1] = [start[0] + delta[0] * this._overlayPercentage, start[1] + delta[1] * this._overlayPercentage];
     }
+}
+
+export class EditStage extends AbstractStage {
+
+    _layer = null;
+    _overlayPercentage = 0.0;
+    runners = [];
+    className = "notStartedStage";
+    path = null;
+    overlayPath = null;
+    flipped = false;
+
+
+    constructor(startPoint, endPoint, throughPoints = [], flipped = false, stageId, map, objRef, stageIndex, lastStage) {
+        super(startPoint, endPoint, throughPoints, flipped);
+
+        this.startPoint = startPoint;
+        this.endPoint = endPoint;
+        this.throughPoints = throughPoints;
+        this.flipped = flipped;
+        this.stageId = stageId;
+
+        this._map = map; 
+        this._dotnetHelper = objRef;
+        this._stageIndex = stageIndex;
+        this._lastStage = lastStage;
+    }
+
+    AddToLayer(layer) {
+        super.AddToLayer(layer, this.startPoint);
+
+        this._prevStage = this.GetPrevLine(this._stageIndex);
+
+        this.path._path.classList.add(this.className);
+        this.InteractablePath(this.path);
+
+        this._marker = new EditorMarker(this._layer, this.startPoint, this._map, this, this._prevStage, this._dotnetHelper, false);
+        this._marker.AddToLayer(this._layer);
+
+        if (this._lastStage == true) {
+            this._marker = new EditorMarker(this._layer, this.endPoint, this._map, this, this._prevStage, this._dotnetHelper, true);
+            this._marker.AddToLayer(this._layer);
+        } 
+    }
+
+    InteractablePath(path) {
+        path.on('mouseover', () => {
+            path.setStyle({ color: '#ff5c26', weight: 12 });
+        })
+
+        path.on('mouseout', () => {
+            path.setStyle({ color: '#db5d57', weight: 6 });
+        })
+
+        path.on('click', () => {
+            this._dotnetHelper.invokeMethodAsync('Trigger', 'SendStageId',
+                JSON.stringify(
+                    {
+                        StageId: this.stageId
+                    }));
+        })
+    }
+
+    AddPopup() {
+        //empty for now
+    } 
+
 }

@@ -108,6 +108,95 @@ export class Popup extends AbstractMarker {
 
 }*/
 
+export class EditorMarker extends AbstractMarker {
+    constructor(layer, point, map, stage, prevStage, dotnetHelper, lastMarker) {
+        super(layer, point);
+
+        this._layer = layer;
+        this.point = point;
+        this._map = map;
+
+        this._dotnetHelper = dotnetHelper; 
+        this._stage = stage;
+        this._prevStage = prevStage;
+        this._lastMarker = lastMarker; 
+    }
+
+    AddToLayer(layer) {
+        this._layer = layer;
+        this._mapMarker = Leaflet.circleMarker(this.point.toArray(), { bubblingMouseEvents: false, fillOpacity: 1 });
+        this._mapMarker.addTo(this._layer);
+
+        this.InteractableMarker(this._mapMarker); 
+
+    }
+
+    InteractableMarker(marker) {
+        //constantly sets the markers pos to the curser pos
+        function trackCursor(evt) {
+            marker.setLatLng(evt.latlng);
+        }
+
+        //Drag marker 
+            marker.on("mousedown", () => {
+            this._map.dragging.disable();
+            this._map.on("mousemove", trackCursor);
+        })
+
+        //Stop dragging marker 
+            marker.on("mouseup", () => {
+                this._map.dragging.enable();
+                this._map.off("mousemove", trackCursor);
+                this.markerDragEnd(marker);
+         })
+
+        return marker;
+    }
+
+    markerDragEnd(marker) {
+        //this.point.x = marker.getLatLng().lat;
+        //this.point.y = marker.getLatLng().lng;
+
+        //this._path.startPoint.x = marker.getLatLng().lat;
+        //this._path.startPoint.y = marker.getLatLng().lng;
+
+        //this._prevPath.endPoint.x = marker.getLatLng().lat;
+        //this._prevpath.endPoint.y = marker.getLatLng().lng;
+
+        //send a stages back to blazor, for saving to DB
+        console.log("stages touched by point");
+        console.log(this._stage);
+        console.log(this._prevStage);
+
+        if (this._lastMarker == true) {
+            this._dotnetHelper.invokeMethodAsync('Trigger', 'EditStage',
+                JSON.stringify(
+                    {
+                        StageId: this._stage.stageId,
+                        StartPoint: { X: this._stage.startPoint.x, Y: this._stage.startPoint.y },
+                        EndPoint: { X: marker.getLatLng().lat, Y: marker.getLatLng().lng }
+                    }));
+        }
+        else {
+            this._dotnetHelper.invokeMethodAsync('Trigger', 'EditStage',
+                JSON.stringify(
+                    {
+                        StageId: this._stage.stageId,
+                        StartPoint: { X: marker.getLatLng().lat, Y: marker.getLatLng().lng },
+                        EndPoint: { X: this._stage.endPoint.x, Y: this._stage.endPoint.y }
+                    }));
+
+            this._dotnetHelper.invokeMethodAsync('Trigger', 'EditStage',
+                JSON.stringify(
+                    {
+                        StageId: this._prevStage.stageId,
+                        StartPoint: { X: this._prevStage.startPoint.x, Y: this._prevStage.startPoint.y },
+                        EndPoint: { X: marker.getLatLng().lat, Y: marker.getLatLng().lng }
+                    }));
+        }
+    }
+}
+
 
 /*
  * MouseDown / MouseUp

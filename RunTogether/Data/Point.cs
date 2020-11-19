@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Binders;
+//using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -6,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Numerics;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RunTogether.Data
@@ -18,7 +20,8 @@ namespace RunTogether.Data
         public float Y { get; set; }
 
         public int StageId { get; set; }
-        
+
+        [JsonIgnore]
         public Stage? Stage { get; set; } 
         public Point(float x, float y)
         {

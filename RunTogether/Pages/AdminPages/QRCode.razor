@@ -15,7 +15,7 @@
 @inject IJSRuntime jsRuntime
 
 <h3>QR Kode</h3>
-<RadzenFieldset Text="QR Kode indstillinger">
+<RadzenFieldset Text="QR Kode print indstillinger">
     <div class="row">
         <div class="col-sm-4">
             <RadzenLabel Text="Farve:" />
@@ -31,11 +31,33 @@
         <div class="col-sm-4">
             <RadzenDropDown @bind-value="color" AllowClear="false" TValue="string" Placeholder="Select..." Data="@ColorList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
         </div>
-        <div class="col-sm-4"
-                                        <RadzenDropDown @bind-value="size" AllowClear="false" TValue="int" Placeholder="Select..." Data="@SizeList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
-                                    </div>
+        <div class="col-sm-4">
+            <RadzenDropDown @bind-value="size" AllowClear="false" TValue="int" Placeholder="Select..." Data="@SizeList" TextProperty="Item1" ValueProperty="Item2" Style="margin-bottom: 20px" />
+        </div>
         <div class="col-sm-4">
             <RadzenButton Click="@((args) => PrintImage())" Text="print billede" Style="margin-bottom: 20px; width: 150px" />
+        </div>
+    </div>
+</RadzenFieldset>
+
+<RadzenFieldset Text="Skift QR kode">
+    <div class="row">
+        <div class="col-sm-4">
+            <RadzenLabel Text="kode:" />
+        </div>
+        <div class="col-sm-4">
+            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <RadzenTextBox Name="QRString" @bind-Value="code" Placeholder="@run.QRString" Style="margin-bottom: 20px" />
+        </div>
+        <div class="col-sm-4">
+
+        </div>
+        <div class="col-sm-4">
+            <RadzenButton Text=@($"Gem ændringer") Click="@(args => dialogService.Confirm("Hvis du skifter QR kode virker den gamle ikke længere. er du sikker på at du vil skifte?", "Skift QR kode", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nej" }))" />
         </div>
     </div>
 </RadzenFieldset>

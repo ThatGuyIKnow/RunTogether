@@ -1,32 +1,40 @@
 ﻿
+import L from 'leaflet';
+import '@elfalem/leaflet-curve';
+import { StageFactory, RunRouteFactory } from "./map/index";
+
 /*Global variable for the map class*/
-let mymap, layerGroup, polyline;
+let editMap, layerGroup;
 let maxBounds1 = [51.649, 0.49];
 let maxBounds2 = [59.799, 18.68];
 let bounds = L.latLngBounds(maxBounds1, maxBounds2);
+let run
 
 
 
 
 /*Class for the map*/
-export class mapClass {
+export class mapEditorClass {
 
     constructor() {
-
-        console.log("from constructor!");
-
         this.initializeMap = this.initializeMap.bind(this);
-        this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
-        this.removeMarkersAndLines = this.removeMarkersAndLines.bind(this);
+        this.loadRoute = this.loadRoute.bind(this);
+
+
+        this.dotnetHelper = null;
     }
 
     /* A Method that initializes the map */
-    initializeMap() {
+    initializeMap(objRef) {
 
-        /*Pointing mymap to leaflet map and setting the viewpoint and start zoom point*/
-        mymap = L.map('mapid').setView([55.964, 9.992], 6.5);
+        //Bind to event trigger from C#
+        this.dotnetHelper = objRef;
 
-        mymap.setMaxBounds(bounds);
+        /*Pointing myeditmap to leaflet map and setting the viewpoint and start zoom point*/
+        editMap = L.map('mapid', { doubleClickZoom: false}).setView([55.964, 9.992], 6.5);
+        editMap.setMaxBounds(bounds);
+
+        editMap.on('dblclick', e => this.addNewStage(e));
 
         /* Appling tile layer to the map*/
         L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
@@ -37,62 +45,47 @@ export class mapClass {
             maxBounds: bounds,
             maxBoundsViscosity: 1,
             ext: 'jpg'
-        }).addTo(mymap);
+        }).addTo(editMap);
 
         /*Creating layer group and adding to map*/
-        layerGroup = L.layerGroup().addTo(mymap);
+        layerGroup = L.layerGroup().addTo(editMap);
 
     }
 
-    /* A Method to add markers and lines*/
-    addMarkersAndLines(obj) {
+    loadRoute(serialData) {
+        console.log('loaded route');
 
-        this.removeMarkersAndLines();
-        /*        mymap.removeLayer(layerGroup); 
-        */
-        let latlngs = JSON.parse(obj).Coordinates
+        layerGroup.clearLayers();
 
-        console.log(latlngs)
+        //editMap.eachLayer(function (layer) {
+        //    map.removeLayer(layer);
+        //});
 
-        let i = 0;
-        let segNum = 0;
-        let marker;
+        let routeFactory = new RunRouteFactory();
 
-        /*Creating layer group and adding to map*/
-        layerGroup = L.layerGroup().addTo(mymap);
+        run = routeFactory.CreateRunRoute(serialData, true, editMap, this.dotnetHelper);
+        console.log(run);
+        run.AddToLayer(layerGroup);
+    }
 
-        /*Creating markers*/
-        for (i = 0; i < latlngs.length; i++) {
-            segNum = i + 1;
-            marker = L.marker(latlngs[i]).bindPopup('Start for segment ' + segNum +
-                '<br />Dette segment er sponseret af [SPONSOR].</p>').openPopup();
-            layerGroup.addLayer(marker);
+    addNewStage(e) {
+        if (run.stages.length < 1) {
+            let stageFactory = new StageFactory();
+            let currStage = stageFactory.CreateStage({ StartPoint: [e.latlng.lat, e.latlng.lng], ThroughPoints: [], EndPoint: [e.latlng.lat, e.latlng.lng] }, true, true);
+            run.stages.push(currStage);
         }
+        else {
+            let lastX = run.stages[run.stages.length - 1].endPoint.x; 
+            let lastY = run.stages[run.stages.length - 1].endPoint.y;
 
-        /*Creating polyline and fiting the polyline and markers to the map view*/
-        polyline = L.polyline(latlngs, { color: '#db5d57' });
-        layerGroup.addLayer(polyline);
-        mymap.fitBounds(polyline.getBounds());
-
+            //send a segment back to blazor, for saving to DB
+            this.dotnetHelper.invokeMethodAsync('Trigger', 'AddStage',
+                JSON.stringify(
+                    {
+                        StartPoint: { X: lastX, Y: lastY },
+                        EndPoint: { X: e.latlng.lat, Y: e.latlng.lng }
+                    }));
+        }
     }
 
-
-    /* A Method to remove markers and lines*/
-    removeMarkersAndLines() {
-        mymap.removeLayer(layerGroup);
-    }
-}
-
-export function onMapClick() {
-
-    var popup = L.popup();
-
-    function onMapClick(e) {
-        popup
-            .setLatLng(e.latlng)
-            .setContent("You clicked the map at " + e.latlng.toString())
-            .openOn(mymap);
-    }
-
-    mymap.on('click', onMapClick);
-}
+ }

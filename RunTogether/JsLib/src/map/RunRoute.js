@@ -14,9 +14,18 @@ export class RunRoute {
 
         this.name = name;
         this.stages = stages;
+        this.GetPrevStage = this.GetPrevStage.bind(this); 
+
+        this.stages.forEach(stage => {
+            stage.PassBind(this.GetPrevStage); 
+        }) 
     }
 
-    AddToLayer(layer) {
+    GetPrevStage(id) {
+        return this.stages[id - 1];
+    } 
+
+    AddToLayer(layer, map = null) {
         this._layer = layer;
         if (this.stages !== null) {
             this.stages.forEach(stage => {

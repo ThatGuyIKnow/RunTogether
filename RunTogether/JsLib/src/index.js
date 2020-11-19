@@ -2,6 +2,7 @@ import { SidebarCollapseFunctionality } from './SidebarHide';
 import { QrScannerClass } from './qrScanner';
 import "../styles/qrScanner.css";
 
+import { mapEditorClass } from './MapEditor';
 import { mapClass } from './map';
 import "../styles/map_style.css";
 
@@ -11,6 +12,5 @@ export const Common = new CommonJS();
 export const QrScanner = new QrScannerClass();
 export const Sidebar = new SidebarCollapseFunctionality();
 
-
-// Route is removed from the parameter of this class
 export const Map = new mapClass();
+export const MapEditor = new mapEditorClass();
