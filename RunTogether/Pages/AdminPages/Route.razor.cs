@@ -30,6 +30,7 @@ namespace RunTogether.Pages.AdminPages
         Run run = new Run();
         StageAssignment AssignmentPlaceholder = new StageAssignment();
         ApplicationUser RunnerToAdd = default;
+        IQueryable<Sponsor> SponsorList;
 
         protected override async Task OnInitializedAsync()
         {
@@ -50,7 +51,7 @@ namespace RunTogether.Pages.AdminPages
                         .ThenInclude(s => s.AssignedRunners)
                 .FirstOrDefault();
 
-
+            SponsorList = dbContext.Sponsors;
 
             //indlæser listen af løbere til det valgte løb
             LoadRunnerList();

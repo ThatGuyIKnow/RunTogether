@@ -31,6 +31,11 @@ namespace RunTogether
         public List<StageAssignment> AssignedRunners { get; set; } = new List<StageAssignment>();
         public RunningStatus Status { get; set; } = RunningStatus.NotStarted;
 
+        public Sponsor? Sponsor { get; set; }
+
+        public int? SponsorId { get; set; }
+
+        public string? Message { get; set; }
 
 
         public Dictionary<string, object> ToJsonSerializableViewer()

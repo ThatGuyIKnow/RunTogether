@@ -74,13 +74,16 @@
                 {
                 <div class="row">
                     <RadzenLabel Text=@($"Tilføj sponser") />
-                    <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                    AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Style="width:100%">
+                    <RadzenDropDown Name="DropDown" AllowClear="false" TValue="Sponsor" Data="@SponsorList" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    AllowFiltering="true" Placeholder="Vælg Sponsor..." TextProperty="Name" Style="width:100%; height: auto;" @bind-Value="@selectedStage.Sponsor">
+                        <Template Context="sponsorData">
+                            <img class="rounded m-1" src="@((sponsorData as Sponsor).Image)" />  @((sponsorData as Sponsor).Name)
+                        </Template>
                     </RadzenDropDown>
                 </div>
                 <div class="row">
                     <RadzenLabel Text=@($"Sponser besked") />
-                    <RadzenTextArea Placeholder="Enter here..." Style="width:100%"/>
+                    <RadzenTextArea Placeholder="Enter here..." Style="width:100%" @bind-Value="selectedStage.Message"/>
                 </div>
                 }
                 else
@@ -90,6 +93,7 @@
                 </div>
                 }
             </RadzenTemplateForm>
+
         </RadzenCard>
 
 

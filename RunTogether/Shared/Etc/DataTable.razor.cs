@@ -105,7 +105,7 @@ namespace RunTogether.Shared.Etc
             if(result == true)
             {
                 Console.WriteLine("Sletter: " + run.Name);
-                dbContext.Remove(run);
+                //dbContext.Remove(run);
                 dbContext.SaveChanges();
             }
             runTable.Reload();

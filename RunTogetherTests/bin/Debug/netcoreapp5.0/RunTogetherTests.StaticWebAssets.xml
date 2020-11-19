@@ -1,0 +1,5 @@
+﻿<StaticWebAssets Version="1.0">
+  <ContentRoot BasePath="/Identity" Path="C:\Users\Mads\.nuget\packages\microsoft.aspnetcore.identity.ui\5.0.0\staticwebassets\V4\" />
+  <ContentRoot BasePath="_content/Radzen.Blazor" Path="C:\Users\Mads\.nuget\packages\radzen.blazor\2.17.2\build\..\staticwebassets\" />
+  <ContentRoot BasePath="_content/RunTogether" Path="C:\Users\Mads\Documents\GitHub\P1\RunTogether\RunTogether\wwwroot\" />
+</StaticWebAssets>
