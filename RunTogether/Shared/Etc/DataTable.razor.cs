@@ -41,17 +41,6 @@ namespace RunTogether.Shared.Etc
 
         protected override async Task OnInitializedAsync()
         {
-            runs = dbContext.Runs
-                .Include(r => r.Route)
-                    .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.StartPoint)
-                .Include(r => r.Route)
-                    .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.EndPoint)
-                .Include(r => r.Route)
-                    .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.ThroughPoints)
-                .Include(r => r.Runners);
 
             //variabler til dropdown box for farve til print af qrkode
             ColorList.Add(new Tuple<string, string>("RT rød", "#cc4545"));
@@ -70,6 +59,25 @@ namespace RunTogether.Shared.Etc
             deleteRunDialog.OnOpen += OpenDeleteRunDialog;
             deleteRunDialog.OnClose += CloseDeleteRunDialog;
 
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+               runs = dbContext.Runs
+                        .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                                .ThenInclude(s => s.StartPoint)
+                        .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                                .ThenInclude(s => s.EndPoint)
+                        .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                                .ThenInclude(s => s.ThroughPoints)
+                        .Include(r => r.Runners);
+                StateHasChanged();
+            }
         }
 
         //Sætter run til at være det valgte run fra tabelen
