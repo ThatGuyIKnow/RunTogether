@@ -7,13 +7,13 @@
 @using System.Collections.Generic
 @using RunTogether.Data
 @using Microsoft.EntityFrameworkCore;
-@using RunTogether.Shared.Map 
+@using RunTogether.Shared.Map
 
 @inject DialogService dialogService
 @inject UserManager<ApplicationUser> userManager
 @inject ApplicationDbContext dbContext
+@inject IJSRuntime JsRunTime
 
-<h3>Route</h3>
 <div class="row">
     <div class="col-md-10">
 
@@ -67,6 +67,12 @@
                     </div>
                 }
             </RadzenTemplateForm>
+            @if (selectedStageId != -1)
+            {
+                <div>
+                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => DeleteStage()) Text="Slet Segment" ButtonStyle="ButtonStyle.Danger" />
+                </div>
+            }
         </RadzenCard>
         <RadzenCard>
             <RadzenTemplateForm TItem="StageAssignment" Data="@AssignmentPlaceholder" Submit="()=> Save()">
@@ -74,13 +80,16 @@
                 {
                 <div class="row">
                     <RadzenLabel Text=@($"Tilføj sponser") />
-                    <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                    AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Style="width:100%">
+                    <RadzenDropDown Name="DropDown" AllowClear="false" TValue="Sponsor" Data="@SponsorList" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                    AllowFiltering="true" Placeholder="Vælg Sponsor..." TextProperty="Name" Style="width:100%; height: auto;" @bind-Value="@selectedStage.Sponsor">
+                        <Template Context="sponsorData">
+                            <img class="rounded m-1" src="@((sponsorData as Sponsor).Image)" />  @((sponsorData as Sponsor).Name)
+                        </Template>
                     </RadzenDropDown>
                 </div>
                 <div class="row">
                     <RadzenLabel Text=@($"Sponser besked") />
-                    <RadzenTextArea Placeholder="Enter here..." Style="width:100%"/>
+                    <RadzenTextArea Placeholder="Enter here..." Style="width:100%" @bind-Value="selectedStage.Message"/>
                 </div>
                 }
                 else
@@ -90,6 +99,7 @@
                 </div>
                 }
             </RadzenTemplateForm>
+
         </RadzenCard>
 
 

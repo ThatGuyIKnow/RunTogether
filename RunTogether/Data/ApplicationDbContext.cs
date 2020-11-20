@@ -21,6 +21,7 @@ namespace RunTogether.Data
         public DbSet<EndPoint> EndPoints { get; set; }
         public DbSet<ThroughPoint> ThroughPoints { get; set; }
         public DbSet<OrganiserCreationKey> OrganiserCreationKeys { get; set; }
+        public DbSet<Sponsor> Sponsors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,10 @@ namespace RunTogether.Data
             modelBuilder.Entity<Stage>()
                 .HasMany(s => s.ThroughPoints)
                 .WithOne(t => t.Stage);
+
+            modelBuilder.Entity<Stage>()
+                .HasOne(s => s.Sponsor)
+                .WithMany(s => s.Stages);
 
             modelBuilder.Entity<StartPoint>()
                 .HasOne(sp => sp.Stage)
