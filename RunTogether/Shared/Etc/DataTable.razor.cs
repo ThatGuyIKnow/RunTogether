@@ -34,6 +34,7 @@ namespace RunTogether.Shared.Etc
 
         //Variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
         RadzenGrid<Run> runTable;
+        public bool loading = true;
 
         //alt querying bliver lavet i DB og kun det relevante data sendes til client.
         IQueryable<Run> runs;
@@ -73,6 +74,7 @@ namespace RunTogether.Shared.Etc
                             .ThenInclude(rr => rr.Stages)
                                 .ThenInclude(s => s.ThroughPoints)
                         .Include(r => r.Runners);
+                loading = false;
                 StateHasChanged();
             }
         }
