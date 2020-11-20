@@ -102,7 +102,7 @@ namespace RunTogether.Shared.Etc
 
          async Task DeleteRun(Run run)
         {
-            var dialogReturnValue = await dialogService.Confirm("Er du sikker på at du vil slette løb med navnet: " + run.Name + "?", "Slet " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+            bool? dialogReturnValue = await dialogService.Confirm("Er du sikker på at du vil slette løb med navnet: " + run.Name + "?", "Slet " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
             if(dialogReturnValue == true)
             {
                 Console.WriteLine("Sletter: " + run.Name);
