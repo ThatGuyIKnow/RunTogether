@@ -11,6 +11,7 @@ using Microsoft.JSInterop;
 using Radzen;
 using System;
 using System.Linq;
+using Microsoft.JSInterop;
 
 namespace RunTogether.Pages.AdminPages
 {
@@ -126,6 +127,24 @@ namespace RunTogether.Pages.AdminPages
 
                 //tæler mængden af løbere på vlagte stage
                 rows = selectedStage.AssignedRunners.Count;
+            }
+        }
+
+        async Task DeleteStage()
+        {
+            if (selectedStageId != -1)
+            {
+
+                selectedStage = run.Route.Stages
+                    .Where(s => s.StageId == selectedStageId) 
+                    .FirstOrDefault();
+
+                run.Route.DeleteStage(dbContext, selectedStage);
+
+                dbContext.SaveChanges();
+
+                await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", run.Route.ToJsonSerializableViewer());
+
             }
         }
 

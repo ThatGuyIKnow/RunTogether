@@ -37,8 +37,6 @@ namespace RunTogether.Shared.Map
                     Run.Route.Stages.Add(NewStage);
 
                     dbContext.SaveChanges();
-                    //StateHasChanged();
-                    //JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", json);
 
                     JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
                 });

@@ -19,11 +19,8 @@
         <QRScanner OnCodeScanned="((v) => { qrCode = v; CheckCode(); })" />
         <br />
         <p>Hvis du ikke kan scanne QR-koden, kan du indtaste den her.</p>
-        <RadzenTemplateForm TItem="string">
-            <RadzenTextBox Placeholder="Indtast QR-kode" Style="margin-bottom: 20px; width: 200px" @bind-Value="qrCode" />
-            <RadzenButton Text="Næste" Click="() => CheckCode()"></RadzenButton>
-        </RadzenTemplateForm>
-        
+        <RadzenTextBox Placeholder="Indtast QR-kode" Style="margin-bottom: 20px; width: 200px" @bind-Value="qrCode" />
+        <RadzenButton Text="Næste" Click="() => CheckCode()"></RadzenButton>
     </div>
 </div>
 
@@ -31,17 +28,15 @@
     <div class="col">
         <h3>Når du er klar til at løbe, tryk på Start Løb.</h3>
         <RadzenButton Click="@(async () => { StartRun(); })" Text="Start Løb" ButtonStyle="ButtonStyle.Success" Style="margin-bottom: 20px; margin-right: 10px;" Disabled="@buttonDisabled" />
-        <RadzenButton Click="@(() => { stopWatchActive = false; })" Text="Pause" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
-        <RadzenButton Click="@(() => { StopWatch(); })" Text="Fortsæt" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
-        <RadzenButton Click="@(() => { stopWatchActive = false; DisplayResult(); activeRunner.RunningTime = stopWatchValue; UpdateDatabase(RunningStatus.Completed); })" Text="Stop Løb" ButtonStyle="ButtonStyle.Danger" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
-        <p>Løbetid: @stopWatchValue</p>
+        <RadzenButton Click="@(() => { StopRun(); })" Text="Stop Løb" ButtonStyle="ButtonStyle.Danger" Style="margin-bottom: 20px; margin-right: 10px;" Visible="@buttonVisible" />
+        <p>Løbetid: @timer.stopWatchValue.ToString(@"hh\:mm\:ss")</p>
     </div>
 </div>
 
 <div class="row @displayResultCSS">
     <div class="col">
         <h3>Du er nu færdig med dit løb!</h3>
-        <h3>Din løbetid er @stopWatchValue</h3>
+        <h3>Din løbetid er @timer.stopWatchValue.ToString(@"hh\:mm\:ss")</h3>
     </div>
 </div>
 
