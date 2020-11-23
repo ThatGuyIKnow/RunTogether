@@ -7,7 +7,7 @@
 @using System.Collections.Generic
 @using RunTogether.Data
 @using Microsoft.EntityFrameworkCore;
-@using RunTogether.Shared.Map 
+@using RunTogether.Shared.Map
 
 @inject DialogService dialogService
 @inject UserManager<ApplicationUser> userManager
@@ -42,20 +42,21 @@
                         </div>
                     </div>
                 }
+
                 @if (selectedStageId != -1)
                 {
-            <div class="row">
-                <RadzenLabel text=@($"Tilføj løber") />
-                <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Add((ApplicationUser)args)" Style="width:100%" @bind-Value="@RunnerToAdd">
-                    <Template Context="data">
-                        @((data as ApplicationUser).FirstName)  @((data as ApplicationUser).LastName)
-                        <br>
-                        (@((data as ApplicationUser).Email))
-                    </Template>
-                </RadzenDropDown>
-                <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Gem" Style="width: 100%" />
-            </div>
+                    <div class="row">
+                        <RadzenLabel text=@($"Tilføj løber") />
+                        <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                        AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Add((ApplicationUser)args)" Style="width:100%" @bind-Value="@RunnerToAdd">
+                            <Template Context="data">
+                                @((data as ApplicationUser).FirstName)  @((data as ApplicationUser).LastName)
+                                <br>
+                                (@((data as ApplicationUser).Email))
+                            </Template>
+                        </RadzenDropDown>
+                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Gem" Style="width: 100%" />
+                    </div>
                 }
                 else
                 {
