@@ -38,6 +38,8 @@
         <div class="col">
             <RadzenTextBox Name="Email" @bind-Value="runner.Email" /><br>
             <RadzenRequiredValidator Component="Email" Text="Email skal udfyldes" Popup=true Style="position: absolute" />
+            <RadzenEmailValidator Component="Email" Text="Angiv en gyldig e-mail-adresse" Popup=true Style="position: absolute" />
+            <RadzenCompareValidator Component="Email" Text="Email findes allerede for dette løb" Popup=true Style="position: absolute" Value=@targetValue Operator=CompareOperator.NotEqual @ref="@compareValidator" />
         </div>
     </div>
 
