@@ -6,8 +6,6 @@
 
 @inject RunTogether.Data.ApplicationDbContext dbContext
 
-@layout RunTogether.Shared.Layouts.NoLayout
-
 @attribute [Authorize( Roles = IdentityRoleTypes.Organiser)] 
 <DataTable></DataTable>
 
