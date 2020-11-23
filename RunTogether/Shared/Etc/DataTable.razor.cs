@@ -34,23 +34,13 @@ namespace RunTogether.Shared.Etc
 
         //Variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
         RadzenGrid<Run> runTable;
+        public bool loading = true;
 
         //alt querying bliver lavet i DB og kun det relevante data sendes til client.
         IQueryable<Run> runs;
 
         protected override async Task OnInitializedAsync()
         {
-            runs = dbContext.Runs
-                .Include(r => r.Route)
-                    .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.StartPoint)
-                .Include(r => r.Route)
-                    .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.EndPoint)
-                .Include(r => r.Route)
-                    .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.ThroughPoints)
-                .Include(r => r.Runners);
 
             //variabler til dropdown box for farve til print af qrkode
             ColorList.Add(new Tuple<string, string>("RT rød", "#cc4545"));
@@ -67,6 +57,26 @@ namespace RunTogether.Shared.Etc
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+               runs = dbContext.Runs
+                        .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                                .ThenInclude(s => s.StartPoint)
+                        .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                                .ThenInclude(s => s.EndPoint)
+                        .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                                .ThenInclude(s => s.ThroughPoints)
+                        .Include(r => r.Runners);
+                loading = false;
+                StateHasChanged();
+            }
         }
 
         //Sætter run til at være det valgte run fra tabelen
@@ -94,7 +104,7 @@ namespace RunTogether.Shared.Etc
 
          async Task DeleteRun(Run run)
         {
-            var dialogReturnValue = await dialogService.Confirm("Er du sikker på at du vil slette løb med navnet: " + run.Name + "?", "Slet " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+            bool? dialogReturnValue = await dialogService.Confirm("Er du sikker på at du vil slette løb med navnet: " + run.Name + "?", "Slet " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
             if(dialogReturnValue == true)
             {
                 Console.WriteLine("Sletter: " + run.Name);

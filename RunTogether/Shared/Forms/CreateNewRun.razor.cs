@@ -20,7 +20,7 @@ namespace RunTogether.Shared.Forms
 
         void OnInvalidSubmit()
         {
-            Console.WriteLine("AW");
+            Console.WriteLine("Submission was invalid");
         }
     }
 }

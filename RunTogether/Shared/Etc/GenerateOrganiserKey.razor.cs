@@ -17,23 +17,30 @@ namespace RunTogether.Shared.Etc
         private ApplicationUser user;
 
         RadzenGrid<ApplicationUser> organiserGrid;
-        IEnumerable<ApplicationUser> organiserList;
+        IQueryable<ApplicationUser> organiserList;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
                 AuthenticationState authState = await authProvider.GetAuthenticationStateAsync();
-                user = await userManager.GetUserAsync(authState.User);
-
                 try
                 {
+                    user = await userManager.GetUserAsync(authState.User);
                     organiserKey = await dbContext.OrganiserCreationKeys.FirstAsync(k => k.GeneratedById == user.Id);
                 }
                 catch (InvalidOperationException e)
                 {
                     await RefreshKey();
                 }
+
+                var ids = dbContext.UserRoles
+                    .Where(r => r.RoleId == "organiser")
+                    .Select(r => r.UserId);
+                organiserList = dbContext.Users
+                    .Where(u => ids.Contains(u.Id))
+                    .Where(u => u.Id != user.Id);
+
                 StateHasChanged();
             }
         }
@@ -58,12 +65,15 @@ namespace RunTogether.Shared.Etc
 
         async Task DeleteRow(ApplicationUser selectedOrganiser)
         {
-            await userManager.DeleteAsync(selectedOrganiser);
+            dbContext.Remove(selectedOrganiser);
+
+            dbContext.SaveChanges();
+
+            organiserGrid.Reload();
         }
 
         async Task LoadOrganisers()
         {
-            organiserList = await userManager.GetUsersInRoleAsync(IdentityRoleTypes.Organiser);
             await InvokeAsync(StateHasChanged);
         }
     }

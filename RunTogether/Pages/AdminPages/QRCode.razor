@@ -14,6 +14,7 @@
 @inject ApplicationDbContext dbContext
 @inject IJSRuntime jsRuntime
 
+@attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
 <h3>QR Kode</h3>
 <RadzenFieldset Text="QR Kode print indstillinger">
     <div class="row">
@@ -46,7 +47,7 @@
             <RadzenLabel Text="kode:" />
         </div>
         <div class="col-sm-4">
-            
+
         </div>
     </div>
     <div class="row">
