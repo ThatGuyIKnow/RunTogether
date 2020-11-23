@@ -91,6 +91,17 @@ namespace RunTogether.Shared.Etc
             NavigationManager.NavigateTo(path);
         }
 
+        //Skifter activ status for løb
+        void ChangeActiveStatus(bool value, Run passedRun)
+        {
+            foreach(Run r in runs)
+            {
+                r.Active = false;
+            }
+            passedRun.Active = value;
+            dbContext.SaveChanges();
+        }
+
         //Dialogbox for at oprette et løb
         void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
         {

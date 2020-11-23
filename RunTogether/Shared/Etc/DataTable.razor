@@ -40,6 +40,11 @@ else
                     <RadzenGridColumn TItem="Run" Property="EndDate" Title="Slut Dato"></RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Property="Route" Title="Rute"></RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
+                    <RadzenGridColumn TItem="Run" Property="Active" Title="aktiv status" Bubble="false" Filterable="false" Sortable="true" TextAlign="TextAlign.Center" Width="100px">
+                        <Template Context="run">
+                            <RadzenSwitch Value="run.Active" Style="margin-bottom: 20px; color: lightgreen"  Change=@(args => ChangeActiveStatus(args, run)) />
+                        </Template>
+                    </RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Context="ID" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
                         <Template Context="run">
                             <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => NavigateToPage($"admin/{run.ID}/runners"))">
