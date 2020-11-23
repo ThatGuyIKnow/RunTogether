@@ -21,6 +21,7 @@ namespace RunTogether.Pages.AdminPages
         RadzenGrid<ApplicationUser> runnerTable;
 
         Run run = new Run();
+        IQueryable<ApplicationUser> runnerList;
 
         protected override async Task OnInitializedAsync()
         {
@@ -28,6 +29,12 @@ namespace RunTogether.Pages.AdminPages
             run = dbContext.Runs
                 .Where(r => r.ID == id)
                 .Include(r => r.Runners).FirstOrDefault();
+
+            runnerList = dbContext.Runs
+                .Where(r => r.ID == id)
+                .Include(r => r.Runners)
+                .SelectMany(r => r.Runners);
+
 
 
 
@@ -92,6 +99,12 @@ namespace RunTogether.Pages.AdminPages
             {
                 runnerTable.CancelEditRow(runner);
             }
+        }
+
+        void CopyLogin(string key)
+        {
+            string url = $"{Navigator.BaseUri}runner/login?key={key}";
+            jsRuntime.InvokeVoidAsync("Main.Common.CopyToClipboard", url);
         }
     }
 }

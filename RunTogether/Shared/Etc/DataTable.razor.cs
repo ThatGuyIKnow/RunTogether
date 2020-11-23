@@ -32,9 +32,8 @@ namespace RunTogether.Shared.Etc
         string color = "#000000";
         int size = 30;
 
-        //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
+        //Variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
         RadzenGrid<Run> runTable;
-        RadzenGrid<ApplicationUser> runnerTable;
 
         //alt querying bliver lavet i DB og kun det relevante data sendes til client.
         IQueryable<Run> runs;
@@ -65,10 +64,8 @@ namespace RunTogether.Shared.Etc
             SizeList.Add(new Tuple<string, int>("Meget lille", 1));
 
             //Bestemmer hvilken function der skal køres når en bestemt dialog service åbnes eller lukkes
-            createRunDialog.OnOpen += OpenCreateRunDialog;
-            createRunDialog.OnClose += CloseCreateRunDialog;
-            deleteRunDialog.OnOpen += OpenDeleteRunDialog;
-            deleteRunDialog.OnClose += CloseDeleteRunDialog;
+            dialogService.OnOpen += Open;
+            dialogService.OnClose += Close;
 
         }
 
@@ -85,31 +82,26 @@ namespace RunTogether.Shared.Etc
         }
 
         //Dialogbox for at oprette et løb
-        void OpenCreateRunDialog(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+        void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
         {
             StateHasChanged();
         }
-        void CloseCreateRunDialog(dynamic result)
+        void Close(dynamic result)
         {
             runTable.Reload();
             StateHasChanged();
         }
 
-        //Dialog box til at slette et løb
-        void OpenDeleteRunDialog(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
+         async Task DeleteRun(Run run)
         {
-            StateHasChanged();
-        }
-        void CloseDeleteRunDialog(dynamic result)
-        {
-            if(result == true)
+            var dialogReturnValue = await dialogService.Confirm("Er du sikker på at du vil slette løb med navnet: " + run.Name + "?", "Slet " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+            if(dialogReturnValue == true)
             {
                 Console.WriteLine("Sletter: " + run.Name);
                 dbContext.Remove(run);
                 dbContext.SaveChanges();
             }
             runTable.Reload();
-            StateHasChanged();
         }
 
     }
