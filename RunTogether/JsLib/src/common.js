@@ -36,4 +36,20 @@
         }
         return null;
     }
+
+    CopyToClipboard(str) {
+        const textarea = document.createElement("textarea");
+        textarea.value = str;
+        textarea.style.top = "0";
+        textarea.style.left = "0";
+        textarea.style.position = "fixed";
+
+        document.body.appendChild(textarea);
+
+        textarea.select();
+        textarea.setSelectionRange(0, 99999); /*For mobile devices*/
+
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+    }
 }

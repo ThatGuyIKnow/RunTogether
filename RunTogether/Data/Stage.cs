@@ -31,7 +31,11 @@ namespace RunTogether
         public List<StageAssignment> AssignedRunners { get; set; } = new List<StageAssignment>();
         public RunningStatus Status { get; set; } = RunningStatus.NotStarted;
 
+        public Sponsor? Sponsor { get; set; }
 
+        public int? SponsorId { get; set; }
+
+        public string? Message { get; set; }
 
         public Dictionary<string, object> ToJsonSerializableViewer()
         {
@@ -58,6 +62,7 @@ namespace RunTogether
 
             return data;
         }
+
         public StageAssignment GetCurrentRunner()
         {
             List<StageAssignment> orderedRunners = new List<StageAssignment>();
@@ -73,8 +78,13 @@ namespace RunTogether
             }
         }
 
+        public Stage GetPreviousStage()
+        {
+            int CurrentIndex = this.RunRoute.Stages.FindIndex(s => s.StageId == this.StageId);
+            int PreviousIndex = CurrentIndex < 1 ? CurrentIndex : CurrentIndex - 1;
+            return this.RunRoute.Stages[PreviousIndex];
+        }
     }
-
 
     public class StageAssignment
     {
@@ -83,7 +93,8 @@ namespace RunTogether
         
         public ApplicationUser Runner { get; set; }
         public int RunnerId { get; set; }
-        public TimeSpan RunningTime { get; set; }
+        public TimeSpan? RunningTime { get; set; }
+        public TimeSpan? StartTime { get; set; }
 
         public Stage Stage { get; set; }
         public int StageId { get; set; }

@@ -20,77 +20,113 @@ namespace RunTogether.Pages
     {
         //Variables for storing information about the current run and runner.
         private string qrCode = "";
-        private string? cookie;
+        private string? codeCookie;
+        private string? startRunCookie;
         private Run assignedRun = new Run();
         private Stage activeStage = new Stage();
         private StageAssignment activeRunner = new StageAssignment();
         private ApplicationUser currentUser = new ApplicationUser();
-        
+        public CustomStopWatch timer = new CustomStopWatch();
 
         //Variables for hiding and displaying CSS.
         private const string HideCss = "display-none";
         private string cameraCSS = HideCss;
         private string startRunCSS = HideCss; 
         private string displayResultCSS = HideCss;
+        private bool buttonVisible = false;
+        private bool buttonDisabled = false;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-                var user = authState.User;
+                await RetrieveUser();
+            }
+        }
 
-                if (user.Identity.IsAuthenticated)
+        protected override void OnParametersSet()
+        {
+           
+        }
+
+        private async Task RetrieveUser()
+        {
+            Microsoft.AspNetCore.Components.Authorization.AuthenticationState? authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            System.Security.Claims.ClaimsPrincipal? user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                currentUser = await UserManager.GetUserAsync(user);
+                assignedRun = await dbContext.Runs
+                                    .Where(r => r.ID == currentUser.RunId)
+                                    .Include(r => r.Route)
+                                    .ThenInclude(rr => rr.Stages)
+                                    .ThenInclude(s => s.AssignedRunners)
+                                    .ThenInclude(a => a.Runner)
+                                    .FirstOrDefaultAsync();
+
+                if (await ValidateRunner())
                 {
-                    currentUser = await UserManager.GetUserAsync(user);
-                    assignedRun = await dbContext.Runs
-                                        .Where(r => r.ID == currentUser.RunId)
-                                        .Include(r => r.Route)
-                                        .ThenInclude(rr => rr.Stages)
-                                        .ThenInclude(s => s.AssignedRunners)
-                                        .ThenInclude(a => a.Runner)
-                                        .FirstOrDefaultAsync();
-
-                    //Get the codeScanned cookie, and display the relevant CSS elements.
-                    cookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "CodeScanned");
-                    if (cookie == null || !cookie.Equals("Yes"))
-                    {
-                        cameraCSS = "";
-                    }
-                    else
-                    {
-                        startRunCSS = "";
-                    }
+                    await CheckCookie();
                 }
-                StateHasChanged();
+            }
+
+            StateHasChanged();
+        }
+
+        public async Task<bool> ValidateRunner()
+        {
+            //Finds the active stage and runner.
+            SetActiveStageAndRunner();
+
+            //Checks if there is an active runner, or if the current user's status is Completed.
+            if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(currentUser.Id)).Status == RunningStatus.Completed)
+            {
+                await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
+                return false;
+            }
+            //Sets the previous runner's status to Completed, if they still have a status of Active.
+            else if (!activeRunner.Runner.Id.Equals(currentUser.Id))
+            {
+                await UpdateDatabase(RunningStatus.Completed);
+            }
+
+            return true;
+        }
+
+        public async Task CheckCookie()
+        {
+            //Get the cookies, and display the relevant CSS elements.
+            codeCookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "CodeScanned");
+            startRunCookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "RunStarted");
+            if (codeCookie == null || !codeCookie.Equals("Yes"))
+            {
+                cameraCSS = "";
+            }
+            else if (startRunCookie == null || !startRunCookie.Equals("Yes"))
+            {
+                startRunCSS = "";
+            }
+            else
+            {
+                startRunCSS = "";
+                StartRun("HasCookie");
             }
         }
 
         public async void CheckCode()
         {
-            //Finds the active stage and runner.
-            SetActiveStageAndRunner();
-
             //Checks that the QR-code is correct.
             if (assignedRun.QRString.Equals(qrCode))
             {
                 //Sets a cookie that remembers that the code has been scanned.
                 await JSRuntime.InvokeAsync<string>("Main.Common.WriteCookie", "CodeScanned", "Yes", 2);
 
-                //Checks if there is an active runner, or if the current user's status is Completed.
-                if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(currentUser.Id)).Status == RunningStatus.Completed)
-                {
-                    await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
-                }
-                //Sets the previous runner's status to Completed, if they still have a status of Active.
-                else if (!activeRunner.Runner.Id.Equals(currentUser.Id))
-                {
-                    UpdateDatabase(RunningStatus.Completed);
-                }
-
                 //Hides the camera CSS and displays the start run CSS.
                 cameraCSS = HideCss;
                 startRunCSS = "";
+
+                StateHasChanged();
             }
             else
             {
@@ -98,47 +134,52 @@ namespace RunTogether.Pages
             }
         }
 
-        private bool buttonVisible = false;
-        private bool buttonDisabled = false;
-        public async void StartRun()
+        public async void StartRun(string? hasCookie = null)
         {
             SetActiveStageAndRunner();
 
-            var confirmResult = await dialogService.Confirm("Er du sikker?", "Start løb", new ConfirmOptions() 
-                                                            { OkButtonText = "Ja", CancelButtonText = "Nej" });
+            bool? confirmResult = false;
 
-            if (confirmResult.HasValue && confirmResult.Value)
+            if (hasCookie == null)
             {
-                StopWatch();
+                confirmResult = await dialogService.Confirm("Er du sikker?", "Start løb", new ConfirmOptions()
+                                                           { OkButtonText = "Ja", CancelButtonText = "Nej" });
+            }
+
+            if ((confirmResult.HasValue && confirmResult.Value) || hasCookie != null)
+            {
+                await JSRuntime.InvokeAsync<string>("Main.Common.WriteCookie", "RunStarted", "Yes", 2);
+                await StartTime();
                 buttonVisible = true;
                 buttonDisabled = true;
-
-                UpdateDatabase(RunningStatus.Active);
+                await UpdateDatabase(RunningStatus.Active);
             }
             else
             {
                 return;
             }
+
+            StateHasChanged(); 
         }
 
-        TimeSpan stopWatchValue = new TimeSpan();
-        private bool stopWatchActive = false;
-
-        public async Task StopWatch()
+        public async void StopRun()
         {
-            stopWatchActive = true;
-            while (stopWatchActive)
-            {
-                await Task.Delay(1000);
- 
-                if (stopWatchActive)
-                {
-                    //Because of the Task.Delay, chances are that when the “Stop” button is clicked, the cycle has already started.
-                    //This means that if we do not check for the Boolean value it will add another second to the already reset variable.
-                    stopWatchValue = stopWatchValue.Add(new TimeSpan(0, 0, 1));
-                    StateHasChanged();
-                }
-            }
+            StopTime();
+            DisplayResult();
+            activeRunner.RunningTime = timer.stopWatchValue;
+            await UpdateDatabase(RunningStatus.Completed);
+        }
+
+        public async Task StartTime()
+        {
+            timer.StartStopWatch(() => { StateHasChanged(); }, activeRunner.StartTime);
+            activeRunner.StartTime = timer.startTime;
+            await dbContext.SaveChangesAsync();
+        }
+
+        public void StopTime()
+        {
+            timer.StopStopWatch();
         }
 
         public void DisplayResult()
@@ -147,7 +188,7 @@ namespace RunTogether.Pages
             displayResultCSS = "";
         }
 
-        public async void UpdateDatabase (RunningStatus runningStatus)
+        public async Task UpdateDatabase (RunningStatus runningStatus)
         {
             activeRunner.Status = runningStatus;
             await dbContext.SaveChangesAsync();
@@ -156,7 +197,10 @@ namespace RunTogether.Pages
         public void SetActiveStageAndRunner()
         {
             activeStage = assignedRun.GetCurrentStage();
-            activeRunner = activeStage.GetCurrentRunner();
+            if (activeStage != null)
+            {
+                activeRunner = activeStage.GetCurrentRunner();
+            }
         }
     }
 }

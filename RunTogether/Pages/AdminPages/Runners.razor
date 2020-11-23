@@ -11,34 +11,44 @@
 @inject DialogService dialogService
 @inject UserManager<ApplicationUser> userManager
 @inject ApplicationDbContext dbContext
+@inject NavigationManager Navigator
+@inject IJSRuntime jsRuntime
 
+
+@attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
 <RadzenButton Icon="person_add" Text=@($"Opret ny løber til {run.Name}") Click="@(args => dialogService.Open<CreateNewRunner>($"Opret ny løber til {run.Name}",
                         new Dictionary<string, object>() { { "selectedRun", run } },
                         new DialogOptions() { Width = "700px", Height = "530px" }))" />
 
-<RadzenGrid @ref="runnerTable" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@run.Runners" TItem="ApplicationUser" EditMode="DataGridEditMode.Single" RowUpdate="@OnUpdateRow">
+<RadzenGrid @ref="runnerTable" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@runnerList" TItem="ApplicationUser" EditMode="DataGridEditMode.Single" RowUpdate="@OnUpdateRow">
     <Columns>
-        <RadzenGridColumn TItem="ApplicationUser" Property="runners.FirstName" Title="Fornavn">
+        <RadzenGridColumn TItem="ApplicationUser" Property="FirstName" Title="Fornavn">
             <EditTemplate Context="selectedRunner">
                 <RadzenTextBox @bind-Value="selectedRunner.FirstName" Style="width:100%; display: block" Name="FirstName" />
                 <RadzenRequiredValidator Text="Fornavn er påkrævet" Component="FirstName" Popup="true" />
             </EditTemplate>
         </RadzenGridColumn>
-        <RadzenGridColumn TItem="ApplicationUser" Property="runners.LastName" Title="Efternavn">
+        <RadzenGridColumn TItem="ApplicationUser" Property="LastName" Title="Efternavn">
             <EditTemplate Context="selectedRunner">
                 <RadzenTextBox @bind-Value="selectedRunner.LastName" Style="width:100%; display: block" Name="LastName" />
                 <RadzenRequiredValidator Text="Efternavn er påkrævet" Component="LastName" Popup="true" />
             </EditTemplate>
         </RadzenGridColumn>
-        <RadzenGridColumn TItem="ApplicationUser" Property="runners.Email" Title="Email">
+        <RadzenGridColumn TItem="ApplicationUser" Property="Email" Title="Email">
             <EditTemplate Context="selectedRunner">
                 <RadzenTextBox @bind-Value="selectedRunner.Email" Style="width:100%; display: block" Name="Email" />
-                <RadzenRequiredValidator Text="Email er påkrævet" Component="Email" Popup="true" />
+                <RadzenRequiredValidator Component="Email" Text="Email skal udfyldes" Popup=true Style="position: absolute" />
+                <RadzenEmailValidator Component="Email" Text="Angiv en gyldig e-mail-adresse" Popup=true Style="position: absolute" />
+                <RadzenCompareValidator Component="Email" Text="Email findes allerede for dette løb" Popup=true Style="position: absolute" Value=FindRunner(selectedRunner.Email) Operator=CompareOperator.NotEqual />
             </EditTemplate>
         </RadzenGridColumn>
+        <RadzenGridColumn TItem="ApplicationUser" Property="runners.PasswordHash" Title="Login URL">
+            <Template Context="data">
+                <RadzenButton Click=@(() => CopyLogin(data?.PasswordHash)) Text="Copy" />
+            </Template>
+        </RadzenGridColumn>
 
-
-        <RadzenGridColumn TItem="ApplicationUser" Context="sampleBlazorModelsSampleOrder" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+        <RadzenGridColumn TItem="ApplicationUser" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="selectedRunner">
                 <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow(selectedRunner))">
                 </RadzenButton>

@@ -1,0 +1,8 @@
+@page "/admin/organisers"
+@layout RunTogether.Shared.Layouts.OrganiserLayoutHome
+@using RunTogether.Areas.Identity
+@using RunTogether.Shared.Etc
+
+@inject RunTogether.Data.ApplicationDbContext dbContext
+@attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
+    <GenerateOrganiserKey></GenerateOrganiserKey>

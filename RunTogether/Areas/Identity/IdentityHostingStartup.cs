@@ -1,7 +1,9 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI;
@@ -44,12 +46,14 @@ namespace RunTogether.Areas.Identity
                     options.User.AllowedUserNameCharacters =
                         " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                     options.User.RequireUniqueEmail = false;
+                    options.SignIn.RequireConfirmedAccount = false;
                 });
-                services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-                services.AddScoped<IHostEnvironmentAuthenticationStateProvider>(sp => {
-                    var provider = (ServerAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>();
-                    return provider;
-                });
+                //services.AddHttpContextAccessor();
+                //services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
+                //services.AddScoped<IHostEnvironmentAuthenticationStateProvider>(sp => {
+                //    var provider = (ServerAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>();
+                //    return provider;
+                //});
             });
         }
     }

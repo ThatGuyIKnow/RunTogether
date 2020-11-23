@@ -1,0 +1,75 @@
+﻿@page "/admin/{id:int}/Sponsors"
+@layout RunTogether.Shared.Layouts.OrganiserLayout
+
+@using RunTogether.Data
+@using RunTogether.Shared.Forms
+@using RunTogether.Areas.Identity
+
+@inject DialogService dialogService
+@inject ApplicationDbContext dbContext
+
+
+@attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
+<h3>Upload PNG images</h3>
+
+<RadzenButton Icon="monetization_on" Text=@($"Opret ny sponsor") Click="@(args => dialogService.Open<CreateNewSponsor>($"Opret ny sponsor",
+                        new Dictionary<string, object>(),
+                        new DialogOptions() { Width = "700px", Height = "530px" }))" />
+
+<RadzenGrid @ref="sponsorTable" AllowFiltering="true" AllowPaging="true" AllowSorting="true" Data="@SponsorList" TItem="Sponsor" RowUpdate="@OnUpdateRow">
+    <Columns>
+        <RadzenGridColumn TItem="Sponsor" Property="Image" Title="Billede" Sortable="false" Filterable="false">
+            <Template Context="data">
+                <div>
+                    <img class="rounded m-1" src="@data.Image" />
+                </div>
+            </Template>
+            <EditTemplate Context="selectedSponsor">
+                <InputFile OnChange="@OnInputFileChange" multiple />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Sponsor" Title="Download" Sortable="false" Filterable="false">
+            <Template Context="data">
+                <div>
+                    <a href="@data.Image" download><RadzenButton Text="Download" Icon="get_app" Style="margin-bottom: 20px; width: 150px" /></a>
+                </div>
+            </Template>
+            <EditTemplate>
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Sponsor" Property="SponsorList.Name" Title="Sponsor navn">
+            <EditTemplate Context="selectedSponsor">
+                <RadzenTextBox @bind-Value="selectedSponsor.Name" Style="width:100%; display: block" Name="Name" />
+                <RadzenRequiredValidator Text="Sponsor navn er påkrævet" Component="Name" Popup="true" />
+            </EditTemplate>
+        </RadzenGridColumn>
+
+
+        <RadzenGridColumn TItem="Sponsor" Context="sampleBlazorModelsSampleOrder" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+            <Template Context="selectedSponsor">
+                <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => EditRow(selectedSponsor))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="selectedSponsor">
+                <RadzenButton Icon="save" Size="ButtonSize.Small" Click="@((args) => SaveRow(selectedSponsor))">
+                </RadzenButton>
+                <RadzenButton Icon="cancel" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Secondary" Click="@((args) => CancelEdit(selectedSponsor))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+
+        <RadzenGridColumn TItem="Sponsor" Context="selectedSponsor" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+            <Template Context="selectedRunner">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRow(selectedRunner))">
+                </RadzenButton>
+            </Template>
+            <EditTemplate Context="selectedRunner">
+                <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRow(selectedRunner))">
+                </RadzenButton>
+            </EditTemplate>
+        </RadzenGridColumn>
+
+    </Columns>
+</RadzenGrid>

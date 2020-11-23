@@ -32,94 +32,86 @@ namespace RunTogether.Shared.Etc
         string color = "#000000";
         int size = 30;
 
-        //Delecare variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
+        //Variable for referencing radzen table (@ref="table") as RadzenGrid of type Run 
         RadzenGrid<Run> runTable;
-        RadzenGrid<ApplicationUser> runnerTable;
+        public bool loading = true;
 
         //alt querying bliver lavet i DB og kun det relevante data sendes til client.
         IQueryable<Run> runs;
 
         protected override async Task OnInitializedAsync()
         {
-            runs = dbContext.Runs
-                .Include(r => r.Route)
-                    .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.StartPoint)
-                .Include(r => r.Route)
-                    .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.EndPoint)
-                .Include(r => r.Route)
-                    .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.ThroughPoints)
-                .Include(r => r.Runners);
 
+            //variabler til dropdown box for farve til print af qrkode
             ColorList.Add(new Tuple<string, string>("RT rød", "#cc4545"));
             ColorList.Add(new Tuple<string, string>("Sort", "#000000"));
             ColorList.Add(new Tuple<string, string>("Navy blå", "#000080"));
 
+            //variabler til dropdown box for størelse til print af qrkode
             SizeList.Add(new Tuple<string, int>("Stor (A4)", 30));
             SizeList.Add(new Tuple<string, int>("Mellem", 20));
             SizeList.Add(new Tuple<string, int>("Lille", 10));
             SizeList.Add(new Tuple<string, int>("Meget lille", 1));
 
+            //Bestemmer hvilken function der skal køres når en bestemt dialog service åbnes eller lukkes
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
-            //await GenerateTestData();
         }
 
-        public async Task GenerateTestData()
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-                var testRun = new Run
-                {
-                    Name = "Løb 1",
-                    StartDate = DateTime.Now,
-                    EndDate = DateTime.Now.AddDays(1),
-                    QRString = "test code",
-
-                    Runners = new List<ApplicationUser>
-                    {
-                        
-                    },
-
-                    Route = new RunRoute
-                    {
-                        Stages = new List<Stage>
-                        {
-                            new Stage() {StartPoint = new StartPoint(57.0117789F, 9.9907118F), EndPoint = new EndPoint(56.7499F, 9.9921F)}
-                        }
-                    }
-                };
-
-                
-
-                dbContext.Runs.Add(testRun);
-                await dbContext.SaveChangesAsync();
-
-                //await userCreation.CreateRunner("Karin", "Wallsten", "asd@asd.dk", testRun);
+            if (firstRender)
+            {
+               runs = dbContext.Runs
+                        .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                                .ThenInclude(s => s.StartPoint)
+                        .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                                .ThenInclude(s => s.EndPoint)
+                        .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                                .ThenInclude(s => s.ThroughPoints)
+                        .Include(r => r.Runners);
+                loading = false;
+                StateHasChanged();
+            }
         }
 
+        //Sætter run til at være det valgte run fra tabelen
         public async Task QueryForRunners(Run QueryRun)
         {
             run = QueryRun;
         }
 
+        //Går til url med "path"
         private void NavigateToPage(string path)
         {
             NavigationManager.NavigateTo(path);
         }
 
+        //Dialogbox for at oprette et løb
         void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
         {
             StateHasChanged();
         }
-
         void Close(dynamic result)
         {
             runTable.Reload();
-            if(run.ID != default)
-                runnerTable.Reload();
             StateHasChanged();
+        }
+
+         async Task DeleteRun(Run run)
+        {
+            bool? dialogReturnValue = await dialogService.Confirm("Er du sikker på at du vil slette løb med navnet: " + run.Name + "?", "Slet " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+            if(dialogReturnValue == true)
+            {
+                Console.WriteLine("Sletter: " + run.Name);
+                dbContext.Remove(run);
+                dbContext.SaveChanges();
+            }
+            runTable.Reload();
         }
 
     }

@@ -241,3 +241,9 @@ app {
     height: 100%;
     width: auto;
 }
+
+.scrollableRZCard {
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 100%;
+}

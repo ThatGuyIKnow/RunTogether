@@ -23,26 +23,16 @@ namespace RunTogether
             //return $"Route with {Stages.Count} stages";
         }
 
-        public List<List<float>> ToPointList()
+        public void DeleteStage(ApplicationDbContext dbContext, Stage DeleteStage)
         {
-            List<List<float>> PointList = new List<List<float>>(); 
-            foreach (Stage stage in this.Stages)
-            {
-                PointList.Add(new List<float> { stage.StartPoint.X, stage.StartPoint.Y});
+            //Check if delete stage is part of route.... 
+            Stage PreviousStage = DeleteStage.GetPreviousStage();
 
-                if (stage.ThroughPoints != null)
-                {
-                    foreach (ThroughPoint point in stage.ThroughPoints)
-                    {
-                        PointList.Add(new List<float> { point.X, point.Y });
-                    }
-                }
+            PreviousStage.EndPoint.X = DeleteStage.EndPoint.X;
+            PreviousStage.EndPoint.Y = DeleteStage.EndPoint.Y;
 
-                PointList.Add(new List<float> { stage.EndPoint.X, stage.EndPoint.Y });
-
-            }
-            return PointList;
-        }
+            dbContext.Remove(DeleteStage);
+        } 
 
         public Dictionary<string, object> ToJsonSerializableViewer()
         {
