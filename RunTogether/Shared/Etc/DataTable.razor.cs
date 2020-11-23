@@ -51,7 +51,7 @@ namespace RunTogether.Shared.Etc
             SizeList.Add(new Tuple<string, int>("Stor (A4)", 30));
             SizeList.Add(new Tuple<string, int>("Mellem", 20));
             SizeList.Add(new Tuple<string, int>("Lille", 10));
-            SizeList.Add(new Tuple<string, int>("Meget lille", 1));
+            SizeList.Add(new Tuple<string, int>("Meget lille", 5));
 
             //Bestemmer hvilken function der skal køres når en bestemt dialog service åbnes eller lukkes
             dialogService.OnOpen += Open;
