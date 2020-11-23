@@ -1,14 +1,17 @@
 ﻿@page "/runner"
 
+@using RunTogether.Shared.QR.QRScanner
+@using RunTogether.Areas.Identity
+
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject Microsoft.AspNetCore.Identity.UserManager<RunTogether.Areas.Identity.ApplicationUser> UserManager
 @inject RunTogether.Data.ApplicationDbContext dbContext
 @inject IJSRuntime JSRuntime
 @inject DialogService dialogService
 
-@using RunTogether.Shared.QR.QRScanner
-
 @layout RunTogether.Shared.Layouts.RunnerLayout
+
+@attribute [Authorize(Roles = IdentityRoleTypes.Runner)]
 <RadzenDialog />
 
 <div class="row @cameraCSS">

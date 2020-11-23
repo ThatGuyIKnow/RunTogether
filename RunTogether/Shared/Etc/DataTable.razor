@@ -14,29 +14,48 @@
 @inject DialogService dialogService
 @inject UserCreationHelper userCreation
 
-<RadzenButton Icon="directions_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret nyt løb",
+@if (@loading)
+{
+    //if loading dont show button
+}
+else
+{
+    <RadzenButton Icon="directions_run" Text="Opret nyt løb " Click="@(args => dialogService.Open<CreateNewRun>($"Opret nyt løb",
                         new Dictionary<string, object>(),
                         new DialogOptions(){ Width = "700px", Height = "530px" }))" />
+}
 
 <div class="row">
     <div class="col-md-6">
-        <RadzenGrid @ref="runTable" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
-            <Columns>
-                <RadzenGridColumn TItem="Run" Property="Name" Title="Løb"></RadzenGridColumn>
-                <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Dato"></RadzenGridColumn>
-                <RadzenGridColumn TItem="Run" Property="EndDate" Title="Slut Dato"></RadzenGridColumn>
-                <RadzenGridColumn TItem="Run" Property="Route" Title="Rute"></RadzenGridColumn>
-                <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
-                <RadzenGridColumn TItem="Run" Context="ID" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
-                    <Template Context="run">
-                        <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => NavigateToPage($"admin/{run.ID}/info"))">
-                        </RadzenButton>
-                        <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRun(run))">
-                        </RadzenButton>
-                    </Template>
-                </RadzenGridColumn>
-            </Columns>
-        </RadzenGrid>
+        @if (@loading)
+        {
+            <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+        }
+        else
+        {
+            <RadzenGrid @ref="runTable" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
+                <Columns>
+                    <RadzenGridColumn TItem="Run" Property="Name" Title="Løb"></RadzenGridColumn>
+                    <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Dato"></RadzenGridColumn>
+                    <RadzenGridColumn TItem="Run" Property="EndDate" Title="Slut Dato"></RadzenGridColumn>
+                    <RadzenGridColumn TItem="Run" Property="Route" Title="Rute"></RadzenGridColumn>
+                    <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
+                    <RadzenGridColumn TItem="Run" Property="Active" Title="aktiv status" Bubble="false" Filterable="false" Sortable="true" TextAlign="TextAlign.Center" Width="100px">
+                        <Template Context="run">
+                            <RadzenSwitch Value="run.Active" Style="margin-bottom: 20px; color: lightgreen"  Change=@(args => ChangeActiveStatus(args, run)) />
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn TItem="Run" Context="ID" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+                        <Template Context="run">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => NavigateToPage($"admin/{run.ID}/runners"))">
+                            </RadzenButton>
+                            <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRun(run))">
+                            </RadzenButton>
+                        </Template>
+                    </RadzenGridColumn>
+                </Columns>
+            </RadzenGrid>
+        }
     </div>
     <div class="col-md-6">
         <RadzenTabs>

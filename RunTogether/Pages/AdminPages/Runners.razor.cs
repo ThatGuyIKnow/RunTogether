@@ -44,6 +44,16 @@ namespace RunTogether.Pages.AdminPages
 
         }
 
+        //retunere Email hvis den blev fundet ellers default
+        public string FindRunner(string Email)
+        {
+            if (runnerList.Any(r => r.Email == Email) == true)
+            {
+                return Email;
+            }
+            return default;
+        }
+
 
         void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
         {
