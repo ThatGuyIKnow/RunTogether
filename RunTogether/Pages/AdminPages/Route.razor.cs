@@ -69,11 +69,11 @@ namespace RunTogether.Pages.AdminPages
             selectedStage.AssignedRunners[index].RunnerId = value.RunnerId;
             selectedStage.AssignedRunners[index].Stage = selectedStage;
             selectedStage.AssignedRunners[index].StageId = selectedStage.StageId;
-          
+
         }
 
         //gemmer ændringer i databasen ved klik på gem knap
-        public async void Save() 
+        public async void Save()
         {
             Console.WriteLine("Route saved");
             await dbContext.SaveChangesAsync();
@@ -84,19 +84,19 @@ namespace RunTogether.Pages.AdminPages
         {
             StageAssignment runnerToDel = selectedStage.AssignedRunners.Find(x => x.Order == index);
             selectedStage.AssignedRunners.Remove(runnerToDel);
-           
+
             for (int i = 0; i < selectedStage.AssignedRunners.Count ; i++)
             {
                 selectedStage.AssignedRunners[i].Order = i;
             }
-            
+
             rows--;
         }
 
         public void Add(ApplicationUser runner)
         {
-            selectedStage.AssignedRunners.Add(new StageAssignment() { 
-                Order       = selectedStage.AssignedRunners.Count, 
+            selectedStage.AssignedRunners.Add(new StageAssignment() {
+                Order       = selectedStage.AssignedRunners.Count,
                 Runner      = runner,
                 RunnerId    = runner.RunnerId,
                 Stage       = selectedStage,
@@ -136,7 +136,7 @@ namespace RunTogether.Pages.AdminPages
             {
 
                 selectedStage = run.Route.Stages
-                    .Where(s => s.StageId == selectedStageId) 
+                    .Where(s => s.StageId == selectedStageId)
                     .FirstOrDefault();
 
                 run.Route.DeleteStage(dbContext, selectedStage);
