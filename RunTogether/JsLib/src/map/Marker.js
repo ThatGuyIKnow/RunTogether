@@ -75,7 +75,7 @@ export class Popup extends AbstractMarker {
         this.content = '<div class="popup">' +
                             `<h3>${stage.sponsor.name}</h3><br>` +
                             `<p>${stage.sponsor.message}</p>` +
-            '<img src="' + stage.sponsor.pictureUrl + '" asp-append-version="true" height="150px" height="auto"></img>'+
+            '<img src="' + stage.sponsor.pictureUrl + '" asp-append-version="true" height="200px" weight="auto"></img>'+
                             "<hr>" + "<h4>Løberne</h4>" +
                             `${this.ConstructContent(stage.runners)}` +
                        "</div>";
