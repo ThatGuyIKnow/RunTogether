@@ -254,3 +254,7 @@ app {
     margin-right: auto;
     width: 50%;
 }
+
+.rz-switch.rz-switch-checked .rz-switch-circle {
+    background: #ff6d41 !important;
+}

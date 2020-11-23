@@ -50,7 +50,7 @@ else
                     <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Property="Active" Title="aktiv status" Bubble="false" Filterable="false" Sortable="true" TextAlign="TextAlign.Center" Width="100px">
                         <Template Context="run">
-                            <RadzenSwitch Value="run.Active" Style="margin-bottom: 20px; color: lightgreen"  Change=@(args => ChangeActiveStatus(args, run)) />
+                            <RadzenSwitch Value="run.Active" Style="margin-bottom: 20px;"  Change=@(args => ChangeActiveStatus(args, run))/>
                         </Template>
                     </RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Context="ID" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
