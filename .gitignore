@@ -18,3 +18,4 @@ RunTogetherTest/RunTogether.csproj.user
 /RunTogetherTests/obj
 /RunTogetherTests/bin/Debug/netcoreapp3.1
 RunTogether.sln.DotSettings.user
+RunTogetherTests/bin/Debug/netcoreapp5.0/
