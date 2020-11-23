@@ -14,25 +14,24 @@ namespace RunTogether.Shared.Forms
         [Parameter] public Run selectedRun { get; set; }
 
         ApplicationUser runner = new ApplicationUser();
-        RadzenCompareValidator compareValidator;
-
-        public string targetValue { get; set; }
 
         async public void OnSubmit(string firstName, string lastName, string email, Run selectedRun)
         {
-            targetValue = default;
-            if (selectedRun.Runners.Any(r => r.Email == runner.Email) == false)
-            {
                 Console.WriteLine(selectedRun.Name + " " + selectedRun.ID);
                 await userCreation.CreateRunner(firstName, lastName, email, selectedRun);
                 Console.WriteLine("YEY!");
                 this.dialogService.Close(true);
-            }
-            else
+        }
+
+
+        //retunere Email hvis den blev fundet ellers default
+        public string FindRunner(string Email)
+        {
+            if (selectedRun.Runners.Any(r => r.Email == Email) == true)
             {
-                targetValue = runner.Email;
-                compareValidator.EditContext.Validate();
+                return Email;
             }
+            return default;
         }
 
         void OnInvalidSubmit()
