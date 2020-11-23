@@ -1,9 +1,11 @@
 @page "/admin"
+@layout RunTogether.Shared.Layouts.OrganiserLayoutHome
 
 @using RunTogether.Shared.Etc
 @using RunTogether.Areas.Identity
 
 @inject RunTogether.Data.ApplicationDbContext dbContext
+
 @layout RunTogether.Shared.Layouts.NoLayout
 
 @attribute [Authorize( Roles = IdentityRoleTypes.Organiser)] 
