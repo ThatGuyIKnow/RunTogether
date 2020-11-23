@@ -24,7 +24,7 @@ namespace RunTogether.Pages
         private string? startRunCookie;
         private Run assignedRun = new Run();
         private Stage activeStage = new Stage();
-        private StageAssignment activeRunner = new StageAssignment();
+        private StageAssignment? activeRunner;
         private ApplicationUser currentUser = new ApplicationUser();
         public CustomStopWatch timer = new CustomStopWatch();
 
@@ -79,8 +79,27 @@ namespace RunTogether.Pages
             //Finds the active stage and runner.
             SetActiveStageAndRunner();
 
+            //Checks if there is an active stage, and updates the stage status if necessary.
+            if (activeStage == null)
+            {
+                IEnumerable<StageAssignment> stageAssignments = currentUser.StageAssignments.FindAll(s => s.Stage.Status != RunningStatus.Completed).OrderBy(s => s.StageId);
+                if (stageAssignments != null)
+                {
+                    stageAssignments.First().Stage.Status = RunningStatus.Active;
+                    Stage previous = stageAssignments.First().Stage.GetPreviousStage();
+                    if (previous.StageId != stageAssignments.First().StageId)
+                    {
+                        previous.Status = RunningStatus.Completed;
+                    }
+                    await dbContext.SaveChangesAsync();
+                }
+                else
+                {
+                    await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
+                }
+            }
             //Checks if there is an active runner, or if the current user's status is Completed.
-            if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(currentUser.Id)).Status == RunningStatus.Completed)
+            else if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(currentUser.Id)).Status == RunningStatus.Completed)
             {
                 await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
                 return false;
