@@ -134,17 +134,18 @@ namespace RunTogether.Pages.AdminPages
         {
             if (selectedStageId != -1)
             {
+                bool? dialogReturnValue = await dialogService.Confirm("Hvis du sletter et stage vil alle forbundne løbere blive blive fjernet og skal muligvis tilføjes igen", "Slet stage?", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nej" });
+                if (dialogReturnValue == true) {
+                    selectedStage = run.Route.Stages
+                        .Where(s => s.StageId == selectedStageId)
+                        .FirstOrDefault();
 
-                selectedStage = run.Route.Stages
-                    .Where(s => s.StageId == selectedStageId)
-                    .FirstOrDefault();
+                    run.Route.DeleteStage(dbContext, selectedStage);
 
-                run.Route.DeleteStage(dbContext, selectedStage);
+                    dbContext.SaveChanges();
 
-                dbContext.SaveChanges();
-
-                await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", run.Route.ToJsonSerializableViewer());
-
+                    await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", run.Route.ToJsonSerializableViewer());
+                }
             }
         }
 

@@ -29,7 +29,8 @@ else
     <div class="col-md-6">
         @if (@loading)
         {
-            <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+            @*<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />*@
+            <img src="heartIconAnimated.svg">
         }
         else
         {
@@ -46,7 +47,6 @@ else
                             @string.Format("{0:d}", date.EndDate)
                         </Template>
                     </RadzenGridColumn>
-                    <RadzenGridColumn TItem="Run" Property="Route" Title="Rute"></RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Property="Active" Title="aktiv status" Bubble="false" Filterable="false" Sortable="true" TextAlign="TextAlign.Center" Width="100px">
                         <Template Context="run">
