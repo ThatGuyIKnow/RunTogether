@@ -21,7 +21,7 @@
         <RadzenGridColumn TItem="Sponsor" Property="Image" Title="Billede" Sortable="false" Filterable="false">
             <Template Context="data">
                 <div>
-                    <img class="rounded m-1" src="@data.Image" />
+                    <img style="max-width: 200px; max-height: 200px" class="rounded m-1" src="@data.Image" />
                 </div>
             </Template>
             <EditTemplate Context="selectedSponsor">
