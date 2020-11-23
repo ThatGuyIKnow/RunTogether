@@ -110,5 +110,11 @@ namespace RunTogether.Pages.AdminPages
                 runnerTable.CancelEditRow(runner);
             }
         }
+
+        void CopyLogin(string key)
+        {
+            string url = $"{Navigator.BaseUri}runner/login?key={key}";
+            jsRuntime.InvokeVoidAsync("Main.Common.CopyToClipboard", url);
+        }
     }
 }

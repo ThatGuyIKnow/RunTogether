@@ -11,6 +11,8 @@
 @inject DialogService dialogService
 @inject UserManager<ApplicationUser> userManager
 @inject ApplicationDbContext dbContext
+@inject NavigationManager Navigator
+@inject IJSRuntime jsRuntime
 
 
 @attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
@@ -40,7 +42,11 @@
                 <RadzenCompareValidator Component="Email" Text="Email findes allerede for dette løb" Popup=true Style="position: absolute" Value=FindRunner(selectedRunner.Email) Operator=CompareOperator.NotEqual />
             </EditTemplate>
         </RadzenGridColumn>
-
+        <RadzenGridColumn TItem="ApplicationUser" Property="runners.PasswordHash" Title="Login URL">
+            <Template Context="data">
+                <RadzenButton Click=@(() => CopyLogin(data?.PasswordHash)) Text="Copy" />
+            </Template>
+        </RadzenGridColumn>
 
         <RadzenGridColumn TItem="ApplicationUser" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
             <Template Context="selectedRunner">

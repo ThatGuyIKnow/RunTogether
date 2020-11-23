@@ -4,15 +4,17 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Authentication
+@using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Http
 @using Radzen
 @inject UserManager<ApplicationUser> userManager
 @inject SignInManager<ApplicationUser> signInManager
 @inject NavigationManager navigationManager
+@*@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IHostEnvironmentAuthenticationStateProvider HostAuthentication
+@inject IHttpContextAccessor Context*@
 
 
-@page "/organiser/login"
 
 <h3>OrganiserLogin</h3>
 
@@ -57,7 +59,6 @@
         finally
         {
             loading = false;
-            StateHasChanged();
         }
         if (err != null)
         {
@@ -65,9 +66,9 @@
             StateHasChanged();
             return;
         }
-        ClaimsPrincipal principal = await CreatePrincipalFromUser(user);
-
-        LoginUser(principal);
+        //ClaimsPrincipal principal = await CreatePrincipalFromUser(user);
+        ClaimsPrincipal principal = new ClaimsPrincipal();
+        await LoginUser(principal, user);
 
         navigationManager.NavigateTo("/organiser");
 
@@ -85,24 +86,39 @@
         throw new AuthenticationException("Invalid Email/Password");
     }
 
-    protected async Task<ClaimsPrincipal> CreatePrincipalFromUser(ApplicationUser user)
-    {
-        //Create User Claims Principal based on the SignInManagers in
-        //addition to the one's found in the default cookie authentication scheme
-        var principal = await signInManager.CreateUserPrincipalAsync(user);
-        var identity = new ClaimsIdentity(
-            principal.Claims,
-            Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme
-            );
-        return new ClaimsPrincipal(identity);
-    }
+    //protected async Task<ClaimsPrincipal> CreatePrincipalFromUser(ApplicationUser user)
+    //{
+    //    //Create User Claims Principal based on the SignInManagers in
+    //    //addition to the one's found in the default cookie authentication scheme
+    //    var principal = await signInManager.CreateUserPrincipalAsync(user);
+    //    var identity = new ClaimsIdentity(
+    //        principal.Claims,
+    //        Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme
+    //        );
+    //    return new ClaimsPrincipal(identity);
+    //}
 
-    protected void LoginUser(ClaimsPrincipal principal)
+    protected async Task LoginUser(ClaimsPrincipal principal, ApplicationUser user)
     {
         // Pass on the User's info (principal claim) to the current HTTP request used to sign in
-        signInManager.Context.User = principal;
-        // Set the authentication state as based on the user claims. Applies to routing and authentication
-        HostAuthentication.SetAuthenticationState(Task.FromResult(new AuthenticationState(principal)));
+        //signInManager.Context.User = principal;
 
+        //// Set the authentication state as based on the user claims. Applies to routing and authentication
+        //HostAuthentication.SetAuthenticationState(Task.FromResult(new AuthenticationState(principal)));
+        //var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        //await signInManager.SignInAsync(user, true, Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme);
+        //await Context.HttpContext.SignInAsync(IdentityConstants.ApplicationScheme,
+        //    principal,
+        //    new AuthenticationProperties(new Dictionary<string, string?>() { { "isPersistent", "true" } }));
+        try
+        {
+            await signInManager.PasswordSignInAsync(email, password, false, false);
+        }
+        catch (Exception e)
+        {
+            var s = e;
+        }
+        var successMessage = $"signed in.";
+        var errorMessage = "";
     }
 }

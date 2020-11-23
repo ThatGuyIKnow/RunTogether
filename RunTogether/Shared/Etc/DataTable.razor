@@ -42,7 +42,7 @@ else
                     <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Context="ID" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
                         <Template Context="run">
-                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => NavigateToPage($"admin/{run.ID}/info"))">
+                            <RadzenButton Icon="edit" Size="ButtonSize.Small" Click="@(args => NavigateToPage($"admin/{run.ID}/runners"))">
                             </RadzenButton>
                             <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRun(run))">
                             </RadzenButton>
