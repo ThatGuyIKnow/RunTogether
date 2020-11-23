@@ -66,6 +66,8 @@ export class Popup extends AbstractMarker {
         if (!isClassOrSubclass(stage, AbstractStage))
             throw new TypeError("Class 'Popup' requires 'stage' Stage parameter");
 
+        //'<img src=' + stage.sponsor.pictureUrl + 'asp-append-version="true" width="300px" ></img>' 
+
         this._stage = stage;
         this._path = path;
         this.stageIndex = stageIndex;
@@ -73,7 +75,7 @@ export class Popup extends AbstractMarker {
         this.content = '<div class="popup">' +
                             `<h3>${stage.sponsor.name}</h3><br>` +
                             `<p>${stage.sponsor.message}</p>` +
-                            `<img src=` + stage.sponsor.pictureUrl + ` asp-append-version="true" width="300px" />` +
+            '<img src="' + stage.sponsor.pictureUrl + '" asp-append-version="true" height="150px" height="auto"></img>'+
                             "<hr>" + "<h4>Løberne</h4>" +
                             `${this.ConstructContent(stage.runners)}` +
                        "</div>";

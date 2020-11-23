@@ -14,13 +14,14 @@ export class StageFactory {
         let runners = null;
         if(Array.isArray(stageData.Runners) && stageData.Runners.length > 0) 
             runners = this.ConstructRunners(stageData.Runners);
-        
 
-        let sponsor = null;
-        if (stageData.Sponsor !== undefined)
-            sponsor = new Sponsor(stageData.Sponsor.Name,
-                stageData.Sponsor.Message,
-                stageData.Sponsor.PictureUrl === undefined ? null : stageData.Sponsor.PictureUrl);
+    let sponsor = null;
+    if (stageData.Sponsor !== undefined)
+        sponsor = new Sponsor(stageData.Sponsor.Name,
+            stageData.Sponsor.Message,
+            stageData.Sponsor.PictureURL);
+
+        console.log(stageData.Sponsor);
 
         let stage;
 
