@@ -1,0 +1,45 @@
+﻿@using RunTogether.Data
+@using RunTogether.Areas.Identity
+@using Microsoft.AspNetCore.Identity
+@inject NavigationManager Navigator
+@inject IJSRuntime jsRuntime
+@inject ApplicationDbContext dbContext
+@inject AuthenticationStateProvider authProvider
+@inject UserManager<ApplicationUser> userManager
+
+<h3>GenerateOrganiserKey</h3>
+
+<RadzenCard Style="width: 500px; margin: 0 auto; background: #ffeae8; border-radius: 5px;">
+    <RadzenTextBox Disabled="true" Placeholder=@organiserKey?.Key />
+    <p>Expires @organiserKey?.ExpirationDatetime</p>
+    <RadzenButton Click=@(() => CopyKey(organiserKey?.Key)) Text="Copy" />
+    <RadzenButton Click=@(RefreshKey) Text="Refresh" />
+</RadzenCard>
+
+<RadzenGrid @ref="organiserGrid" Data="@organiserList" LoadData="@LoadOrganisers" TItem="ApplicationUser">
+    <Columns>
+        <RadzenGridColumn TItem="ApplicationUser" Property="FirstName" Title="Fornavn">
+            <Template Context="selectedOrganiser">
+                <RadzenTextBox @bind-Value="selectedOrganiser.FirstName" Style="width:100%; display: block" Name="FirstName" />
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="ApplicationUser" Property="LastName" Title="Efternavn">
+            <Template Context="selectedOrganiser">
+                <RadzenTextBox @bind-Value="selectedOrganiser.LastName" Style="width:100%; display: block" Name="LastName" />
+            </Template>
+        </RadzenGridColumn>
+        <RadzenGridColumn TItem="ApplicationUser" Property="Email" Title="Email">
+                <Template Context="selectedOrganiser">
+                    <RadzenTextBox @bind-Value="selectedOrganiser.Email" Style="width:100%; display: block" Name="Email" />
+                </Template>
+            </RadzenGridColumn>
+
+            <RadzenGridColumn TItem="ApplicationUser" Context="selectedOrganiser" Bubble="false" TextAlign="TextAlign.Center" Width="70px">
+                <Template Context="selectedOrganiser">
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Icon="close" Size="ButtonSize.Small" Click="@(args => DeleteRow(selectedOrganiser))">
+                    </RadzenButton>
+                </Template>
+            </RadzenGridColumn>
+
+    </Columns>
+</RadzenGrid>
