@@ -26,7 +26,6 @@ namespace RunTogether.Pages.AdminPages
 
         protected override async Task OnInitializedAsync()
         {
-
             run = dbContext.Runs
                 .Find(id);
 
