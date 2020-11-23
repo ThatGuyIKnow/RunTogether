@@ -3,10 +3,13 @@
 
 @using RunTogether.Data
 @using RunTogether.Shared.Forms
+@using RunTogether.Areas.Identity
 
 @inject DialogService dialogService
 @inject ApplicationDbContext dbContext
 
+
+@attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
 <h3>Upload PNG images</h3>
 
 <RadzenButton Icon="monetization_on" Text=@($"Opret ny sponsor") Click="@(args => dialogService.Open<CreateNewSponsor>($"Opret ny sponsor",
@@ -29,7 +32,7 @@
         <RadzenGridColumn TItem="Sponsor" Title="Download" Sortable="false" Filterable="false">
             <Template Context="data">
                 <div>
-                    <a href="@data.Image" download><RadzenButton Text="Download" Icon="get_app" Style="margin-bottom: 20px; width: 150px"/></a>
+                    <a href="@data.Image" download><RadzenButton Text="Download" Icon="get_app" Style="margin-bottom: 20px; width: 150px" /></a>
                 </div>
             </Template>
             <EditTemplate>
