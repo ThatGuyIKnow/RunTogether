@@ -73,9 +73,11 @@ export class Popup extends AbstractMarker {
         this.content = '<div class="popup">' +
                             `<h3>${stage.sponsor.name}</h3><br>` +
                             `<p>${stage.sponsor.message}</p>` +
+                            `<img src=` + stage.sponsor.pictureUrl + ` asp-append-version="true" width="300px" />` +
                             "<hr>" + "<h4>Løberne</h4>" +
                             `${this.ConstructContent(stage.runners)}` +
                        "</div>";
+
     }
 
     ConstructContent(runners) {
@@ -107,6 +109,7 @@ export class Popup extends AbstractMarker {
 
         this._path.bindPopup(this._popup);
         this._marker.bindPopup(this._popup);
+
     }
 
     //OpenPopup() {
