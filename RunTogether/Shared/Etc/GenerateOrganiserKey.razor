@@ -16,21 +16,21 @@
     <RadzenButton Click=@(RefreshKey) Text="Refresh" />
 </RadzenCard>
 
-<RadzenGrid @ref="organiserGrid" Data="@organiserList" LoadData="@LoadOrganisers" TItem="ApplicationUser">
+<RadzenGrid @ref="organiserGrid" Data="@organiserList" TItem="ApplicationUser">
     <Columns>
         <RadzenGridColumn TItem="ApplicationUser" Property="FirstName" Title="Fornavn">
             <Template Context="selectedOrganiser">
-                <RadzenTextBox @bind-Value="selectedOrganiser.FirstName" Style="width:100%; display: block" Name="FirstName" />
+                <p style="width:100%; display: block" Name="FirstName">@selectedOrganiser.FirstName</p>
             </Template>
         </RadzenGridColumn>
         <RadzenGridColumn TItem="ApplicationUser" Property="LastName" Title="Efternavn">
             <Template Context="selectedOrganiser">
-                <RadzenTextBox @bind-Value="selectedOrganiser.LastName" Style="width:100%; display: block" Name="LastName" />
+                <p style="width:100%; display: block" Name="LastName">@selectedOrganiser.LastName</p>
             </Template>
         </RadzenGridColumn>
         <RadzenGridColumn TItem="ApplicationUser" Property="Email" Title="Email">
                 <Template Context="selectedOrganiser">
-                    <RadzenTextBox @bind-Value="selectedOrganiser.Email" Style="width:100%; display: block" Name="Email" />
+                    <p style="width:100%; display: block" Name="Email">@selectedOrganiser.Email</p>
                 </Template>
             </RadzenGridColumn>
 

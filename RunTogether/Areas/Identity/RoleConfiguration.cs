@@ -25,6 +25,12 @@ namespace RunTogether.Areas.Identity
                     Name = IdentityRoleTypes.Organiser,
                     NormalizedName = "ORGANISER",
                     Id = "organiser"
+                },
+            new IdentityRole
+                {
+                    Name = IdentityRoleTypes.SuperOrganiser,
+                    NormalizedName = "SUPERORGANISER",
+                    Id = "superOrganiser"
                 }
             );
         }

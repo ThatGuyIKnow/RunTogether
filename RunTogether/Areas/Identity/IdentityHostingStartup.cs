@@ -48,12 +48,6 @@ namespace RunTogether.Areas.Identity
                     options.User.RequireUniqueEmail = false;
                     options.SignIn.RequireConfirmedAccount = false;
                 });
-                //services.AddHttpContextAccessor();
-                //services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
-                //services.AddScoped<IHostEnvironmentAuthenticationStateProvider>(sp => {
-                //    var provider = (ServerAuthenticationStateProvider)sp.GetRequiredService<AuthenticationStateProvider>();
-                //    return provider;
-                //});
             });
         }
     }

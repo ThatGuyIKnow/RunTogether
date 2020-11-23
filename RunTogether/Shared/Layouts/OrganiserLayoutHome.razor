@@ -1,15 +1,16 @@
 ﻿@using RunTogether.Shared.Etc
 @using Radzen
+@using RunTogether.Areas.Identity
+@using Microsoft.AspNetCore.Identity
 
 @inject IJSRuntime JSRuntime
-
 @inject DialogService dialogService
 
 @inherits LayoutComponentBase
 
 <!-- Desktop navigation bar -->
 <div class="sidebar" id="navBarOrgId">
-    <NavMenuOrganiserHome ID="@ID"/>
+    <NavMenuOrganiserHome ID="@ID" />
 </div>
 
 <div class="main">
