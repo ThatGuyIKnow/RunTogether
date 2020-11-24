@@ -10,7 +10,7 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "commandLineArgs": "npm --prefix $(ProjectDir)JsLib run builds",
+      "commandLineArgs": "npm --force --prefix $(ProjectDir)JsLib run build",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

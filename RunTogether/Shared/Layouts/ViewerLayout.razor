@@ -4,24 +4,17 @@
 
 @inject IJSRuntime JSRuntime
 
-<div class="main">
-    <div class="top-row px-4 auth">
-        <!-- Sidebar toggle open/close button -->
-        <button class="navbar-toggler" @onclick="ToggleSidebar">
-            <span class="oi oi-menu"></span>
-        </button>
-
-        <!-- RunTogether logo -->
-        <RadzenImage Path="https://www.runtogether.dk/wp-content/uploads/2020/03/ny-red.png"
-                     Style="width:200px" class="logo logo-align-left"></RadzenImage>
-    </div>
+<div class="main mainViewer">
+    <button class="navbar-toggler viewer-toggler" @onclick="ToggleSidebar">
+        <span class="oi oi-menu"></span>
+    </button>
     <!-- Main content of the page -->
-    <div class="content px-4">
+    <div>
         @Body
     </div>
 </div>
 
 <!-- Sponsor bar -->
-<div class="sidebar" id="sponsorbarId">
+<div class="sidebar sidebarViewer" id="sponsorbarId">
     <SponsorBar />
 </div>
