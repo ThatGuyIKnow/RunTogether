@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using Newtonsoft.Json;
 using RunTogether.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace RunTogether.Shared.Map
 {
@@ -29,19 +31,41 @@ namespace RunTogether.Shared.Map
             if (firstRender)
             {
                 await JsRunTime.InvokeVoidAsync("Main.Map.initializeMap");
+
+                try
+                {
+                    Run run = dbContext.Runs
+                        .Where(r => r.Active)
+                        .Include(r => r.Route)
+                        .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.AssignedRunners)
+                        .ThenInclude(a => a.Runner)
+                        .Include(r => r.Route)
+                        .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.StartPoint)
+                        .Include(r => r.Route)
+                        .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.EndPoint)
+                        .Include(r => r.Route)
+                        .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.ThroughPoints)
+                        .Include(r => r.Route)
+                        .ThenInclude(rr => rr.Stages)
+                        .ThenInclude(s => s.Sponsor)
+                        .First();
+
+                    //var data = run;
+                    json = JsonSerializer.Serialize(run.Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
+                    await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
+                }
+                catch (Exception e) { }
+
                 StateHasChanged();
             }
 
             /*            await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines");
             */
-            await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
 
-        }
-
-        protected override void OnParametersSet()
-        {
-            
-            json = JsonConvert.SerializeObject(new { Coordinates = Route.ToJsonSerializableViewer() });
         }
 
 
