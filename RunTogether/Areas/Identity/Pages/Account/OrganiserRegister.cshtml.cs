@@ -22,18 +22,18 @@ using RunTogether.Data;
 namespace RunTogether.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class OrganiserRegisterModel : PageModel
+    public class AdminRegisterModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
-        private readonly ILogger<OrganiserRegisterModel> _logger;
+        private readonly ILogger<AdminRegisterModel> _logger;
 
-        public OrganiserRegisterModel(
+        public AdminRegisterModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ApplicationDbContext dbContext,
-            ILogger<OrganiserRegisterModel> logger
+            ILogger<AdminRegisterModel> logger
             )
         {
             _userManager = userManager;
@@ -100,7 +100,7 @@ namespace RunTogether.Areas.Identity.Pages.Account
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     
-                    return LocalRedirect("/organiser");
+                    return LocalRedirect("/admin");
                 }
                 foreach (var error in resultCreate.Errors)
                 {

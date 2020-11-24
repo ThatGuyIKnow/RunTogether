@@ -51,7 +51,7 @@ namespace RunTogether.Shared.Etc
             SizeList.Add(new Tuple<string, int>("Stor (A4)", 30));
             SizeList.Add(new Tuple<string, int>("Mellem", 20));
             SizeList.Add(new Tuple<string, int>("Lille", 10));
-            SizeList.Add(new Tuple<string, int>("Meget lille", 1));
+            SizeList.Add(new Tuple<string, int>("Meget lille", 5));
 
             //Bestemmer hvilken function der skal køres når en bestemt dialog service åbnes eller lukkes
             dialogService.OnOpen += Open;
@@ -92,14 +92,19 @@ namespace RunTogether.Shared.Etc
         }
 
         //Skifter activ status for løb
-        void ChangeActiveStatus(bool value, Run passedRun)
+        async Task ChangeActiveStatus(bool value, Run passedRun)
         {
-            foreach(Run r in runs)
+            bool? dialogReturnValue = await dialogService.Confirm("Hvis du skifter status på dette løb, vil det aktive løb blive deaktiveret", "Skift status på " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nej" });
+            if (dialogReturnValue == true)
             {
-                r.Active = false;
+                foreach (Run r in runs)
+                {
+                    r.Active = false;
+                }
+                passedRun.Active = value;
+                dbContext.SaveChanges();
             }
-            passedRun.Active = value;
-            dbContext.SaveChanges();
+
         }
 
         //Dialogbox for at oprette et løb
@@ -115,7 +120,7 @@ namespace RunTogether.Shared.Etc
 
          async Task DeleteRun(Run run)
         {
-            bool? dialogReturnValue = await dialogService.Confirm("Er du sikker på at du vil slette løb med navnet: " + run.Name + "?", "Slet " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Yes", CancelButtonText = "No" });
+            bool? dialogReturnValue = await dialogService.Confirm("Er du sikker på at du vil slette løb med navnet: " + run.Name + "?", "Slet " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nej" });
             if(dialogReturnValue == true)
             {
                 Console.WriteLine("Sletter: " + run.Name);

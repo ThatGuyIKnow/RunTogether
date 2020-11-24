@@ -247,3 +247,18 @@ app {
     overflow-y: scroll;
     height: 100%;
 }
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.rz-switch.rz-switch-checked .rz-switch-circle {
+    background: #ff6d41 !important;
+}
+.ui-paginator-last, .ui-paginator-next, .ui-paginator-first, .ui-paginator-prev {
+    background-color: var(--run-together) !important;
+    color: white !important;
+}

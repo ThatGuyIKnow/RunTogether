@@ -29,20 +29,28 @@ else
     <div class="col-md-6">
         @if (@loading)
         {
-            <RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />
+            @*<RadzenProgressBar Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" Style="margin-bottom: 20px" />*@
+            <img src="heartIconAnimated.svg">
         }
         else
         {
-            <RadzenGrid @ref="runTable" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))">
-                <Columns>
+            <RadzenGrid @ref="runTable" Data="@runs" AllowFiltering="true" AllowSorting="true" TItem="Run" RowSelect="@(args => QueryForRunners(args))" AllowPaging="true" PageSize="4">
+                <Columns >
                     <RadzenGridColumn TItem="Run" Property="Name" Title="Løb"></RadzenGridColumn>
-                    <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Dato"></RadzenGridColumn>
-                    <RadzenGridColumn TItem="Run" Property="EndDate" Title="Slut Dato"></RadzenGridColumn>
-                    <RadzenGridColumn TItem="Run" Property="Route" Title="Rute"></RadzenGridColumn>
+                    <RadzenGridColumn TItem="Run" Property="StartDate" Title="Start Dato">
+                        <Template Context="date">
+                            @string.Format("{0:d}", date.StartDate)
+                        </Template>
+                    </RadzenGridColumn>
+                    <RadzenGridColumn TItem="Run" Property="EndDate" Title="Slut Dato">
+                        <Template Context="date">
+                            @string.Format("{0:d}", date.EndDate)
+                        </Template>
+                    </RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Property="QRString" Title="QR Kode"></RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Property="Active" Title="aktiv status" Bubble="false" Filterable="false" Sortable="true" TextAlign="TextAlign.Center" Width="100px">
                         <Template Context="run">
-                            <RadzenSwitch Value="run.Active" Style="margin-bottom: 20px; color: lightgreen"  Change=@(args => ChangeActiveStatus(args, run)) />
+                            <RadzenSwitch Value="run.Active" Style="margin-bottom: 20px;"  Change=@(args => ChangeActiveStatus(args, run))/>
                         </Template>
                     </RadzenGridColumn>
                     <RadzenGridColumn TItem="Run" Context="ID" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
@@ -58,7 +66,7 @@ else
         }
     </div>
     <div class="col-md-6">
-        <RadzenTabs>
+        <RadzenTabs Style="height: 70vh">
             <Tabs>
                 <RadzenTabsItem Text="Runners">
                     @if (run.ID == default)

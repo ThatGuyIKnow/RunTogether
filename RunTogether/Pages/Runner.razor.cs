@@ -20,7 +20,8 @@ namespace RunTogether.Pages
     {
         //Variables for storing information about the current run and runner.
         private string qrCode = "";
-        private string? cookie;
+        private string? codeCookie;
+        private string? startRunCookie;
         private Run assignedRun = new Run();
         private Stage activeStage = new Stage();
         private StageAssignment activeRunner = new StageAssignment();
@@ -50,8 +51,8 @@ namespace RunTogether.Pages
 
         private async Task RetrieveUser()
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            var user = authState.User;
+            Microsoft.AspNetCore.Components.Authorization.AuthenticationState? authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            System.Security.Claims.ClaimsPrincipal? user = authState.User;
 
             if (user.Identity.IsAuthenticated)
             {
@@ -95,15 +96,21 @@ namespace RunTogether.Pages
 
         public async Task CheckCookie()
         {
-            //Get the codeScanned cookie, and display the relevant CSS elements.
-            cookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "CodeScanned");
-            if (cookie == null || !cookie.Equals("Yes"))
+            //Get the cookies, and display the relevant CSS elements.
+            codeCookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "CodeScanned");
+            startRunCookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "RunStarted");
+            if (codeCookie == null || !codeCookie.Equals("Yes"))
             {
                 cameraCSS = "";
+            }
+            else if (startRunCookie == null || !startRunCookie.Equals("Yes"))
+            {
+                startRunCSS = "";
             }
             else
             {
                 startRunCSS = "";
+                StartRun("HasCookie");
             }
         }
 
@@ -127,15 +134,21 @@ namespace RunTogether.Pages
             }
         }
 
-        public async void StartRun()
+        public async void StartRun(string? hasCookie = null)
         {
             SetActiveStageAndRunner();
 
-            var confirmResult = await dialogService.Confirm("Er du sikker?", "Start løb", new ConfirmOptions() 
-                                                            { OkButtonText = "Ja", CancelButtonText = "Nej" });
+            bool? confirmResult = false;
 
-            if (confirmResult.HasValue && confirmResult.Value)
+            if (hasCookie == null)
             {
+                confirmResult = await dialogService.Confirm("Er du sikker?", "Start løb", new ConfirmOptions()
+                                                           { OkButtonText = "Ja", CancelButtonText = "Nej" });
+            }
+
+            if ((confirmResult.HasValue && confirmResult.Value) || hasCookie != null)
+            {
+                await JSRuntime.InvokeAsync<string>("Main.Common.WriteCookie", "RunStarted", "Yes", 2);
                 await StartTime();
                 buttonVisible = true;
                 buttonDisabled = true;
@@ -159,7 +172,7 @@ namespace RunTogether.Pages
 
         public async Task StartTime()
         {
-            timer.StartStopWatch(() => { StateHasChanged(); });
+            timer.StartStopWatch(() => { StateHasChanged(); }, activeRunner.StartTime);
             activeRunner.StartTime = timer.startTime;
             await dbContext.SaveChangesAsync();
         }

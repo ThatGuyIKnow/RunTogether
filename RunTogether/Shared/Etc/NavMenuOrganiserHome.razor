@@ -1,4 +1,8 @@
-﻿@inject IJSRuntime JSRuntime
+﻿@using RunTogether.Areas.Identity
+@using Microsoft.AspNetCore.Identity
+@inject IJSRuntime JSRuntime
+@inject UserManager<ApplicationUser> userManager
+@inject AuthenticationStateProvider authProvider
 
 <!-- Navigation bar top title -->
 <div class="top-row pl-4 navbar navbar-dark">
@@ -10,13 +14,39 @@
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="admin" Match="NavLinkMatch.All">
-                <span class="oi oi-arrow-left back-arrow" aria-hidden="true"></span> Tilbage
+                <RadzenIcon Icon="home" /> Home
             </NavLink>
         </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href=@($"admin/organisers") Match="NavLinkMatch.All">
-                <RadzenIcon Icon="assignment_ind" /> Organiser(s)
-            </NavLink>
-        </li>
+        @if (isSuperAdmin)
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href=@($"admin/organisers") Match="NavLinkMatch.All">
+                    <RadzenIcon Icon="assignment_ind" /> Organiser(s)
+                </NavLink>
+            </li>
+
+        }
     </ul>
 </div>
+
+
+@code {
+    bool isSuperAdmin = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        AuthenticationState authState = await authProvider.GetAuthenticationStateAsync();
+        try
+        {
+            ApplicationUser user = await userManager.GetUserAsync(authState.User);
+
+            isSuperAdmin = await userManager.IsInRoleAsync(user, IdentityRoleTypes.SuperOrganiser);
+        }
+        catch (Exception e)
+        {
+            isSuperAdmin = false;
+        }
+        StateHasChanged();
+    }
+
+}

@@ -26,7 +26,6 @@ namespace RunTogether.Pages.AdminPages
 
         protected override async Task OnInitializedAsync()
         {
-
             run = dbContext.Runs
                 .Find(id);
 
@@ -48,6 +47,22 @@ namespace RunTogether.Pages.AdminPages
             jsRuntime.InvokeVoidAsync("Main.Common.PrintImage", "QRCodeImg", run.QRString);
         }
 
+        async Task SaveQRCode()
+        {
+            bool? dialogReturnValue = await dialogService.Confirm("Hvis du skifter QR kode virker den gamle ikke længere. er du sikker på at du vil skifte?", "Skift QR kode", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nej" });
+            if(dialogReturnValue == true)
+            {
+                run.QRString = code;
+                dbContext.Update(run);
+                dbContext.SaveChanges();
+            }
+            else
+            {
+                code = run.QRString;
+            }
+            
+        }
+
         void Open(string title, Type type, Dictionary<string, object> parameters, DialogOptions options)
         {
             StateHasChanged();
@@ -56,19 +71,8 @@ namespace RunTogether.Pages.AdminPages
         void Close(dynamic result)
         {
 
-            if (result == true)
-            {
-                run.QRString = code;
-                dbContext.Update(run);
-                dbContext.SaveChanges();
-            }
-            else if (result == false)
-            {
-                code = run.QRString;
-            }
-
-
             StateHasChanged();
+        
         }
 
     }
