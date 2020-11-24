@@ -286,7 +286,8 @@ export class EditStage extends AbstractStage {
     }
 
     AddToLayer(layer) {
-        super.AddToLayer(layer, this.startPoint);
+        //super.AddToLayer(layer, this.startPoint);
+        super.AddToLayer(layer);
 
         this._prevStage = this.GetPrevLine(this._stageIndex);
 
