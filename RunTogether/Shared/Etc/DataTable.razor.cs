@@ -98,10 +98,10 @@ namespace RunTogether.Shared.Etc
             bool? dialogReturnValue = await dialogService.Confirm("Hvis du skifter status på dette løb, vil det aktive løb blive deaktiveret", "Skift status på " + run.Name + "?", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nej" });
             if (dialogReturnValue == true)
             {
-                //foreach (Run r in runs)
-                //{
-                //    r.Active = false;
-                //}
+                foreach (Run r in runs)
+                {
+                    r.Active = false;
+                }
                 passedRun.Active = value;
                 await dbContext.SaveChangesAsync();
             }
