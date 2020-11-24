@@ -77,7 +77,6 @@ export class Popup extends AbstractMarker {
                         "<hr>" + 
                         this.ConstructRunners(stage.runners) +
                        "</div>";
-
     }
 
     ConstructSponsor(sponsor) {
