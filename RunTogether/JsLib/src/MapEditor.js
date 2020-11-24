@@ -31,7 +31,7 @@ export class mapEditorClass {
         this.dotnetHelper = objRef;
 
         /*Pointing myeditmap to leaflet map and setting the viewpoint and start zoom point*/
-        editMap = L.map('mapid', { doubleClickZoom: false}).setView([55.964, 9.992], 6.5);
+        editMap = Leaflet.map('mapid', { doubleClickZoom: false}).setView([55.964, 9.992], 6.5);
         editMap.setMaxBounds(bounds);
 
         editMap.on('dblclick', e => this.addNewStage(e));
