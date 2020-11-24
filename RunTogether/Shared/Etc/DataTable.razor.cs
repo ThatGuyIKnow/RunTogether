@@ -83,6 +83,7 @@ namespace RunTogether.Shared.Etc
         public async Task QueryForRunners(Run QueryRun)
         {
             run = QueryRun;
+            StateHasChanged();
         }
 
         //Går til url med "path"
@@ -102,7 +103,7 @@ namespace RunTogether.Shared.Etc
                     r.Active = false;
                 }
                 passedRun.Active = value;
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
 
         }
@@ -125,7 +126,7 @@ namespace RunTogether.Shared.Etc
             {
                 Console.WriteLine("Sletter: " + run.Name);
                 dbContext.Remove(run);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
             runTable.Reload();
         }

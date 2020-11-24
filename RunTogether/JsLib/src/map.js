@@ -3,6 +3,7 @@ import L from 'leaflet';
 import '@elfalem/leaflet-curve';
 import { settings } from './mapSettings.json';
 import {StageFactory, RunRouteFactory} from "./map/index";
+import { Layer } from '../../wwwroot/js/main';
 
 /*Global variable for the map class*/
 let mymap, layerGroup;
@@ -45,6 +46,8 @@ export class mapClass {
     /* A Method to add markers and lines*/
     addMarkersAndLines(object) {
 
+        /*Removes old lines*/
+        this.RemoveLayer();
 
         /*Creating layer group and adding to map*/
         layerGroup = L.layerGroup().addTo(mymap);
@@ -82,6 +85,13 @@ export class mapClass {
         svg.appendChild(svgFilter);
     }
 
+    RemoveLayer() {
+        if (layerGroup != null || layerGroup != undefined)
+        {
+            mymap.removeLayer(layerGroup);
+            layerGroup = L.layerGroup().addTo(mymap);
+        }
+    }
 
     //onMapClick() {
     //    let pointArray = [];  

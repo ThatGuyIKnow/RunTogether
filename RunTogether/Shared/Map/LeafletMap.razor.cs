@@ -16,7 +16,7 @@ namespace RunTogether.Shared.Map
     {
 
         [Parameter]
-        public RunRoute Route { get; set; }
+        public RunRoute? Route { get; set; }
 
         public bool Markers = false; 
 
@@ -27,76 +27,65 @@ namespace RunTogether.Shared.Map
 
 
             //await JsRunTime.InvokeVoidAsync("Main.tester", json);
-
+            Console.WriteLine("før first render");
             if (firstRender)
             {
+                Console.WriteLine("efter first render");
                 await JsRunTime.InvokeVoidAsync("Main.Map.initializeMap");
 
                 try
                 {
-                    Run run = dbContext.Runs
-                        .Where(r => r.Active)
-                        .Include(r => r.Route)
-                        .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.AssignedRunners)
-                        .ThenInclude(a => a.Runner)
-                        .Include(r => r.Route)
-                        .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.StartPoint)
-                        .Include(r => r.Route)
-                        .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.EndPoint)
-                        .Include(r => r.Route)
-                        .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.ThroughPoints)
-                        .Include(r => r.Route)
-                        .ThenInclude(rr => rr.Stages)
-                        .ThenInclude(s => s.Sponsor)
-                        .First();
+                    if (Route == null)
+                    {
+                        Console.WriteLine("i ran");
+                        Run run = dbContext.Runs
+                            .Where(r => r.Active)
+                            .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                            .ThenInclude(s => s.AssignedRunners)
+                            .ThenInclude(a => a.Runner)
+                            .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                            .ThenInclude(s => s.StartPoint)
+                            .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                            .ThenInclude(s => s.EndPoint)
+                            .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                            .ThenInclude(s => s.ThroughPoints)
+                            .Include(r => r.Route)
+                            .ThenInclude(rr => rr.Stages)
+                            .ThenInclude(s => s.Sponsor)
+                            .First();
 
-                    //var data = run;
-                    json = JsonSerializer.Serialize(run.Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
+                        json = JsonSerializer.Serialize(run.Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
+                    
+                    }
+                    else
+                    {
+                        json = JsonSerializer.Serialize(Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
+                    }
+                    
                     await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
                 }
                 catch (Exception e) { }
 
-                StateHasChanged();
             }
-
-            /*            await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines");
-            */
-
-        }
-
-
-/*        private async void button_add()
-        {
-            //json = JsonConvert.SerializeObject(new { Coordinates = Route.ToPointList() });
-
-            //await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
-        }
-
-
-        private async void button_remove()
-        {
-            await JsRunTime.InvokeVoidAsync("Main.Map.removeMarkersAndLines");
-        }
-*/
-
-
-        /*
-            protected string Coordinates { get; set; }
-
-            protected void Mouse_Move(MouseEventArgs e)
+            else
             {
-                Coordinates = $"X = {e.ClientX } Y = {e.ClientY}";
-            }
+                try
+                {
+                    if (Route != null)
+                    {
+                        json = JsonSerializer.Serialize(Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
+                    }
 
-            private async void CreateMarker()
-            {
-                await JsRunTime.InvokeVoidAsync("Main.onMapClick");
-            }
+                    await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
+                }
+                catch (Exception e) { }
 
-        */
+              
+            }
+        }
     }
 }
