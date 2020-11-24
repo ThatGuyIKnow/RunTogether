@@ -28,7 +28,8 @@ app {
 
 /* #region BlazorSpecific */
 
-a, .btn-link {
+a,
+.btn-link {
     color: #0366d6;
     /* Light Blue */
 }
@@ -115,7 +116,7 @@ a, .btn-link {
 
 .sidebar .top-row {
     background-color: var(--run-together);
-    position: sticky;
+    position: relative;
     top: 0;
 }
 
