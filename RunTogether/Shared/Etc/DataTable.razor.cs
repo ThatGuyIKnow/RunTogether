@@ -103,7 +103,7 @@ namespace RunTogether.Shared.Etc
                     r.Active = false;
                 }
                 passedRun.Active = value;
-                await dbContext.SaveChangesAsync();
+                dbContext.SaveChanges();
             }
 
         }
@@ -126,7 +126,7 @@ namespace RunTogether.Shared.Etc
             {
                 Console.WriteLine("Sletter: " + run.Name);
                 dbContext.Remove(run);
-                await dbContext.SaveChangesAsync();
+                dbContext.SaveChanges();
             }
             runTable.Reload();
         }
