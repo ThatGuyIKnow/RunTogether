@@ -68,11 +68,10 @@ namespace RunTogether.Pages.AdminPages
 
 
 
-        async Task OnUpdateRow(ApplicationUser runner)
+        void OnUpdateRow(ApplicationUser runner)
         {
             dbContext.Update(runner);
-            await dbContext.SaveChangesAsync();
-
+            dbContext.SaveChanges();
         }
         void EditRow(ApplicationUser runner)
         {
@@ -96,14 +95,13 @@ namespace RunTogether.Pages.AdminPages
             }
         }
 
-        async Task DeleteRow(ApplicationUser runner)
+        void DeleteRow(ApplicationUser runner)
         {
             if (run.Runners.Contains(runner))
             {
                 dbContext.Remove<ApplicationUser>(runner);
 
-                await dbContext.SaveChangesAsync();
-
+                dbContext.SaveChanges();
 
                 runnerTable.Reload();
             }

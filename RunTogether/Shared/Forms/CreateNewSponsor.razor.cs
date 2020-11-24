@@ -18,7 +18,7 @@ namespace RunTogether.Shared.Forms
         {
 
             dbContext.Sponsors.Add(sponsor);
-            await dbContext.SaveChangesAsync();
+            dbContext.SaveChanges();
             this.dialogService.Close(true);
         }
 

@@ -142,7 +142,7 @@ namespace RunTogether.Pages.AdminPages
 
                     run.Route.DeleteStage(dbContext, selectedStage);
 
-                    await dbContext.SaveChangesAsync();
+                    dbContext.SaveChanges();
 
                     await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", run.Route.ToJsonSerializableViewer());
                 }

@@ -66,7 +66,7 @@ namespace RunTogether.Shared.Forms
             Console.WriteLine("AW");
         }
 
-        public async Task SaveRouteChanges()
+        public void SaveRouteChanges()
         {
             runRoute.Run = run; //burde laves om til at automatisk tage det run man har valgt at edit route på
             dialogService.Close(true);
@@ -78,8 +78,7 @@ namespace RunTogether.Shared.Forms
                 dbContext.Stages.Add(stage);
             }
 
-            await dbContext.SaveChangesAsync();
-
+            dbContext.SaveChanges();
         }
 
         public void CancelRouteChanges()
