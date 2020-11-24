@@ -14,33 +14,30 @@ export class StageFactory {
         let runners = null;
         if(Array.isArray(stageData.Runners) && stageData.Runners.length > 0) 
             runners = this.ConstructRunners(stageData.Runners);
-        
 
-        let sponsor = null;
-        if (stageData.Sponsor !== undefined)
-            sponsor = new Sponsor(stageData.Sponsor.Name,
-                stageData.Sponsor.Message,
-                stageData.Sponsor.PictureUrl === undefined ? null : stageData.Sponsor.PictureUrl);
+    let sponsor = null;
+    if (stageData.Sponsor !== undefined && stageData.Sponsor !== null)
+        sponsor = new Sponsor(stageData.Sponsor.Name,
+            stageData.Sponsor.Message,
+            stageData.Sponsor.PictureURL);
 
-        let stage;
+    let stage;
 
         if (editStage == true) {
             stage = new EditStage(startPoint, endPoint, throughPoints, flipped, stageData.StageId, map, objRef, stageIndex, lastStage); 
         }
         else {
             if (stageData.Status === 'Active')
-                stage = new ActiveStage(startPoint, endPoint, throughPoints, flipped);
+                stage = new ActiveStage(stageIndex, lastStage, startPoint, endPoint, throughPoints, flipped);
             else
-                stage = new InactiveStage(startPoint, endPoint, throughPoints, flipped, stageData.Status === 'Completed');
+                stage = new InactiveStage(stageIndex, lastStage, startPoint, endPoint, throughPoints, flipped, stageData.Status === 'Completed');
         }
 
 
         stage.runners = runners;
         stage.sponsor = sponsor;
         stage.status = stageData.Status;
-        // Class 'RunRoute' constructor has parameters '<name : string, stages : Stage[]>'
-        // ok
-        // Det er en custom TypeError fra RunRoute. Det er en af vores egne tests
+
         return stage;
     }
 

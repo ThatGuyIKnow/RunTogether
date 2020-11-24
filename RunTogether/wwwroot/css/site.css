@@ -3,11 +3,14 @@
 /* #region Root, html & dependencies */
 
 :root {
-    --run-together: #CC4545; /* RunTogether Red */
-    --background-element: #114B5F; /* Dark blue background for elements like buttons */
+    --run-together: #CC4545;
+    /* RunTogether Red */
+    --background-element: #114B5F;
+    /* Dark blue background for elements like buttons */
 }
 
-html, body {
+html,
+body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
@@ -25,14 +28,18 @@ app {
 
 /* #region BlazorSpecific */
 
-a, .btn-link {
-    color: #0366d6; /* Light Blue */
+a,
+.btn-link {
+    color: #0366d6;
+    /* Light Blue */
 }
 
 .btn-primary {
     color: white;
-    background-color: #1b6ec2; /* Blue */
-    border-color: #1861ac; /* Dark Blue */
+    background-color: #1b6ec2;
+    /* Blue */
+    border-color: #1861ac;
+    /* Dark Blue */
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -76,7 +83,8 @@ a, .btn-link {
 
 .main .top-row {
     position: relative;
-    background-color: #f7f7f7; /* Light Gray */
+    background-color: #f7f7f7;
+    /* Light Gray */
     border-bottom: 1px solid #d6d5d5;
     justify-content: flex-end;
     height: 3.5rem;
@@ -86,7 +94,8 @@ a, .btn-link {
     z-index: 91199;
 }
 
-.main .top-row > a, .main .top-row .btn-link {
+.main .top-row>a,
+.main .top-row .btn-link {
     white-space: nowrap;
     margin-left: 1.5rem;
 }
@@ -155,9 +164,9 @@ a, .btn-link {
 }
 
 .viewer-toggler {
-    position:absolute;
+    position: absolute;
     right: 0.75rem;
-    top:0.75rem;
+    top: 0.75rem;
     z-index: 1001;
 }
 
@@ -236,7 +245,8 @@ a, .btn-link {
         padding: 1rem 1rem 0 1rem;
     }
 
-    .main .top-row a, .main .top-row .btn-link {
+    .main .top-row a,
+    .main .top-row .btn-link {
         margin-left: 0;
     }
 }
@@ -271,13 +281,38 @@ a, .btn-link {
         position: fixed;
     }
 
-    .main > div {
+    .main>div {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
 
-    .mainViewer > div {
+    .mainViewer>div {
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
+}
+
+.scrollableRZCard {
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 100%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.rz-switch.rz-switch-checked .rz-switch-circle {
+    background: #ff6d41 !important;
+}
+
+.ui-paginator-last,
+.ui-paginator-next,
+.ui-paginator-first,
+.ui-paginator-prev {
+    background-color: var(--run-together) !important;
+    color: white !important;
 }

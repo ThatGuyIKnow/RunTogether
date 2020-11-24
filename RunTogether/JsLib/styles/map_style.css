@@ -8,21 +8,37 @@
     width: 100%;
 }
 
+.mapLogo {
+    height: 60px;
+    width: 300px;
+    display: flex;
+    position: absolute;
+    bottom: 20px;
+    left: 10px;
+    z-index: 500;
+}
+
+.mapLogo img {
+    height: 100%;
+}
+
+.mapLogo object {
+    height: 100%;
+    width: 53%;
+    margin: 0 -15%;
+}
+
 .completedStage {
-    stroke: green;
+    stroke: rgba(255, 101, 101);
 }
 
 .notStartedStage {
-    stroke: red;
+    stroke: rgb(200, 200, 200);
 }
 
 .activeStageOverlay {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    stroke: yellow;
+    stroke: rgb(255, 101, 101);
 }
 .activeStage {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    stroke: gray;
+    stroke: rgb(200, 200, 200);
 }

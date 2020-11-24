@@ -22,7 +22,6 @@ namespace RunTogether.Pages.AdminPages
 
         IQueryable<Sponsor> SponsorList;
         RadzenGrid<Sponsor> sponsorTable;
-        
 
         protected override async Task OnInitializedAsync()
         {
@@ -49,13 +48,11 @@ namespace RunTogether.Pages.AdminPages
         {
             var format = "image/png";
 
-            var file = await e.File.RequestImageFileAsync(format, 100, 100);
+            var file = await e.File.RequestImageFileAsync(format, 400, 400);
             var buffer = new byte[file.Size];
             await file.OpenReadStream().ReadAsync(buffer);
             imageChange = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
         }
-
-
 
         void OnUpdateRow(Sponsor selectedSponsor)
         {
@@ -98,6 +95,5 @@ namespace RunTogether.Pages.AdminPages
                 sponsorTable.CancelEditRow(selectedSponsor);
             }
         }
-
     }
 }
