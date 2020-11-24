@@ -82,14 +82,14 @@ namespace RunTogether.Pages
             //Checks if there is an active stage, and updates the stage status if necessary.
             if (activeStage == null)
             {
-                IEnumerable<StageAssignment> stageAssignments = currentUser.StageAssignments.FindAll(s => s.Stage.Status != RunningStatus.Completed).OrderBy(s => s.StageId);
-                if (stageAssignments != null)
+                IEnumerable<StageAssignment> runnersStageAssignments = currentUser.StageAssignments.FindAll(s => s.Stage.Status != RunningStatus.Completed).OrderBy(s => s.StageId);
+                if (runnersStageAssignments != null)
                 {
-                    stageAssignments.First().Stage.Status = RunningStatus.Active;
-                    Stage previous = stageAssignments.First().Stage.GetPreviousStage();
-                    if (previous.StageId != stageAssignments.First().StageId)
+                    runnersStageAssignments.First().Stage.Status = RunningStatus.Active;
+                    Stage previousStage = runnersStageAssignments.First().Stage.GetPreviousStage();
+                    if (previousStage.StageId != runnersStageAssignments.First().StageId)
                     {
-                        previous.Status = RunningStatus.Completed;
+                        previousStage.Status = RunningStatus.Completed;
                     }
                     await dbContext.SaveChangesAsync();
                 }
@@ -187,6 +187,16 @@ namespace RunTogether.Pages
             DisplayResult();
             activeRunner.RunningTime = timer.stopWatchValue;
             await UpdateDatabase(RunningStatus.Completed);
+            if (activeStage.GetLastRunner().Id == activeRunner.Id)
+            {
+                activeStage.Status = RunningStatus.Completed;
+                Stage nextStage = activeStage.GetNextStage();
+                if (nextStage.StageId != activeStage.StageId)
+                {
+                    nextStage.Status = RunningStatus.Active;
+                }
+                await dbContext.SaveChangesAsync();
+            }
         }
 
         public async Task StartTime()

@@ -65,8 +65,7 @@ namespace RunTogether
 
         public StageAssignment GetCurrentRunner()
         {
-            List<StageAssignment> orderedRunners = new List<StageAssignment>();
-            orderedRunners = AssignedRunners.OrderBy(a => a.Order).ToList();
+            List<StageAssignment> orderedRunners = AssignedRunners.OrderBy(a => a.Order).ToList();
 
             if (orderedRunners.Exists(o => o.Status == RunningStatus.Active))
             {
@@ -78,11 +77,24 @@ namespace RunTogether
             }
         }
 
+        public StageAssignment GetLastRunner()
+        {
+            return AssignedRunners.OrderBy(a => a.Order).ToList().Last();
+        }
+
         public Stage GetPreviousStage()
         {
             int CurrentIndex = this.RunRoute.Stages.FindIndex(s => s.StageId == this.StageId);
             int PreviousIndex = CurrentIndex < 1 ? CurrentIndex : CurrentIndex - 1;
             return this.RunRoute.Stages[PreviousIndex];
+        }
+
+        public Stage GetNextStage()
+        {
+            int CurrentIndex = RunRoute.Stages.FindIndex(s => s.StageId == StageId);
+            int LastIndex = RunRoute.Stages.Count - 1;
+            int NextIndex = CurrentIndex == LastIndex ? CurrentIndex : CurrentIndex + 1;
+            return RunRoute.Stages[NextIndex];
         }
     }
 
