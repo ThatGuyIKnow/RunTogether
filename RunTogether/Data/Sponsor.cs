@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace RunTogether.Data
@@ -13,6 +14,13 @@ namespace RunTogether.Data
 
         public string? Image { get; set; }
 
+        [JsonIgnore]
         public List<Stage> Stages { get; set; } = new List<Stage>();
+
+
+        public Dictionary<string, object> ToJsonSerializableViewer()
+        {
+            return new Dictionary<string, object>(){{"Name", Name}, {"PictureURL", Image}};
+        }
     }
 }

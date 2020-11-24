@@ -72,13 +72,14 @@ export class Popup extends AbstractMarker {
         this._path = path;
         this.stageIndex = stageIndex;
         this.lastStage = lastStage;
-        this.content = '<div class="popup">' +
-                            `<h3>${stage.sponsor.name}</h3><br>` +
-                            `<p>${stage.sponsor.message}</p>` +
-            '<img src="' + stage.sponsor.pictureUrl + '" asp-append-version="true" height="200px" weight="auto"></img>'+
-                            "<hr>" + "<h4>Løberne</h4>" +
-                            `${this.ConstructContent(stage.runners)}` +
-                       "</div>";
+        if(stage.sponsor !== undefined && stage.sponsor !== null)
+            this.content = '<div class="popup">' +
+                                `<h3>${stage.sponsor.name}</h3><br>` +
+                                `<p>${stage.sponsor.message}</p>` +
+                '<img src="' + stage.sponsor.pictureUrl + '" asp-append-version="true" height="200px" weight="auto"></img>'+
+                                "<hr>" + "<h4>Løberne</h4>" +
+                                `${this.ConstructContent(stage.runners)}` +
+                           "</div>";
 
     }
 
@@ -92,8 +93,6 @@ export class Popup extends AbstractMarker {
 
     AddToLayer(layer) {
 
-        this._popup = Leaflet.popup();
-        this._popup.setContent(this.content);
 
         if(this.stageIndex === 0)
             this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: this.customMarkerStart} );
@@ -109,9 +108,12 @@ export class Popup extends AbstractMarker {
         this._marker.addTo(this._stage._layer);
         this._marker2.addTo(this._stage._layer);
 
-        this._path.bindPopup(this._popup);
-        this._marker.bindPopup(this._popup);
-
+        if (this._stage.sponsor !== undefined && this._stage.sponsor !== null) {
+            this._popup = Leaflet.popup();
+            this._popup.setContent(this.content);
+            this._path.bindPopup(this._popup);
+            this._marker.bindPopup(this._popup);
+        }
     }
 
     //OpenPopup() {
@@ -204,9 +206,6 @@ export class EditorMarker extends AbstractMarker {
         //this._prevpath.endPoint.y = marker.getLatLng().lng;
 
         //send a stages back to blazor, for saving to DB
-        console.log("stages touched by point");
-        console.log(this._stage);
-        console.log(this._prevStage);
 
         if (this._lastMarker == true) {
             this._dotnetHelper.invokeMethodAsync('Trigger', 'EditStage',

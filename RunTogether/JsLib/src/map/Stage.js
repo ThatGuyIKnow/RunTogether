@@ -37,7 +37,7 @@ export class AbstractStage {
             throw new TypeError("Parameter 'layer' should be or extend from Layer class");
         
         this._layer = layer;
-        this.path = this.CreatePath().setStyle({'weight': 10});
+        this.path = this.CreatePath().setStyle({ 'weight': 10 });
         this.path.addTo(this._layer);
         this.AddHoverFocus(this.path);
         this.AddPopup(this, this.path);

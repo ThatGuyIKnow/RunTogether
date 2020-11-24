@@ -16,14 +16,12 @@ export class StageFactory {
             runners = this.ConstructRunners(stageData.Runners);
 
     let sponsor = null;
-    if (stageData.Sponsor !== undefined)
+    if (stageData.Sponsor !== undefined && stageData.Sponsor !== null)
         sponsor = new Sponsor(stageData.Sponsor.Name,
             stageData.Sponsor.Message,
             stageData.Sponsor.PictureURL);
 
-        console.log(stageData.Sponsor);
-
-        let stage;
+    let stage;
 
         if (editStage == true) {
             stage = new EditStage(startPoint, endPoint, throughPoints, flipped, stageData.StageId, map, objRef, stageIndex, lastStage); 
@@ -39,7 +37,7 @@ export class StageFactory {
         stage.runners = runners;
         stage.sponsor = sponsor;
         stage.status = stageData.Status;
-       
+
         return stage;
     }
 

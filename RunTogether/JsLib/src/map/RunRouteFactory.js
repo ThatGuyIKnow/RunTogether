@@ -15,7 +15,7 @@ export class RunRouteFactory {
         let lastStage = false;
         if (Array.isArray(Stages)) {
             Stages.forEach((stage, index) => {
-                if (index == (Stages.length - 1)) {
+                if (index === (Stages.length - 1)) {
                     lastStage = true; 
                 }
                 currStage = stageFactory.CreateStage(stage, flipped, editor, map, objRef, index, lastStage);
