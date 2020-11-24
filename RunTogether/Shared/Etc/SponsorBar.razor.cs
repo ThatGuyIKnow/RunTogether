@@ -1,4 +1,7 @@
-﻿namespace RunTogether.Shared.Etc
+﻿using Microsoft.JSInterop;
+using System.Threading.Tasks;
+
+namespace RunTogether.Shared.Etc
 {
     public partial class SponsorBar
     {
