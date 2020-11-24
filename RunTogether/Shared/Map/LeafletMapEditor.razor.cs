@@ -30,20 +30,20 @@ namespace RunTogether.Shared.Map
                 
 
                 //event called from JS
-                Handler.AddHandler("AddStage", (evt) => {
+                Handler.AddHandler("AddStage", async (evt) => {
                     //Deserialize and cast to a Stage object. 
                     Stage NewStage = JsonSerializer.Deserialize<Stage>(evt);
 
                     Run.Route.Stages.Add(NewStage);
 
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
 
-                    JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
+                    await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
                 });
 
 
                 //event called from JS
-                Handler.AddHandler("EditStage", (evt) => {
+                Handler.AddHandler("EditStage", async (evt) => {
                     //Deserialize and cast to a Stage object. 
                     Stage NewStage = JsonSerializer.Deserialize<Stage>(evt);
 
@@ -52,9 +52,10 @@ namespace RunTogether.Shared.Map
                     EditStage.StartPoint = NewStage.StartPoint;
                     EditStage.EndPoint = NewStage.EndPoint;
 
-                    dbContext.SaveChanges();
+                    await dbContext.SaveChangesAsync();
 
-                    JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
+
+                    await JsRunTime.InvokeVoidAsync("Main.MapEditor.loadRoute", Run.Route.ToJsonSerializableViewer());
                 });
 
                 //event called from JS

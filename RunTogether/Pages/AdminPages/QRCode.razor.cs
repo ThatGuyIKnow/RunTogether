@@ -54,7 +54,7 @@ namespace RunTogether.Pages.AdminPages
             {
                 run.QRString = code;
                 dbContext.Update(run);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
             }
             else
             {

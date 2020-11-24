@@ -54,11 +54,12 @@ namespace RunTogether.Pages.AdminPages
             imageChange = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
         }
 
-        void OnUpdateRow(Sponsor selectedSponsor)
+        async Task OnUpdateRow(Sponsor selectedSponsor)
         {
             imageChange = selectedSponsor.Image;
             dbContext.Update(selectedSponsor);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
+
         }
         void EditRow(Sponsor selectedSponsor)
         {
@@ -80,13 +81,14 @@ namespace RunTogether.Pages.AdminPages
                 sponSorEntry.State = EntityState.Unchanged;
             }
         }
-        void DeleteRow(Sponsor selectedSponsor)
+        async Task DeleteRow(Sponsor selectedSponsor)
         {
             if (SponsorList.Contains(selectedSponsor))
             {
                 dbContext.Remove<Sponsor>(selectedSponsor);
 
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
+
 
                 sponsorTable.Reload();
             }

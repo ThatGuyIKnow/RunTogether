@@ -67,7 +67,8 @@ namespace RunTogether.Shared.Etc
         {
             dbContext.Remove(selectedOrganiser);
 
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
+
 
             organiserGrid.Reload();
         }
