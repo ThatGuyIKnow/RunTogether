@@ -72,23 +72,30 @@ export class Popup extends AbstractMarker {
         this._path = path;
         this.stageIndex = stageIndex;
         this.lastStage = lastStage;
-        if(stage.sponsor !== undefined && stage.sponsor !== null)
-            this.content = '<div class="popup">' +
-                                `<h3>${stage.sponsor.name}</h3><br>` +
-                                `<p>${stage.sponsor.message}</p>` +
-                '<img src="' + stage.sponsor.pictureUrl + '" asp-append-version="true" height="200px" weight="auto"></img>'+
-                                "<hr>" + "<h4>Løberne</h4>" +
-                                `${this.ConstructContent(stage.runners)}` +
-                           "</div>";
+        this.content = '<div class="popup">' +
+                        this.ConstructSponsor(stage.sponsor) +
+                        "<hr>" + 
+                        this.ConstructRunners(stage.runners) +
+                       "</div>";
 
     }
 
-    ConstructContent(runners) {
+    ConstructSponsor(sponsor) {
+
+        if (sponsor == undefined && sponsor == null) return "";
+
+        return `<img src="${sponsor.pictureUrl}" asp-append-version="true" height="200px" weight="auto">` +
+            `<h3>${sponsor.name}</h3><br>` +
+            `<p>${sponsor.message}</p>`;
+    }
+
+    ConstructRunners(runners) {
+        if (runners == undefined || runners === null || runners.length === 0) return "";
         let content = "";
         runners.forEach(runner => {
             content += `<p>${runner.name}</p>`;
         });
-        return content;
+        return "<h4>Løberne</h4>" + content;
     }
 
     AddToLayer(layer) {
@@ -108,7 +115,8 @@ export class Popup extends AbstractMarker {
         this._marker.addTo(this._stage._layer);
         this._marker2.addTo(this._stage._layer);
 
-        if (this._stage.sponsor !== undefined && this._stage.sponsor !== null) {
+        if ((this._stage.sponsor !== undefined && this._stage.sponsor !== null) ||
+            (Array.isArray(this._stage.runners) && this._stage.runners.length > 0)) {
             this._popup = Leaflet.popup();
             this._popup.setContent(this.content);
             this._path.bindPopup(this._popup);
