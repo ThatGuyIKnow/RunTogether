@@ -58,7 +58,7 @@
 
         </div>
         <div class="col-sm-4">
-            <RadzenButton Text=@($"Gem ændringer") Click="@(args => dialogService.Confirm("Hvis du skifter QR kode virker den gamle ikke længere. er du sikker på at du vil skifte?", "Skift QR kode", new ConfirmOptions() { OkButtonText = "Ja", CancelButtonText = "Nej" }))" />
+            <RadzenButton Text=@($"Gem ændringer") Click="@(args => SaveQRCode())" />
         </div>
     </div>
 </RadzenFieldset>

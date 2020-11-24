@@ -22,6 +22,8 @@ namespace RunTogether
 
         public DateTime EndDate { get; set; }
 
+        public bool Active { get; set; } = false;
+
         public RunRoute? Route { get; set; }
         public List<ApplicationUser> Runners { get; set; } = new List<ApplicationUser>();
         private int NextRunnerId { get; set; } = 1;
