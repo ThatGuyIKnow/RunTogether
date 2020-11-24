@@ -41,7 +41,6 @@ export class AbstractStage {
         this.path.addTo(this._layer);
         this.AddHoverFocus(this.path);
         this.AddPopup(this, this.path);
-        this.path._path.setAttribute('filter', 'url(#pathFilter)');
     }
 
     AddHoverFocus(target, trigger = null) {
@@ -150,6 +149,7 @@ export class InactiveStage extends AbstractStage {
 
     AddToLayer(layer) {
         super.AddToLayer(layer);
+        this.path._path.setAttribute('filter', 'url(#pathFilter)');
         this.path._path.classList.add(this._className);
     }
 }
@@ -178,6 +178,7 @@ export class ActiveStage extends AbstractStage {
 
     AddToLayer(layer) {
         super.AddToLayer(layer);
+        this.path._path.setAttribute('filter', 'url(#pathFilter)');
         this.path._path.classList.add(this.className);
 
         this.overlayPath = this.CreatePath();
