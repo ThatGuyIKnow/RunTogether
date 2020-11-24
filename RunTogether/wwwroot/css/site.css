@@ -28,8 +28,7 @@ app {
 
 /* #region BlazorSpecific */
 
-a,
-.btn-link {
+a, .btn-link {
     color: #0366d6;
     /* Light Blue */
 }
@@ -167,12 +166,13 @@ a,
     position: absolute;
     right: 0.75rem;
     top: 0.75rem;
-    z-index: 1001;
+    z-index: 1001; /* Always on top */
 }
 
 /* #endregion Sidebar */
 
 /* #region Misc. */
+
 .navbar-toggler {
     background-color: var(--background-element);
     color: white;
@@ -207,6 +207,25 @@ a,
     overflow: hidden;
     overflow-y: scroll;
     height: 100%;
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.rz-switch.rz-switch-checked .rz-switch-circle {
+    background: #ff6d41 !important;
+}
+
+.ui-paginator-last,
+.ui-paginator-next,
+.ui-paginator-first,
+.ui-paginator-prev {
+    background-color: var(--run-together) !important;
+    color: white !important;
 }
 
 /* #endregion */
@@ -269,7 +288,7 @@ a,
     }
 
     .sidebar {
-        width: 15rem;
+        width: 15rem; /* Default value. Changed in JS */
         height: 100vh;
         position: sticky;
         top: 0;
@@ -281,38 +300,13 @@ a,
         position: fixed;
     }
 
-    .main>div {
+    .main > div {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
     }
 
-    .mainViewer>div {
+    .mainViewer > div { /* Overwrite on Viewer page (make map fullscreen) */
         padding-left: 0 !important;
         padding-right: 0 !important;
     }
-}
-
-.scrollableRZCard {
-    overflow: hidden;
-    overflow-y: scroll;
-    height: 100%;
-}
-
-.center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 50%;
-}
-
-.rz-switch.rz-switch-checked .rz-switch-circle {
-    background: #ff6d41 !important;
-}
-
-.ui-paginator-last,
-.ui-paginator-next,
-.ui-paginator-first,
-.ui-paginator-prev {
-    background-color: var(--run-together) !important;
-    color: white !important;
 }
