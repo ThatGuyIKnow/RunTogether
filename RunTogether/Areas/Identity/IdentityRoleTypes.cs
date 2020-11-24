@@ -5,5 +5,6 @@ namespace RunTogether.Areas.Identity
     {
         public const string Runner = "Runner";
         public const string Organiser = "Organiser";
+        public const string SuperOrganiser = "SuperOrganiser";
     }
 }

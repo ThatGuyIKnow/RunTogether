@@ -3,6 +3,5 @@
 @using RunTogether.Areas.Identity
 @using RunTogether.Shared.Etc
 
-@inject RunTogether.Data.ApplicationDbContext dbContext
-@attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
+@attribute [Authorize(Roles = IdentityRoleTypes.SuperOrganiser)]
     <GenerateOrganiserKey></GenerateOrganiserKey>
