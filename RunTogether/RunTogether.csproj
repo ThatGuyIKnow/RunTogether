@@ -53,6 +53,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\js\" />
     <Folder Include="wwwroot\icons\" />
+    <Folder Include="wwwroot\markers\" />
   </ItemGroup>
 
 

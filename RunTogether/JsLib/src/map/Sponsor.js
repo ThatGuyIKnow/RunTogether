@@ -14,4 +14,5 @@ export class Sponsor {
         this.message = message;
         this.pictureUrl = pictureUrl;
     }
+
 }

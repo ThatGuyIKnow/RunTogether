@@ -58,8 +58,16 @@ namespace RunTogether
             {
                 serializedRunners.Add(runner.ToJsonSerializableViewer());
             });
-            data["StageId"] = StageId;
+            data["Runners"] = serializedRunners;
 
+            data["Sponsor"] = Sponsor?.ToJsonSerializableViewer();
+            if(data["Sponsor"] != null)
+            {
+                var k = data;
+                ((Dictionary<string, object>) data["Sponsor"]).Add("Message", Message ?? "");
+            }
+            data["StageId"] = StageId;
+            
             return data;
         }
 
