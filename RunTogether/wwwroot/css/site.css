@@ -163,6 +163,10 @@ a,
     color: white;
 }
 
+.sidebar ul {
+    padding: 0;
+}
+
 .viewer-toggler {
     position: absolute;
     right: 0.75rem;
@@ -217,7 +221,7 @@ a,
     width: 50%;
 }
 
-.rz-switch.rz-switch-checked .rz-switch-circle {
+.rz-switch .rz-switch-checked .rz-switch-circle {
     background: #ff6d41 !important;
 }
 
