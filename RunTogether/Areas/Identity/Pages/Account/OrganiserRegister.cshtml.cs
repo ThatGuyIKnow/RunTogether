@@ -99,7 +99,7 @@ namespace RunTogether.Areas.Identity.Pages.Account
                     await _dbContext.SaveChangesAsync();
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    
+
                     return LocalRedirect("/admin");
                 }
                 foreach (var error in resultCreate.Errors)
