@@ -57,6 +57,7 @@ namespace RunTogether.Shared.Etc
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
+            StateHasChanged();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
