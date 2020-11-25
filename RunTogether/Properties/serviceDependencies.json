@@ -1,9 +1,5 @@
 {
   "dependencies": {
-    "mssql1": {
-      "type": "mssql",
-      "connectionId": "DefaultConnection"
-    },
     "signalr1": {
       "type": "signalr",
       "connectionId": "Azure__SignalR__ConnectionString"
@@ -11,6 +7,10 @@
     "mssql2": {
       "type": "mssql",
       "connectionId": "ApplicationUserContextConnection"
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "DefaultConnection"
     }
   }
 }
