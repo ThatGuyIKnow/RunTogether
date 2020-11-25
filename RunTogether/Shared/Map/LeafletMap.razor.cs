@@ -35,8 +35,8 @@ namespace RunTogether.Shared.Map
 
                 try
                 {
-                    if (Route == null)
-                    {
+/*                    if (Route == null)
+                    {*/
                         Console.WriteLine("i ran");
                         Run run = dbContext.Runs
                             .Where(r => r.Active)
@@ -59,14 +59,14 @@ namespace RunTogether.Shared.Map
                             .First();
 
                         json = JsonSerializer.Serialize(run.Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
-                    
-                    }
+
+/*                }
                     else
-                    {
-                        json = JsonSerializer.Serialize(Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
-                    }
-                    
-                    await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
+                {
+                    json = JsonSerializer.Serialize(Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
+                }*/
+
+                await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
                 }
                 catch (Exception e) { }
 
