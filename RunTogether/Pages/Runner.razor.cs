@@ -65,10 +65,7 @@ namespace RunTogether.Pages
                                     .ThenInclude(a => a.Runner)
                                     .FirstOrDefaultAsync();
 
-                if (await ValidateRunner())
-                {
-                    await CheckCookie();
-                }
+                await CheckCookie();
             }
 
             StateHasChanged();
@@ -79,12 +76,22 @@ namespace RunTogether.Pages
             //Finds the active stage and runner.
             SetActiveStageAndRunner();
 
+            List<StageAssignment> notCompletedStageAssignments;
+            try
+            {
+                notCompletedStageAssignments = currentUser.StageAssignments.FindAll(s => s.Status != RunningStatus.Completed).OrderBy(s => s.Stage.StageId).ToList();
+            }
+            catch (Exception)
+            {
+                notCompletedStageAssignments = new List<StageAssignment>();
+            }
+
             //Checks if there is an active stage, and updates the stage status if necessary.
             if (activeStage == null)
             {
-                IEnumerable<StageAssignment> runnersStageAssignments = currentUser.StageAssignments.FindAll(s => s.Stage.Status != RunningStatus.Completed).OrderBy(s => s.StageId);
-                if (runnersStageAssignments != null)
+                try
                 {
+                    IEnumerable<StageAssignment> runnersStageAssignments = currentUser.StageAssignments.FindAll(s => s.Stage.Status != RunningStatus.Completed).OrderBy(s => s.StageId);
                     runnersStageAssignments.First().Stage.Status = RunningStatus.Active;
                     Stage previousStage = runnersStageAssignments.First().Stage.GetPreviousStage();
                     if (previousStage.StageId != runnersStageAssignments.First().StageId)
@@ -93,22 +100,60 @@ namespace RunTogether.Pages
                     }
                     await dbContext.SaveChangesAsync();
                 }
-                else
+                catch (Exception)
                 {
                     await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
                 }
+                
+                //if (runnersStageAssignments != null)
+                //{
+                //    runnersStageAssignments.First().Stage.Status = RunningStatus.Active;
+                //    Stage previousStage = runnersStageAssignments.First().Stage.GetPreviousStage();
+                //    if (previousStage.StageId != runnersStageAssignments.First().StageId)
+                //    {
+                //        previousStage.Status = RunningStatus.Completed;
+                //    }
+                //    await dbContext.SaveChangesAsync();
+                //}
+                //else
+                //{
+                //    await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
+                //}
             }
-            //Checks if there is an active runner, or if the current user's status is Completed.
-            else if (activeRunner == null || activeStage.AssignedRunners.Find(a => a.Runner.Id.Equals(currentUser.Id)).Status == RunningStatus.Completed)
+            else if (notCompletedStageAssignments.Count > 0)
+            {
+                notCompletedStageAssignments[0].Status = RunningStatus.Active;
+                foreach (StageAssignment stageAssignment in notCompletedStageAssignments[0].Stage.AssignedRunners)
+                {
+                    if (stageAssignment.Order < notCompletedStageAssignments[0].Order)
+                    {
+                        stageAssignment.Status = RunningStatus.Completed;
+                    }
+                }
+
+                foreach (Stage stage in assignedRun.Route.Stages)
+                {
+                    if (stage.StageId < notCompletedStageAssignments[0].StageId)
+                    {
+                        stage.Status = RunningStatus.Completed;
+                        foreach (StageAssignment stageAssignment in stage.AssignedRunners)
+                        {
+                            stageAssignment.Status = RunningStatus.Completed;
+                        }
+                    }
+                }
+                await dbContext.SaveChangesAsync();
+            }
+            else
             {
                 await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
                 return false;
             }
             //Sets the previous runner's status to Completed, if they still have a status of Active.
-            else if (!activeRunner.Runner.Id.Equals(currentUser.Id))
-            {
-                await UpdateDatabase(RunningStatus.Completed);
-            }
+            //else if (!activeRunner.Runner.Id.Equals(currentUser.Id))
+            //{
+            //    await UpdateDatabase(RunningStatus.Completed);
+            //}
 
             return true;
         }
@@ -124,10 +169,12 @@ namespace RunTogether.Pages
             }
             else if (startRunCookie == null || !startRunCookie.Equals("Yes"))
             {
+                await ValidateRunner();
                 startRunCSS = "";
             }
             else
             {
+                await ValidateRunner();
                 startRunCSS = "";
                 StartRun("HasCookie");
             }
@@ -140,6 +187,8 @@ namespace RunTogether.Pages
             {
                 //Sets a cookie that remembers that the code has been scanned.
                 await JSRuntime.InvokeAsync<string>("Main.Common.WriteCookie", "CodeScanned", "Yes", 2);
+
+                await ValidateRunner();
 
                 //Hides the camera CSS and displays the start run CSS.
                 cameraCSS = HideCss;
