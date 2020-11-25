@@ -1,6 +1,5 @@
-using System;
-using Xunit;
 using Bunit;
+using Xunit;
 
 namespace RunTogetherTests
 {

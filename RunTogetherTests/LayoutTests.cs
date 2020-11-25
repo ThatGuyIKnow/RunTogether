@@ -1,8 +1,6 @@
-﻿using Xunit;
-using Bunit;
-using RunTogether.Shared.Etc;
+﻿using Bunit;
 using RunTogether.Shared.Layouts;
-using RunTogether.Data;
+using Xunit;
 
 namespace RunTogetherTests
 {

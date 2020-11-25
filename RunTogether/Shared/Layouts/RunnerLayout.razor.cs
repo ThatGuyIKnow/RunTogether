@@ -8,11 +8,11 @@ namespace RunTogether.Shared.Layouts
         public string runnerStatus = "You are the active runner";
 
         /* Keeps track of whether sidebar is collapsed or not. By default not collapsed */
-        bool collapsed = false;
+        private bool collapsed = false;
 
-        readonly string sidebarId = "navBarId";
+        private readonly string sidebarId = "navBarId";
 
-        async Task ToggleSidebar()
+        private async Task ToggleSidebar()
         {
             collapsed = !collapsed;
 

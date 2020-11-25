@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
 using RunTogether.Areas.Identity;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace RunTogether.Shared.Etc
@@ -14,7 +12,7 @@ namespace RunTogether.Shared.Etc
         [Parameter]
         public string ID { get; set; }
 
-        bool isSuperAdmin = false;
+        private bool isSuperAdmin = false;
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
