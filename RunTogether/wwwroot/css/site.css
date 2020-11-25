@@ -186,12 +186,24 @@ a,
     border-top-color: var(--run-together) !important;
 }
 
-.ui-button.btn-primary, .btn-primary.ui-paginator-element {
+.ui-button.btn-primary {
     background-color: var(--run-together) !important;
 }
 
 .ui-state-active a[role='tab'] {
     color: var(--run-together) !important;
+}
+
+.rz-switch.rz-switch-checked .rz-switch-circle {
+    background: #ff6d41 !important;
+}
+
+.ui-paginator-last,
+.ui-paginator-next,
+.ui-paginator-first,
+.ui-paginator-prev {
+    background-color: var(--run-together) !important;
+    color: white !important;
 }
 
 /* #endregion Radzen */
@@ -239,18 +251,6 @@ a,
     margin-left: auto;
     margin-right: auto;
     width: 50%;
-}
-
-.rz-switch .rz-switch-checked .rz-switch-circle {
-    background: #ff6d41 !important;
-}
-
-.ui-paginator-last,
-.ui-paginator-next,
-.ui-paginator-first,
-.ui-paginator-prev {
-    background-color: var(--run-together) !important;
-    color: white !important;
 }
 
 /* #endregion */
