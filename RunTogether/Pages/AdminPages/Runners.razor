@@ -1,4 +1,5 @@
 ﻿@page "/admin/{id:int}/runners"
+
 @layout RunTogether.Shared.Layouts.OrganiserLayout
 
 @using Microsoft.AspNetCore.Identity
@@ -14,8 +15,8 @@
 @inject NavigationManager Navigator
 @inject IJSRuntime jsRuntime
 
-
 @attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
+
 <RadzenButton Icon="person_add" Text=@($"Opret ny løber til {run.Name}") Click="@(args => dialogService.Open<CreateNewRunner>($"Opret ny løber til {run.Name}",
                         new Dictionary<string, object>() { { "selectedRun", run } },
                         new DialogOptions() { Width = "700px", Height = "530px" }))" />

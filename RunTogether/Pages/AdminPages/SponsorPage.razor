@@ -1,4 +1,5 @@
 ﻿@page "/admin/{id:int}/Sponsors"
+
 @layout RunTogether.Shared.Layouts.OrganiserLayout
 
 @using RunTogether.Data
@@ -8,8 +9,8 @@
 @inject DialogService dialogService
 @inject ApplicationDbContext dbContext
 
-
 @attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
+
 <h3>Upload PNG images</h3>
 
 <RadzenButton Icon="monetization_on" Text=@($"Opret ny sponsor") Click="@(args => dialogService.Open<CreateNewSponsor>($"Opret ny sponsor",

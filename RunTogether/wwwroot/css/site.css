@@ -176,6 +176,26 @@ a,
 
 /* #endregion Sidebar */
 
+/* #region Radzen */
+
+.ui-tabview-nav .ui-tabview-selected {
+    border-top-color: var(--background-element) !important;
+}
+
+.ui-tabview-nav li:hover:not(.ui-tabview-selected):not(.ui-state-disabled) {
+    border-top-color: var(--run-together) !important;
+}
+
+.ui-button.btn-primary, .btn-primary.ui-paginator-element {
+    background-color: var(--run-together) !important;
+}
+
+.ui-state-active a[role='tab'] {
+    color: var(--run-together) !important;
+}
+
+/* #endregion Radzen */
+
 /* #region Misc. */
 
 .navbar-toggler {
