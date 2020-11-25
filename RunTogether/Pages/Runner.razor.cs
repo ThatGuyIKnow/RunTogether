@@ -165,15 +165,16 @@ namespace RunTogether.Pages
             startRunCookie = await JSRuntime.InvokeAsync<string>("Main.Common.ReadCookie", "RunStarted");
             if (codeCookie == null || !codeCookie.Equals("Yes"))
             {
-                await ValidateRunner();
                 cameraCSS = "";
             }
             else if (startRunCookie == null || !startRunCookie.Equals("Yes"))
             {
+                await ValidateRunner();
                 startRunCSS = "";
             }
             else
             {
+                await ValidateRunner();
                 startRunCSS = "";
                 StartRun("HasCookie");
             }
