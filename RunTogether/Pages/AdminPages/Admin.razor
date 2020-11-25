@@ -9,7 +9,7 @@
 @attribute [Authorize( Roles = IdentityRoleTypes.Organiser)] 
 <AuthorizeView>
     <Authorized>
-        <p>You can only see this content if you're authorized.</p>
+        @*<p>You can only see this content if you're authorized.</p>*@
     </Authorized>
     <NotAuthorized>
         <h1>Authentication Failure!</h1>

@@ -83,6 +83,7 @@ namespace RunTogether.Shared.Etc
         public async Task QueryForRunners(Run QueryRun)
         {
             run = QueryRun;
+            StateHasChanged();
         }
 
         //Går til url med "path"
