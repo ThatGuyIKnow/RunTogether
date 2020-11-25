@@ -48,7 +48,7 @@ namespace RunTogether.Areas.Identity
                     options.User.RequireUniqueEmail = false;
                     options.SignIn.RequireConfirmedAccount = false;
                 });
-                //IdentitySeedInitializer.SeedUsers(services.BuildServiceProvider());
+                IdentitySeedInitializer.SeedUsers(services.BuildServiceProvider());
             });
         }
     }
