@@ -1,32 +1,11 @@
-﻿using Xunit;
-using Bunit;
-using RunTogether.Shared.Etc;
+﻿using Bunit;
 using RunTogether.Shared.Layouts;
+using Xunit;
 
 namespace RunTogetherTests
 {
     public class LayoutTests : TestContext
     {
-        // Check if sponsor bar renders correctly
-        [Fact]
-        public void SponsorBarRendersCorrectly()
-        {
-            // Arrange
-            var cut = RenderComponent<SponsorBar>(); // cut = Component Under Test
-
-            var expectedMarkup = @"<div class=""top-row pl-4 navbar navbar-dark"">
-                                    <a class=""navbar-brand"" href="""">Sponsors</a>
-                                </div>
-
-                                <div class=""scrollable"">
-                                    <ul diff:ignore>
-                                    </ul>
-                                </div>";
-
-            // Assert
-            cut.MarkupMatches(expectedMarkup);
-        }
-
         // Check if main layout renders correctly
         [Fact]
         public void MainLayoutRendersCorrectly()

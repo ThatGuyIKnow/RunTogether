@@ -57,6 +57,7 @@ namespace RunTogether.Shared.Etc
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
+            StateHasChanged();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -83,6 +84,7 @@ namespace RunTogether.Shared.Etc
         public async Task QueryForRunners(Run QueryRun)
         {
             run = QueryRun;
+            StateHasChanged();
         }
 
         //Går til url med "path"

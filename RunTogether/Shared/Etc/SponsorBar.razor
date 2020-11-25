@@ -6,7 +6,7 @@
 
 <!-- Sponsor bar top title -->
 <div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">Sponsors</a>
+    <a class="navbar-brand" href="">Sponsorer</a>
 </div>
 
 <!-- List of all sponsors -->
@@ -14,7 +14,7 @@
     <ul>
         @foreach (var sponsor in dbContext.Sponsors)
         {
-            <RadzenImage Path="@sponsor.Image" Style="height: 10rem; max-width: 100%; object-fit: contain" />
+            <RadzenImage Path="@sponsor.Image" Style="height: 10rem; max-width: 100%; object-fit: contain; margin: 0.2rem;" />
         }
     </ul>
 </div>

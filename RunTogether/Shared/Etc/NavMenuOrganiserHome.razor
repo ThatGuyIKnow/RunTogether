@@ -1,5 +1,6 @@
 ﻿@using RunTogether.Areas.Identity
 @using Microsoft.AspNetCore.Identity
+
 @inject IJSRuntime JSRuntime
 @inject UserManager<ApplicationUser> userManager
 @inject AuthenticationStateProvider authProvider
@@ -28,25 +29,3 @@
         }
     </ul>
 </div>
-
-
-@code {
-    bool isSuperAdmin = false;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        AuthenticationState authState = await authProvider.GetAuthenticationStateAsync();
-        try
-        {
-            ApplicationUser user = await userManager.GetUserAsync(authState.User);
-
-            isSuperAdmin = await userManager.IsInRoleAsync(user, IdentityRoleTypes.SuperOrganiser);
-        }
-        catch (Exception e)
-        {
-            isSuperAdmin = false;
-        }
-        StateHasChanged();
-    }
-
-}

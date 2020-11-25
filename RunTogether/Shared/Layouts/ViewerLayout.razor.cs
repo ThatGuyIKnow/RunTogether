@@ -6,11 +6,11 @@ namespace RunTogether.Shared.Layouts
     public partial class ViewerLayout
     {
         /* Keeps track of whether sidebar is collapsed or not. By default not collapsed */
-        bool collapsed = false;
+        private bool collapsed = false;
 
-        readonly string sidebarId = "sponsorbarId";
+        private readonly string sidebarId = "sponsorbarId";
 
-        async Task ToggleSidebar()
+        private async Task ToggleSidebar()
         {
             collapsed = !collapsed;
 

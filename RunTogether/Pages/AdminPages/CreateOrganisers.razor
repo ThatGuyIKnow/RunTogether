@@ -1,7 +1,10 @@
 @page "/admin/organisers"
+
 @layout RunTogether.Shared.Layouts.OrganiserLayoutHome
+
 @using RunTogether.Areas.Identity
 @using RunTogether.Shared.Etc
 
 @attribute [Authorize(Roles = IdentityRoleTypes.SuperOrganiser)]
-    <GenerateOrganiserKey></GenerateOrganiserKey>
+
+<GenerateOrganiserKey></GenerateOrganiserKey>

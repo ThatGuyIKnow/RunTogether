@@ -1,16 +1,16 @@
-﻿using System.Threading.Tasks;
-using Microsoft.JSInterop;
+﻿using Microsoft.JSInterop;
+using System.Threading.Tasks;
 
 namespace RunTogether.Shared.Layouts
 {
     public partial class MainLayout
     {
         /* Keeps track of whether sidebar is collapsed or not. By default not collapsed */
-        bool collapsed = false;
+        private bool collapsed = false;
 
-        readonly string sidebarId = "navBarId";
+        private readonly string sidebarId = "navBarId";
 
-        async Task ToggleSidebar()
+        private async Task ToggleSidebar()
         {
             collapsed = !collapsed;
 

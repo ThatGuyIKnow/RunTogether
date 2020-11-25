@@ -9,8 +9,6 @@ namespace RunTogether.Pages
     public partial class Viewer
     {
 
-        public RunRoute Route = new RunRoute();
-
         protected override void OnInitialized()
         {
             //Stage stage1 = new Stage(new StartPoint(57.0117789F, 9.9907118F), new EndPoint(56.7499F, 9.9921F));

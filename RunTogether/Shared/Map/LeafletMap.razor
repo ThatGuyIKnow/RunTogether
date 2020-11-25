@@ -2,15 +2,10 @@
 @inject IJSRuntime JsRunTime
 @inject ApplicationDbContext dbContext
 
-@*<h1>{Test side for Map}</h1>*@
-
-<div class="mapid" id="mapid"></div>
-@*
-    <button class="btn btn-primary" @onclick="button_add">Tilføje markers og linjer</button>
-    <button class="btn btn-primary" @onclick="button_remove">Fjerne markers og linjer</button>
-    <br>*@
-
-
-@*<div @ref="mapid" @onmousedown="CreateMarker" id="mapid"></div>*@
-
-@*<p>@Coordinates</p>*@
+<div class="mapid" id="mapid">
+    <div class="mapLogo">
+        <img src="/RunLogo.png" alt="RunTogetherLogo" />
+        <object type="image/svg+xml" data="/heartIconAnimatedViewer.svg"></object>
+        <img src="/TogetherLogo.png" alt="RunTogetherLogo" />
+    </div>
+</div>

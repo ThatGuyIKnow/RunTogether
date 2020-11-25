@@ -1,4 +1,5 @@
 @page "/admin"
+
 @layout RunTogether.Shared.Layouts.OrganiserLayoutHome
 
 @using RunTogether.Shared.Etc
@@ -6,10 +7,11 @@
 
 @inject RunTogether.Data.ApplicationDbContext dbContext
 
-@attribute [Authorize( Roles = IdentityRoleTypes.Organiser)] 
+@attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
+
 <AuthorizeView>
     <Authorized>
-        <p>You can only see this content if you're authorized.</p>
+        @*<p>You can only see this content if you're authorized.</p>*@
     </Authorized>
     <NotAuthorized>
         <h1>Authentication Failure!</h1>
@@ -17,5 +19,3 @@
     </NotAuthorized>
 </AuthorizeView>
 <DataTable></DataTable>
-
-

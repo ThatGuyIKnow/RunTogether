@@ -1,5 +1,7 @@
 ﻿@page "/runner"
 
+@layout RunTogether.Shared.Layouts.RunnerLayout
+
 @using RunTogether.Shared.QR.QRScanner
 @using RunTogether.Areas.Identity
 
@@ -8,8 +10,6 @@
 @inject RunTogether.Data.ApplicationDbContext dbContext
 @inject IJSRuntime JSRuntime
 @inject DialogService dialogService
-
-@layout RunTogether.Shared.Layouts.RunnerLayout
 
 @attribute [Authorize(Roles = IdentityRoleTypes.Runner)]
 <RadzenDialog />
@@ -42,4 +42,3 @@
         <h3>Din løbetid er @timer.stopWatchValue.ToString(@"hh\:mm\:ss")</h3>
     </div>
 </div>
-
