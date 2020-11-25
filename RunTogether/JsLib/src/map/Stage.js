@@ -243,8 +243,15 @@ export class ActiveStage extends AbstractStage {
         }
 
         //Set the final partial strech
-        let finalStrech1 = points[i - 1].toArray(),
-            finalStrech2 = points[i].toArray();
+/*        let finalStrech1 = points[i - 1].toArray(),
+            finalStrech2 = points[i].toArray();*/
+
+
+        let finalStrech1 = points[i].toArray(),
+            finalStrech2 = points[i+1].toArray();
+
+
+
         let delta = [finalStrech2[0] - finalStrech1[0], finalStrech2[1] - finalStrech1[1]];
         let finalStrechPct = accumOverlayLength / lengths[i];
         lanlngs.push([finalStrech1[0] + delta[0] * finalStrechPct, finalStrech1[1] + delta[1] * finalStrechPct]);
