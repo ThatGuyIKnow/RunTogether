@@ -77,6 +77,7 @@ namespace RunTogether.Pages.AdminPages
         {
             Console.WriteLine("Route saved");
             await dbContext.SaveChangesAsync();
+            NotificationService.Notify(new NotificationMessage { Style = "position: fixed; top: 3.6rem;", Severity = NotificationSeverity.Success, Summary = "Gem", Detail = "løbet er blevet gemt", Duration = 4000 });
         }
 
         //Sletter valgte løber fra stage og ændre Order nummer til at matche index
