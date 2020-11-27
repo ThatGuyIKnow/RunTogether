@@ -45,7 +45,7 @@
         </RadzenGridColumn>
         <RadzenGridColumn TItem="ApplicationUser" Property="runners.PasswordHash" Title="Login URL">
             <Template Context="data">
-                <RadzenButton Click=@(() => CopyLogin(data?.PasswordHash)) Text="Copy" />
+                <RadzenButton Click=@(() => CopyLogin(data?.PasswordHash)) Text="Copy login URL" />
             </Template>
         </RadzenGridColumn>
 
