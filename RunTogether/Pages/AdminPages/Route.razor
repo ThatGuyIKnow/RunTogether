@@ -14,6 +14,7 @@
 @inject UserManager<ApplicationUser> userManager
 @inject ApplicationDbContext dbContext
 @inject IJSRuntime JsRunTime
+@inject NotificationService NotificationService
 
 @attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
 

@@ -47,6 +47,7 @@ namespace RunTogether
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
             services.AddScoped<DialogService>();
+            services.AddScoped<NotificationService>();
             services.AddTransient<UserCreationHelper>();
 
             services.ConfigureApplicationCookie(options =>
