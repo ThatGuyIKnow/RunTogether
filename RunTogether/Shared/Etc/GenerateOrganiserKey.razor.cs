@@ -47,7 +47,7 @@ namespace RunTogether.Shared.Etc
 
         void CopyKey(string key)
         {
-            string url = $"{Navigator.BaseUri}organiser/register?organiserKey={key}";
+            string url = $"{Navigator.BaseUri}admin/register?organiserKey={key}";
             jsRuntime.InvokeVoidAsync("Main.Common.CopyToClipboard", url);
         }
 

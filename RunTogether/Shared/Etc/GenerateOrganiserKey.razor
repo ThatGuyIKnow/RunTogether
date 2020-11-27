@@ -13,8 +13,8 @@
 <RadzenCard Style="width: 500px; margin: 0 auto; background: #ffeae8; border-radius: 5px;">
     <RadzenTextBox Disabled="true" Placeholder=@organiserKey?.Key />
     <p>Expires @organiserKey?.ExpirationDatetime</p>
-    <RadzenButton Click=@(() => CopyKey(organiserKey?.Key)) Text="Copy" />
-    <RadzenButton Click=@(RefreshKey) Text="Refresh" />
+    <RadzenButton Click=@(() => CopyKey(organiserKey?.Key)) Text="Copy Link" />
+    <RadzenButton Click=@(RefreshKey) Text="Refresh Link" />
 </RadzenCard>
 
 <RadzenGrid @ref="organiserGrid" Data="@organiserList" TItem="ApplicationUser">
