@@ -65,8 +65,159 @@ namespace RunTogetherTests
             // Assert
             Assert.Equal(expected, result);
             Assert.Equal(expected2, result2);
+        }
 
+        [Fact]
+        public void StageMethod_GetCurrentRunner_FindFirstActiveRunne()
+        {
+            Stage stage = new Stage()
+            {
+                StartPoint = new StartPoint(1.1F, 1.2F),
+                EndPoint = new EndPoint(4.1F, 4.2F)
+            };
 
+            StageAssignment runner1 = new StageAssignment()
+            {
+                Order = 1,
+                Status = RunningStatus.Active,
+                Stage = stage
+            };
+
+            StageAssignment runner2 = new StageAssignment()
+            {
+                Order = 2,
+                Status = RunningStatus.NotStarted,
+                Stage = stage
+            };
+
+            StageAssignment runner3 = new StageAssignment()
+            {
+                Order = 3,
+                Status = RunningStatus.NotStarted,
+                Stage = stage
+            };
+
+            stage.AssignedRunners.Add(runner1);
+            stage.AssignedRunners.Add(runner2);
+            stage.AssignedRunners.Add(runner3);
+
+            StageAssignment result = stage.GetCurrentRunner();
+            StageAssignment expected = runner1;
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void StageMethod_GetCurrentRunner_FindFirstNotActiveRunner()
+        {
+            Stage stage = new Stage()
+            {
+                StartPoint = new StartPoint(1.1F, 1.2F),
+                EndPoint = new EndPoint(4.1F, 4.2F)
+            };
+
+            StageAssignment runner1 = new StageAssignment()
+            {
+                Order = 1,
+                Status = RunningStatus.Completed,
+                Stage = stage
+            };
+
+            StageAssignment runner2 = new StageAssignment()
+            {
+                Order = 2,
+                Status = RunningStatus.NotStarted,
+                Stage = stage
+            };
+
+            StageAssignment runner3 = new StageAssignment()
+            {
+                Order = 3,
+                Status = RunningStatus.NotStarted,
+                Stage = stage
+            };
+
+            stage.AssignedRunners.Add(runner1);
+            stage.AssignedRunners.Add(runner2);
+            stage.AssignedRunners.Add(runner3);
+
+            StageAssignment result = stage.GetCurrentRunner();
+            StageAssignment expected = runner2;
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void StageMethod_GetLastRunner_FindLastRunner()
+        {
+            Stage stage = new Stage()
+            {
+                StartPoint = new StartPoint(1.1F, 1.2F),
+                EndPoint = new EndPoint(4.1F, 4.2F)
+            };
+
+            StageAssignment runner1 = new StageAssignment()
+            {
+                Order = 1,
+                Status = RunningStatus.NotStarted,
+                Stage = stage
+            };
+
+            StageAssignment runner2 = new StageAssignment()
+            {
+                Order = 2,
+                Status = RunningStatus.NotStarted,
+                Stage = stage
+            };
+
+            StageAssignment runner3 = new StageAssignment()
+            {
+                Order = 3,
+                Status = RunningStatus.NotStarted,
+                Stage = stage
+            };
+
+            stage.AssignedRunners.Add(runner1);
+            stage.AssignedRunners.Add(runner2);
+            stage.AssignedRunners.Add(runner3);
+
+            StageAssignment result = stage.GetLastRunner();
+            StageAssignment expected = runner3;
+
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void StageMethod_GetNextStage_FindNextStage()
+        {
+            RunRoute route = new RunRoute()
+            {
+                Stages = new List<Stage>
+                {
+                }
+            };
+
+            Stage stage1 = new Stage()
+            {
+                StartPoint = new StartPoint(1.1F, 1.2F),
+                EndPoint = new EndPoint(4.1F, 4.2F),
+                RunRoute = route
+            };
+
+            Stage stage2 = new Stage()
+            {
+                StartPoint = new StartPoint(5.1F, 5.2F),
+                EndPoint = new EndPoint(8.1F, 8.2F),
+                RunRoute = route
+            };
+
+            route.Stages.Add(stage1);
+            route.Stages.Add(stage2);
+
+            Stage result = stage1.GetNextStage();
+            Stage expected = stage2;
+
+            Assert.Equal(expected, result);
         }
     }
 
