@@ -7,7 +7,7 @@ using RunTogether.Data;
 
 namespace RunTogetherTests
 {
-    public class StageMethods : TestContext
+    public class StageMethodsTests : TestContext
     {
 
         [Fact]
