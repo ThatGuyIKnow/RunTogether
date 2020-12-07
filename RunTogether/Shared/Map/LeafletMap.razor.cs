@@ -24,20 +24,12 @@ namespace RunTogether.Shared.Map
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-
-
-            //await JsRunTime.InvokeVoidAsync("Main.tester", json);
-            Console.WriteLine("før first render");
             if (firstRender)
             {
-                Console.WriteLine("efter first render");
                 await JsRunTime.InvokeVoidAsync("Main.Map.initializeMap");
 
                 try
                 {
-/*                    if (Route == null)
-                    {*/
-                        Console.WriteLine("i ran");
                         Run run = dbContext.Runs
                             .Where(r => r.Active)
                             .Include(r => r.Route)
@@ -59,12 +51,6 @@ namespace RunTogether.Shared.Map
                             .First();
 
                         json = JsonSerializer.Serialize(run.Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
-
-/*                }
-                    else
-                {
-                    json = JsonSerializer.Serialize(Route.ToJsonSerializableViewer(), typeof(Dictionary<string, object>));
-                }*/
 
                 await JsRunTime.InvokeVoidAsync("Main.Map.addMarkersAndLines", json);
                 }

@@ -23,19 +23,12 @@ class AbstractMarker {
 
 export class Popup extends AbstractMarker {
     _stage;
-    _path;
-    content = "";
-    _popup;
 
-    
-/*    customMarkerStandard = L.icon({
-        iconUrl: '/markers/RU_CUSTOM_MARKER.png',
-        iconSize: [24, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        tooltipAnchor: [16, -28],
-    });
-*/
+    _path;
+
+    content = "";
+
+    _popup;
 
     customMarkerStandard = L.icon({
         iconUrl: '/markers/RU_FLAG_WAYPOINT.png',
@@ -58,7 +51,7 @@ export class Popup extends AbstractMarker {
         iconAnchor: [0, 105],
         popupAnchor: [1, -34],
         tooltipAnchor: [16, -28],
-    }); 
+    });
 
     constructor(stage, path, stageIndex, lastStage) {
         super(stage._layer, stage.startPoint);
@@ -66,17 +59,15 @@ export class Popup extends AbstractMarker {
         if (!isClassOrSubclass(stage, AbstractStage))
             throw new TypeError("Class 'Popup' requires 'stage' Stage parameter");
 
-        //'<img src=' + stage.sponsor.pictureUrl + 'asp-append-version="true" width="300px" ></img>' 
-
         this._stage = stage;
         this._path = path;
         this.stageIndex = stageIndex;
         this.lastStage = lastStage;
         this.content = '<div class="popup">' +
-                        this.ConstructSponsor(stage.sponsor) +
-                        "<hr>" + 
-                        this.ConstructRunners(stage.runners) +
-                       "</div>";
+            this.ConstructSponsor(stage.sponsor) +
+            "<hr>" +
+            this.ConstructRunners(stage.runners) +
+            "</div>";
     }
 
     ConstructSponsor(sponsor) {
@@ -100,8 +91,8 @@ export class Popup extends AbstractMarker {
     AddToLayer(layer) {
 
 
-        if(this.stageIndex === 0)
-            this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: this.customMarkerStart} );
+        if (this.stageIndex === 0)
+            this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: this.customMarkerStart });
         else
             this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: this.customMarkerStandard });
 
@@ -109,7 +100,7 @@ export class Popup extends AbstractMarker {
         if (this.lastStage)
             this._marker2 = Leaflet.marker(this._stage.endPoint.toArray(), { icon: this.customMarkerEnd });
         else
-            this._marker2 = Leaflet.marker(this._stage.endPoint.toArray(), { icon: this.customMarkerStandard }); 
+            this._marker2 = Leaflet.marker(this._stage.endPoint.toArray(), { icon: this.customMarkerStandard });
 
         this._marker.addTo(this._stage._layer);
         this._marker2.addTo(this._stage._layer);
@@ -122,40 +113,7 @@ export class Popup extends AbstractMarker {
             this._marker.bindPopup(this._popup);
         }
     }
-
-    //OpenPopup() {
-    //    this._mapMarker.openPopup();
-    //}
 }
-
-/*export class ViewerMarker extends AbstractMarker {
-    _stage;
-
-    constructor(stage) {
-        super(stage.startPoint);
-
-        if (!isClassOrSubclass(stage, AbstractStage))
-            throw new TypeError("Class 'ViewerMarker' requires 'stage' Stage parameter");
-        this._stage = stage;
-    }
-
-    AddToLayer(layer) {
-        let customMarker = L.icon({
-            iconUrl: '/markers/RU_CUSTOM_MARKER.png', 
-            iconSize: [24, 41], 
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            tooltipAnchor: [16, -28],
-        }); 
-
-        this._marker = Leaflet.marker(this._stage.startPoint.toArray(), { icon: customMarker });
-        this._marker2 = Leaflet.marker(this._stage.endPoint.toArray(), { icon: customMarker });
-        this._marker.addTo(this._stage._layer);
-        this._marker2.addTo(this._stage._layer);
-        this._marker.bindPopup(this._popup);
-    }
-
-}*/
 
 export class EditorMarker extends AbstractMarker {
     constructor(layer, point, map, stage, prevStage, dotnetHelper, lastMarker) {
@@ -203,15 +161,6 @@ export class EditorMarker extends AbstractMarker {
     }
 
     markerDragEnd(marker) {
-        //this.point.x = marker.getLatLng().lat;
-        //this.point.y = marker.getLatLng().lng;
-
-        //this._path.startPoint.x = marker.getLatLng().lat;
-        //this._path.startPoint.y = marker.getLatLng().lng;
-
-        //this._prevPath.endPoint.x = marker.getLatLng().lat;
-        //this._prevpath.endPoint.y = marker.getLatLng().lng;
-
         //send a stages back to blazor, for saving to DB
 
         if (this._lastMarker == true) {
@@ -243,49 +192,3 @@ export class EditorMarker extends AbstractMarker {
     }
 }
 
-
-/*
- * MouseDown / MouseUp
- * MapDragging Off / On
- * /
- 
-/*export class RunnersPopup extends AbstractMarker {
-    sponsor;
-    content = "";
-    _path;
-    constructor(map, path, runners) {
-        super(map, new Point(0, 0));
-
-        if (!Array.isArray(runners) ||
-            !runners.every(r => isClassOrSubclass(r, Runner)))
-            throw new TypeError("Class 'RunnerPopup' requires 'Runners' Runner[] parameter");
-
-        this._map = map;
-        this._path = path;
-        this.point = point;
-        this.sponsor = sponsor;
-        this.content = ConstructContent(runners);
-    }
-
-    ConstructContent(runners) {
-        let content = '<div class="runnerPopupContent">';
-        runners.forEach(runner => {
-            content += `<p>${runner.name}</p>`;
-        });
-        content += "</div>";
-        return content;
-    }*/
-
-//    AddToMap(map) {
-//        this._map = map;
-//        this._mapMarker = Leaflet.popup();
-//        this._mapMarker.setContent(this.content);
-//        this._path.bindPopup(this._mapMarker);
-//        //Leaflet.marker(point.toArray()).addTo(this._map)
-//    }
-
-///*    L.curve(lineArray).bindPopup('Dette er noget tekst').openPopup().addTo(mymap); */
-//    //OpenPopup() {
-//    //    this._mapMarker.openPopup();
-//    //}
-//}

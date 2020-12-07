@@ -24,7 +24,7 @@ namespace RunTogether.Shared.Forms
 
         void OnInvalidSubmit()
         {
-            Console.WriteLine("AW");
+            Console.WriteLine("Sponsor Submission was invalid.");
         }
 
         private async Task OnInputFileChange(InputFileChangeEventArgs e)

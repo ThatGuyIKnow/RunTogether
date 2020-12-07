@@ -19,7 +19,6 @@ namespace RunTogether.Shared.Forms
         {
                 Console.WriteLine(selectedRun.Name + " " + selectedRun.ID);
                 await userCreation.CreateRunner(firstName, lastName, email, selectedRun);
-                Console.WriteLine("YEY!");
                 this.dialogService.Close(true);
         }
 
@@ -36,7 +35,7 @@ namespace RunTogether.Shared.Forms
 
         void OnInvalidSubmit()
         {
-            Console.WriteLine("AW");
+            Console.WriteLine("Runner Submit was invalid.");
         }
 
     }

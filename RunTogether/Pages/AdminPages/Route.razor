@@ -83,7 +83,7 @@
                 @if (selectedStageId != -1)
                 {
                     <div class="row">
-                        <RadzenLabel Text=@($"Tilføj sponser") />
+                        <RadzenLabel Text=@($"Tilføj sponsor") />
                         <RadzenDropDown Name="DropDown" AllowClear="false" TValue="Sponsor" Data="@SponsorList" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
                                         AllowFiltering="true" Placeholder="Vælg Sponsor..." TextProperty="Name" Style="width:100%; height: auto;" @bind-Value="@selectedStage.Sponsor">
                             <Template Context="sponsorData">
@@ -92,7 +92,7 @@
                         </RadzenDropDown>
                     </div>
                     <div class="row">
-                        <RadzenLabel Text=@($"Sponser besked") />
+                        <RadzenLabel Text=@($"Sponsor besked") />
                         <RadzenTextArea Placeholder="Enter here..." Style="width:100%" @bind-Value="selectedStage.Message" />
                     </div>
                 }

@@ -4,8 +4,6 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using RunTogether.Data;
@@ -61,7 +59,7 @@ namespace RunTogether.Areas.Identity.Helpers
                     await _dbContext.SaveChangesAsync();
                     await _userManager.AddToRoleAsync(user, IdentityRoleTypes.Runner);
                 }
-                catch (Exception e) { return IdentityResult.Failed(); }
+                catch (Exception) { return IdentityResult.Failed(); }
             }
 
             _userManager.PasswordHasher = new PasswordHasher<ApplicationUser>();

@@ -2,15 +2,13 @@
 import '@elfalem/leaflet-curve';
 import { Point } from './Point';
 import { Popup, EditorMarker } from './Marker';
-import { Sponsor } from './Sponsor';
-import { Runner } from './Runner';  
 import { isClassOrSubclass } from '../utils/ClassTypeUtils';
 
 /*
  * Abstract Stage class
  */
 export class AbstractStage {
-    constructor(startPoint, endPoint, throughPoints, flipped) {
+    constructor(startPoint, endPoint, throughPoints) {
         if (this.constructor === AbstractStage)
             throw new TypeError("Cannot construct abstract class 'Stage'");
 
@@ -26,10 +24,6 @@ export class AbstractStage {
         if (!Array.isArray(throughPoints) ||
             !throughPoints.every(p => isClassOrSubclass(p, Point)))
             throw new TypeError("Class extending abstract class 'Stage' requires 'ThroughPoints' Point Array parameter");
-
-        // Boolean flipped
-        if (typeof flipped !== "boolean")
-            throw new TypeError("Class extending abstract class 'Stage' requires 'Flipped' boolean parameter");
     }
 
     AddToLayer(layer) {
@@ -40,7 +34,6 @@ export class AbstractStage {
         this.path = this.CreatePath().setStyle({ 'weight': 10 });
         this.path.addTo(this._layer);
         this.AddHoverFocus(this.path);
-        this.AddPopup(this, this.path);
     }
 
     AddHoverFocus(target, trigger = null) {
@@ -65,58 +58,12 @@ export class AbstractStage {
         return Leaflet.polyline(path);
     }
 
-
-    //CreatePath() {
-    //    const path = [];
-    //    const points = [this.startPoint, ...this.throughPoints, this.endPoint];
-
-    //    path.push('M', this.startPoint.toArray());
-
-    //    let direction = this.flipped ? -1 : 1;
-    //    for (let i = 0; i < points.length - 1; i++) {
-    //        let controlPoint = this.CalculateControlPoint(points[i], points[i + 1], direction);
-    //        path.push('Q', controlPoint.toArray(), points[i + 1].toArray());
-    //        direction *= -1;
-    //    }
-    //    return Leaflet.curve(path);
-    //}
-
-    CalculateControlPoint(point1, point2, amplitude) {
-        if (!isClassOrSubclass(point1, Point) ||
-            !isClassOrSubclass(point2, Point) ||
-            typeof amplitude !== "number")
-            throw new TypeError("Method 'CalculateControlPoints' use parameters '<latlngFrom : Point, latlngTo : Point, amplitude : Number>'");
-
-        const latlngFrom = point1.toArray(),
-              latlngTo = point2.toArray();
-
-        let offsetX = latlngTo[1] - latlngFrom[1],
-            offsetY = latlngTo[0] - latlngFrom[0];
-
-        let r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2));
-        let theta = Math.atan2(offsetY, offsetX);
-
-        let thetaOffset = (11 / 10);
-
-        let r2 = (r / 2) / (Math.cos(thetaOffset));
-        let theta2 = theta + (amplitude * thetaOffset);
-
-        let controlPointX = (r2 * Math.cos(theta2)) + latlngFrom[1];
-        let controlPointY = (r2 * Math.sin(theta2)) + latlngFrom[0];
-
-        return new Point(controlPointY, controlPointX);
-    }
-
     AddPopup(stage, path) {
         let popup = new Popup(stage, path, this.stageIndex, this.lastStage);
         popup.AddToLayer();
         this._popup = popup;
         return popup;
     } 
-
-    EvenNumberOfCurves() {
-        return this.throughPoints.length % 2 === 1;
-    }
 
     PassBind(bind) {
         this.GetPrevLine = bind; 
@@ -131,16 +78,14 @@ export class InactiveStage extends AbstractStage {
     completedClass = "completedStage";
     runners = [];
     path = null;
-    flipped = false;
     completed = false;
 
-    constructor(stageIndex, lastStage, startPoint, endPoint, throughPoints = [], flipped = false, completed = false) {
-        super(startPoint, endPoint, throughPoints, flipped);
+    constructor(stageIndex, lastStage, startPoint, endPoint, throughPoints = [], completed = false) {
+        super(startPoint, endPoint, throughPoints);
 
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.throughPoints = throughPoints;
-        this.flipped = flipped;
         this.completed = completed;
         this._className = this.completed ? this.completedClass : this.notCompletedClass;
         this.stageIndex = stageIndex;
@@ -149,6 +94,7 @@ export class InactiveStage extends AbstractStage {
 
     AddToLayer(layer) {
         super.AddToLayer(layer);
+        super.AddPopup(this, this.path);
         this.path._path.setAttribute('filter', 'url(#pathFilter)');
         this.path._path.classList.add(this._className);
     }
@@ -164,20 +110,19 @@ export class ActiveStage extends AbstractStage {
     overlayClassName = "activeStageOverlay";
     path = null;
     overlayPath = null;
-    flipped = false;
 
-    constructor(stageIndex, lastStage, startPoint, endPoint, throughPoints = [], flipped = false) {
-        super(startPoint, endPoint, throughPoints, flipped);
+    constructor(stageIndex, lastStage, startPoint, endPoint, throughPoints = []) {
+        super(startPoint, endPoint, throughPoints);
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.throughPoints = throughPoints;
-        this.flipped = flipped;
         this.stageIndex = stageIndex;
         this.lastStage = lastStage;
     }
 
     AddToLayer(layer) {
         super.AddToLayer(layer);
+        super.AddPopup(this, this.path);
         this.path._path.setAttribute('filter', 'url(#pathFilter)');
         this.path._path.classList.add(this.className);
 
@@ -222,7 +167,7 @@ export class ActiveStage extends AbstractStage {
 
     UpdateOverlay() {
         if (this.overlayPercentage >= 1) {
-            this.overlayPath._lanlngs = this.path._lanlngs;
+            this.overlayPath.setLatLngs(this.path._lanlngs);
         }
         let points = [this.startPoint, ...this.throughPoints, this.endPoint];
         // Measure the lengths between each consecutive point
@@ -233,31 +178,26 @@ export class ActiveStage extends AbstractStage {
         let overlayLength = lengths.reduce((accum, curr) => accum + curr) * this._overlayPercentage;
 
         // Get the streches the runners have completed
-        let lanlngs = [this.startPoint.toArray(),];
+        let latlngs = [this.startPoint.toArray(),];
         let accumOverlayLength = overlayLength;
         let i = 0;
         for(; i < lengths.length; i++){
             if (lengths[i] > accumOverlayLength) break;
-            lanlngs.push(points[i + 1].toArray());
+            latlngs.push(points[i + 1].toArray());
             accumOverlayLength -= lengths[i];
         }
 
-        //Set the final partial strech
-/*        let finalStrech1 = points[i - 1].toArray(),
-            finalStrech2 = points[i].toArray();*/
+        //Set the final partial stretch
+        let finalStretch1 = points[i].toArray(),
+            finalStretch2 = points[i+1].toArray();
+
+        //Calculate and assign the partial stretch 
+        let delta = [finalStretch2[0] - finalStretch1[0], finalStretch2[1] - finalStretch1[1]];
+        let finalStretchPct = accumOverlayLength / lengths[i];
+        latlngs.push([finalStretch1[0] + delta[0] * finalStretchPct, finalStretch1[1] + delta[1] * finalStretchPct]);
 
 
-        let finalStrech1 = points[i].toArray(),
-            finalStrech2 = points[i+1].toArray();
-
-
-
-        let delta = [finalStrech2[0] - finalStrech1[0], finalStrech2[1] - finalStrech1[1]];
-        let finalStrechPct = accumOverlayLength / lengths[i];
-        lanlngs.push([finalStrech1[0] + delta[0] * finalStrechPct, finalStrech1[1] + delta[1] * finalStrechPct]);
-
-
-        this.overlayPath.setLatLngs(lanlngs);
+        this.overlayPath.setLatLngs(latlngs);
     }
 
     GetLength(point1, point2) {
@@ -270,21 +210,17 @@ export class ActiveStage extends AbstractStage {
 export class EditStage extends AbstractStage {
 
     _layer = null;
-    _overlayPercentage = 0.0;
     runners = [];
     className = "notStartedStage";
     path = null;
-    overlayPath = null;
-    flipped = false;
 
 
-    constructor(startPoint, endPoint, throughPoints = [], flipped = false, stageId, map, objRef, stageIndex, lastStage) {
-        super(startPoint, endPoint, throughPoints, flipped);
+    constructor(startPoint, endPoint, throughPoints = [], stageId, map, objRef, stageIndex, lastStage) {
+        super(startPoint, endPoint, throughPoints);
 
         this.startPoint = startPoint;
         this.endPoint = endPoint;
         this.throughPoints = throughPoints;
-        this.flipped = flipped;
         this.stageId = stageId;
 
         this._map = map; 
@@ -298,7 +234,7 @@ export class EditStage extends AbstractStage {
         super.AddToLayer(layer);
 
         this._prevStage = this.GetPrevLine(this._stageIndex);
-
+        
         this.path._path.classList.add(this.className);
         this.InteractablePath(this.path);
 
@@ -328,9 +264,4 @@ export class EditStage extends AbstractStage {
                     }));
         })
     }
-
-    AddPopup() {
-        //empty for now
-    } 
-
 }

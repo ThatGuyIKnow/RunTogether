@@ -12,7 +12,6 @@ namespace RunTogether.Shared.Forms
         public void OnSubmit(String RunName, DateTime Start, DateTime End, String QR)
         {
             Run RunObj = new Run() { Name = RunName, StartDate = Start, EndDate = End, QRString = QR };
-            Console.WriteLine("YEY!");
             this.dialogService.Close(true);
             dbContext.Runs.Add(RunObj);
             dbContext.SaveChanges();

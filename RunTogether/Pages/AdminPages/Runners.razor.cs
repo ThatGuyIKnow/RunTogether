@@ -35,10 +35,6 @@ namespace RunTogether.Pages.AdminPages
                 .Include(r => r.Runners)
                 .SelectMany(r => r.Runners);
 
-
-
-
-
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 

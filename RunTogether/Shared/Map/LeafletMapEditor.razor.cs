@@ -62,7 +62,6 @@ namespace RunTogether.Shared.Map
                     //Deserialize and cast to a Stage object. 
                     Stage NewStage = JsonSerializer.Deserialize<Stage>(evt);
 
-                    Console.WriteLine(NewStage.StageId);
                     sendToParent.InvokeAsync(NewStage.StageId);
                 });
 

@@ -55,15 +55,13 @@ namespace RunTogether.Shared.Forms
             StageObj.StartPoint = startPoint;
             runRoute.Stages.Add(StageObj);
             newStages.Add(StageObj);
-            Console.WriteLine("I am in onsubmit");
-            Console.WriteLine(StageObj.StartPoint.X + "," + StageObj.StartPoint.Y);
             this.dialogService.Close(true);
             table.Reload();
         }
 
         void OnInvalidSubmit()
         {
-            Console.WriteLine("AW");
+            Console.WriteLine("Route Submission was invalid");
         }
 
         public void SaveRouteChanges()

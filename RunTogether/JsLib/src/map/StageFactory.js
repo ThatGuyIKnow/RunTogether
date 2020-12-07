@@ -1,5 +1,4 @@
-﻿import { isClassOrSubclass } from '../utils/ClassTypeUtils';
-import { ActiveStage, InactiveStage, EditStage } from './Stage';
+﻿import { ActiveStage, InactiveStage, EditStage } from './Stage';
 import {Point} from './Point';
 import {Runner} from './Runner';
 import {Sponsor} from './Sponsor';
@@ -7,7 +6,7 @@ import {Sponsor} from './Sponsor';
 export class StageFactory {
     constructor() { }
 
-    CreateStage(stageData, flipped = false, editStage = false, map = null, objRef = null, stageIndex, lastStage) {
+    CreateStage(stageData, editStage = false, map = null, objRef = null, stageIndex, lastStage) {
         const startPoint = new Point(...stageData.StartPoint);
         const endPoint = new Point(...stageData.EndPoint);
         const throughPoints = this.ConstructThroughPoints(stageData.ThroughPoints);
@@ -24,13 +23,13 @@ export class StageFactory {
     let stage;
 
         if (editStage == true) {
-            stage = new EditStage(startPoint, endPoint, throughPoints, flipped, stageData.StageId, map, objRef, stageIndex, lastStage); 
+            stage = new EditStage(startPoint, endPoint, throughPoints, stageData.StageId, map, objRef, stageIndex, lastStage); 
         }
         else {
             if (stageData.Status === 'Active')
-                stage = new ActiveStage(stageIndex, lastStage, startPoint, endPoint, throughPoints, flipped);
+                stage = new ActiveStage(stageIndex, lastStage, startPoint, endPoint, throughPoints);
             else
-                stage = new InactiveStage(stageIndex, lastStage, startPoint, endPoint, throughPoints, flipped, stageData.Status === 'Completed');
+                stage = new InactiveStage(stageIndex, lastStage, startPoint, endPoint, throughPoints, stageData.Status === 'Completed');
         }
 
 
@@ -42,18 +41,13 @@ export class StageFactory {
     }
 
     ConstructThroughPoints(points) {
-        const result = [];
-        points.forEach(point => {
-            result.push(new Point(...point));
-        });
-        return result;
+        return points.map(point => new Point(...point));
     }
 
     ConstructRunners(runners) {
-        const result = [];
-        runners.forEach(runner => {
+        const result = runners.map(runner => {
             const { Name, Order, Status } = runner;
-            result.push(new Runner(Name, Order, Status));
+            return new Runner(Name, Order, Status);
         });
         return result;
     }

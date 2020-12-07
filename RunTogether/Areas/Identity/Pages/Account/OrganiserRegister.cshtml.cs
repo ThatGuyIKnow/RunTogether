@@ -47,8 +47,6 @@ namespace RunTogether.Areas.Identity.Pages.Account
 
         public string OrganiserKey { get; set; }
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
-
         public class InputModel
         {
             [Required]

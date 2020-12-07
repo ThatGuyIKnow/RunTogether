@@ -1,46 +1,42 @@
 ﻿
-import L from 'leaflet';
-import '@elfalem/leaflet-curve';
-import { settings } from './mapSettings.json';
-import {StageFactory, RunRouteFactory} from "./map/index";
-import { Layer } from '../../wwwroot/js/main';
-
-/*Global variable for the map class*/
-let mymap, layerGroup;
-let maxBounds1 = [51.649, 0.49]; 
-let maxBounds2 = [59.799, 18.68]; 
-let bounds = L.latLngBounds(maxBounds1, maxBounds2);
+import Leaflet from 'leaflet';
+import {RunRouteFactory} from "./map/index";
 
 /*Class for the map*/
 export class mapClass {
+    myMap = null;
+    layerGroup = null;
+    maxBounds1 = [51.649, 0.49];
+    maxBounds2 = [59.799, 18.68];
+    bounds;
 
     constructor() {
         this.initializeMap = this.initializeMap.bind(this);
         this.addMarkersAndLines = this.addMarkersAndLines.bind(this);
+        this.bounds = Leaflet.latLngBounds(this.maxBounds1, this.maxBounds2);
     }
 
     /* A Method that initializes the map */
     initializeMap() {   
 
-        /*Pointing mymap to leaflet map and setting the viewpoint and start zoom point*/
-        mymap = L.map('mapid').setView([55.964, 9.992], 6.5);
+        /*Pointing myMap to leaflet map and setting the viewpoint and start zoom point*/
+        this.myMap = Leaflet.map('mapid').setView([55.964, 9.992], 6.5);
 
-        mymap.setMaxBounds(bounds);
+        this.myMap.setMaxBounds(this.bounds);
 
         /* Appling tile layer to the map*/
-        L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+        Leaflet.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
             attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
             subdomains: 'abcd',
             minZoom: 6,
             maxZoom: 13,
-            maxBounds: bounds,
+            maxBounds: this.bounds,
             maxBoundsViscosity: 1, 
             ext: 'jpg'
-        }).addTo(mymap);
+        }).addTo(this.myMap);
 
         /*Creating layer group and adding to map*/
-        layerGroup = L.layerGroup().addTo(mymap);
-
+        this.layerGroup = Leaflet.layerGroup().addTo(this.myMap);
     }
 
     /* A Method to add markers and lines*/
@@ -50,19 +46,19 @@ export class mapClass {
         this.RemoveLayer();
 
         /*Creating layer group and adding to map*/
-        layerGroup = L.layerGroup().addTo(mymap);
+        this.layerGroup = Leaflet.layerGroup().addTo(this.myMap);
 
         let routeFactory = new RunRouteFactory();   
 
         let parsedData = JSON.parse(object);
         let routeRun = routeFactory.CreateRunRoute(parsedData);
-        routeRun.AddToLayer(layerGroup);
+        routeRun.AddToLayer(this.layerGroup);
 
         this.AddFilter();
     }
 
     AddFilter() {
-        var svg = mymap.getPanes().overlayPane.firstChild,
+        var svg = this.myMap.getPanes().overlayPane.firstChild,
             svgFilter = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
 
         svgFilter.setAttribute('id', 'pathFilter');
@@ -86,28 +82,10 @@ export class mapClass {
     }
 
     RemoveLayer() {
-        if (layerGroup != null || layerGroup != undefined)
+        if (this.layerGroup != null || this.layerGroup != undefined)
         {
-            mymap.removeLayer(layerGroup);
-            layerGroup = L.layerGroup().addTo(mymap);
+            this.myMap.removeLayer(this.layerGroup);
+            this.layerGroup = Leaflet.layerGroup().addTo(this.myMap);
         }
     }
-
-    //onMapClick() {
-    //    let pointArray = [];  
-
-    //    var popup = L.popup();
-
-    //    function onMapClick(e) {
-    //        popup
-    //            .setLatLng(e.latlng)
-    //            .setContent("You clicked the map at " + e.latlng.toString())
-    //            .openOn(mymap);
-
-    //        pointArray.push(e.latlng.toString());
-    //        console.log(pointArray);
-    //    }
-
-    //    mymap.on('click', onMapClick);
-    //}
 }
