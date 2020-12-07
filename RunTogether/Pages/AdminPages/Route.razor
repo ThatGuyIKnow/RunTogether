@@ -14,6 +14,7 @@
 @inject UserManager<ApplicationUser> userManager
 @inject ApplicationDbContext dbContext
 @inject IJSRuntime JsRunTime
+@inject NotificationService NotificationService
 
 @attribute [Authorize(Roles = IdentityRoleTypes.Organiser)]
 
@@ -27,14 +28,14 @@
         <h3></h3>
         <RadzenCard>
             <RadzenTemplateForm TItem="StageAssignment" Data="@AssignmentPlaceholder" Submit="()=> Save()">
-                <div class="scrollableRZCard row" Style="max-height: 30vh; margin-left:0;">
+                <div class="scrollableRZCard row" Style="max-height: 30vh;">
                     @for (int i = 0; i < rows; i++)
                     {
                         int i2 = i;
-                        <div Style="margin-bottom: 10px">
+                        <div Style="margin: 0 0 10px 0;">
                             <RadzenLabel Text=@($"{i+1}. Løber") />
                             <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" @bind-Value="@selectedStage.AssignedRunners[i2].Runner" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                            AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Change((ApplicationUser)args, i2)" Style="flex-grow: 1;">
+                                            AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Change((ApplicationUser)args, i2)" Style="width:100%; margin: 0 0 1rem 0">
                                 <Template Context="data">
                                     @((data as ApplicationUser).FirstName)  @((data as ApplicationUser).LastName)
                                     <br>
@@ -42,7 +43,7 @@
                                 </Template>
                             </RadzenDropDown>
                             <div>
-                                <RadzenButton Icon="delete" Size="ButtonSize.Small" Click="@(args => Delete(i2))" />
+                                <RadzenButton Icon="delete" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@(args => Delete(i2))" />
                             </div>
                         </div>
                     }
@@ -53,14 +54,14 @@
                     <div class="row">
                         <RadzenLabel Text=@($"Tilføj løber") />
                         <RadzenDropDown Name="DropDown" AllowClear="false" TValue="ApplicationUser" Data="@run.Runners" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                                        AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Add((ApplicationUser)args)" Style="width:100%" @bind-Value="@RunnerToAdd">
+                                        AllowFiltering="true" Placeholder="Vælg løber..." TextProperty="LastName" Change="args => Add((ApplicationUser)args)" Style="width:100%; margin: 0 0 1rem 0" @bind-Value="@RunnerToAdd">
                             <Template Context="data">
                                 @((data as ApplicationUser).FirstName)  @((data as ApplicationUser).LastName)
                                 <br>
                                 (@((data as ApplicationUser).Email))
                             </Template>
                         </RadzenDropDown>
-                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Gem" Style="width: 100%" />
+                        <RadzenButton ButtonType="ButtonType.Submit" Icon="save" Text="Gem" Style="width: 100%; margin: 0 0 1rem 0"  />
                     </div>
                 }
                 else
@@ -72,8 +73,8 @@
             </RadzenTemplateForm>
             @if (selectedStageId != -1)
             {
-                <div>
-                    <RadzenButton style="margin: 0 1rem 1rem 0" Click=@(args => DeleteStage()) Text="Slet Segment" ButtonStyle="ButtonStyle.Danger" />
+                <div class="row">
+                    <RadzenButton style="width: 100%; margin: 0 0 1rem 0" Click=@(args => DeleteStage()) Text="Slet Segment" ButtonStyle="ButtonStyle.Danger" Icon="delete_forever"/>
                 </div>
             }
         </RadzenCard>

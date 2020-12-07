@@ -103,22 +103,8 @@ namespace RunTogether.Pages
                 catch (Exception)
                 {
                     await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
+                    return false;
                 }
-                
-                //if (runnersStageAssignments != null)
-                //{
-                //    runnersStageAssignments.First().Stage.Status = RunningStatus.Active;
-                //    Stage previousStage = runnersStageAssignments.First().Stage.GetPreviousStage();
-                //    if (previousStage.StageId != runnersStageAssignments.First().StageId)
-                //    {
-                //        previousStage.Status = RunningStatus.Completed;
-                //    }
-                //    await dbContext.SaveChangesAsync();
-                //}
-                //else
-                //{
-                //    await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
-                //}
             }
             else if (notCompletedStageAssignments.Count > 0)
             {
@@ -149,12 +135,7 @@ namespace RunTogether.Pages
                 await JSRuntime.InvokeVoidAsync("alert", "Du er allerede færdig med dit løb.");
                 return false;
             }
-            //Sets the previous runner's status to Completed, if they still have a status of Active.
-            //else if (!activeRunner.Runner.Id.Equals(currentUser.Id))
-            //{
-            //    await UpdateDatabase(RunningStatus.Completed);
-            //}
-
+            
             return true;
         }
 
@@ -169,14 +150,18 @@ namespace RunTogether.Pages
             }
             else if (startRunCookie == null || !startRunCookie.Equals("Yes"))
             {
-                await ValidateRunner();
-                startRunCSS = "";
+                if (await ValidateRunner())
+                {
+                    startRunCSS = "";
+                }
             }
             else
             {
-                await ValidateRunner();
-                startRunCSS = "";
-                StartRun("HasCookie");
+                if (await ValidateRunner())
+                {
+                    startRunCSS = "";
+                    StartRun("HasCookie");
+                }
             }
         }
 
