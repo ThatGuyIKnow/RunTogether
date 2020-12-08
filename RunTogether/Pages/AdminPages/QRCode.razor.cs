@@ -32,12 +32,10 @@ namespace RunTogether.Pages.AdminPages
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 
-            //variabler til print af qrkode farve
             ColorList.Add(new Tuple<string, string>("RT rød", "#cc4545"));
             ColorList.Add(new Tuple<string, string>("Sort", "#000000"));
             ColorList.Add(new Tuple<string, string>("Navy blå", "#000080"));
 
-            //variabler til print af qrkode størelse
             SizeList.Add(new Tuple<string, int>("Stor (A4)", 30));
             SizeList.Add(new Tuple<string, int>("Mellem", 20));
             SizeList.Add(new Tuple<string, int>("Lille", 10));
