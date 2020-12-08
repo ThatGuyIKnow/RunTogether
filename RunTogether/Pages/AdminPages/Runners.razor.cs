@@ -41,11 +41,14 @@ namespace RunTogether.Pages.AdminPages
         }
 
         //retunere Email hvis den blev fundet ellers default
-        public string FindRunner(string Email)
+        public string FindRunner(ApplicationUser SelectedRunner)
         {
-            if (runnerList.Any(r => r.Email == Email) == true)
+            if (runnerList.Any(r => r.Email == SelectedRunner.Email) == true)
             {
-                return Email;
+                if(runnerList.Where(r => r.Email == SelectedRunner.Email).FirstOrDefault() != SelectedRunner)
+                {
+                    return SelectedRunner.Email;
+                }
             }
             return default;
         }

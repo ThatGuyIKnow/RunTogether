@@ -40,7 +40,7 @@
                 <RadzenTextBox @bind-Value="selectedRunner.Email" Style="width:100%; display: block" Name="Email" />
                 <RadzenRequiredValidator Component="Email" Text="Email skal udfyldes" Popup=true Style="position: absolute" />
                 <RadzenEmailValidator Component="Email" Text="Angiv en gyldig e-mail-adresse" Popup=true Style="position: absolute" />
-                <RadzenCompareValidator Component="Email" Text="Email findes allerede for dette løb" Popup=true Style="position: absolute" Value=FindRunner(selectedRunner.Email) Operator=CompareOperator.NotEqual />
+                <RadzenCompareValidator Component="Email" Text="Email findes allerede for dette løb" Popup=true Style="position: absolute" Value=FindRunner(selectedRunner) Operator=CompareOperator.NotEqual />
             </EditTemplate>
         </RadzenGridColumn>
         <RadzenGridColumn TItem="ApplicationUser" Property="runners.PasswordHash" Title="Login URL">
