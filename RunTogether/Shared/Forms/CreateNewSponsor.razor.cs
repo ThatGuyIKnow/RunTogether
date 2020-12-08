@@ -24,17 +24,18 @@ namespace RunTogether.Shared.Forms
 
         void OnInvalidSubmit()
         {
+<<<<<<< Updated upstream
             Console.WriteLine("Sponsor Submission was invalid.");
+=======
+>>>>>>> Stashed changes
         }
 
         private async Task OnInputFileChange(InputFileChangeEventArgs e)
         {
-            var format = "image/png";
-
-            var file = await e.File.RequestImageFileAsync(format, 400, 400);
-            var buffer = new byte[file.Size];
+            IBrowserFile? file = await e.File.RequestImageFileAsync("image/png", 400, 400);
+            byte[]? buffer = new byte[file.Size];
             await file.OpenReadStream().ReadAsync(buffer);
-            NewSponsor.Image = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+            NewSponsor.Image = $"data:image/png;base64,{Convert.ToBase64String(buffer)}";
         }
 
     }

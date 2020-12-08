@@ -35,6 +35,10 @@ namespace RunTogether.Pages.AdminPages
                 .Include(r => r.Runners)
                 .SelectMany(r => r.Runners);
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
             dialogService.OnOpen += Open;
             dialogService.OnClose += Close;
 

@@ -19,7 +19,6 @@ namespace RunTogether.Shared.Forms
 
         void OnInvalidSubmit()
         {
-            Console.WriteLine("Submission was invalid");
         }
     }
 }
