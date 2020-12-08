@@ -35,10 +35,6 @@ namespace RunTogether.Shared.Forms
 
         void OnInvalidSubmit()
         {
-<<<<<<< Updated upstream
-            Console.WriteLine("Runner Submit was invalid.");
-=======
->>>>>>> Stashed changes
         }
 
     }
